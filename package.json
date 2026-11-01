@@ -1,0 +1,16 @@
+{
+  "name": "craxtoys-invertedcrax",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests/run_inverted.mjs && node tests/run_installer.mjs && node tests/run_client.mjs",
+    "build:installer": "python3 tools/build_inverted_package.py"
+  },
+  "devDependencies": {
+    "luau-web": "1.5.1"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

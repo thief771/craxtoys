@@ -1,34 +1,45 @@
 # 7 Deadly Crax — InvertedCrax
 
-Version **tête seule**, créée à partir du véritable Crax Sourire du projet Roblox. Aucun corps, bras, jambe ou chaussure. Tête noire, yeux blancs fermés, sourire à dents noires et croix blanche courbe à l’arrière.
+Personnage **tête seule**, dérivé du véritable Crax Sourire : vinyle noir, yeux blancs, sourire à dents noires et X blanc derrière la tête.
 
 ![InvertedCrax de face](assets/invertedcrax/head-only/face.png)
 
 [Vue de dos](assets/invertedcrax/head-only/dos.png) · [Vue de trois quarts](assets/invertedcrax/head-only/trois-quarts.png)
 
-## Fichiers
+## Paquet total
 
-Tous les fichiers se trouvent dans [`assets/invertedcrax/head-only`](assets/invertedcrax/head-only).
+**[Télécharger InvertedCrax-TOTAL.zip](dist/InvertedCrax-TOTAL.zip)**
 
-- [Archive complète](assets/invertedcrax/head-only/InvertedCrax-TeteSeule.zip).
-- [Scène Blender éditable](assets/invertedcrax/head-only/InvertedCrax_TeteSeule.blend).
-- [FBX de la tête complète](assets/invertedcrax/head-only/InvertedCrax_TeteSeule.fbx).
-- [OBJ](assets/invertedcrax/head-only/InvertedCrax_TeteSeule.obj) et [matériaux MTL](assets/invertedcrax/head-only/InvertedCrax_TeteSeule.mtl).
-- [Croix et repères pour le futur raccordement au rig natif](assets/invertedcrax/head-only/InvertedCrax_Croix_IMPORT.fbx).
-- [Instructions et limites](assets/invertedcrax/head-only/LIRE-MOI.md).
+Il contient le modèle Blender/FBX/OBJ, les rendus, les 19 WAV originaux, les sources serveur/client, les adaptations du livre et des catalogues, les animations/VFX, les tests, l’installateur et le retour arrière. Il s’installe dans le projet Roblox existant analysé, pas dans une place vide.
 
-La scène Blender conserve une référence originale masquée. Les aperçus sont des rendus réels du modèle. Le script Python est celui utilisé pour la correction, à titre de traçabilité ; il dépend de la scène intermédiaire précédente et de chemins de l’environnement de création. Il ne constitue pas un installateur autonome.
+**Play arrêté**, copier tout [`INSTALLER_INVERTEDCRAX.lua`](integration/invertedcrax/INSTALLER_INVERTEDCRAX.lua) dans la barre de commande de Studio, puis exécuter. La commande vérifie vos sources avant de modifier le projet et les sauvegarde. Une réexécution ne crée aucun doublon.
 
-## Vérifications et état du jeu
+[Instructions complètes et tests Studio](integration/invertedcrax/INSTALLATION.md) · [Retour arrière](integration/invertedcrax/RETOUR_ARRIERE.lua) · [Brancher les sons et l’icône importés](integration/invertedcrax/BRANCHER_AUDIO_ET_ICONE.lua)
 
-Contrôle Blender : 25 pièces de tête, aucune pièce de corps, échelle conservée et écart maximal des sommets du visage inférieur à 0,000002 unité. Les rendus face/dos ont été examinés. Le détail est dans [`validation.json`](assets/invertedcrax/head-only/validation.json).
+## Fonctionnalités dans le code
 
-**Ces fichiers ne constituent pas encore l’intégration du personnage dans le jeu.** Les pouvoirs, le casino, les achats, la sauvegarde et la cinématique ne sont pas raccordés. Aucun test dans Roblox Studio ou à deux clients n’est annoncé.
+- Épique, 120 PV, mêlée 8, vitesse et prix repris des réglages existants.
+- Collection, livre à quatre niveaux, casino et progression via les systèmes existants.
+- MUTE / SILENCE ; PIRATAGE et vulnérabilité ; COPIER-COLLER ; CTRL-Z.
+- ERREUR 404 : cinématique de victoire MAX avec copies visuelles, fragments, effet monochrome local et restauration de la caméra.
+- Aucun nouveau trophée, don universel du personnage, DataStore parallèle ou identifiant Roblox inventé.
 
-Pour examiner le modèle, importer le FBX complet dans un modèle temporaire, avec Play arrêté. Ne pas remplacer directement les combattants ou le Crax Sourire original. Les trois objets `FIT_…` du fichier de croix sont uniquement des repères techniques à retirer des futures copies jouables.
+## Validation et limites
 
-## Audio et archive de ressources
+Les tests locaux exécutent le Luau et les sources réellement modifiées avec des services simulés. Les fichiers Blender et WAV ont leurs propres contrôles. **Roblox Studio n’a pas été exécuté ici** : réplication réelle, rendu, sauvegarde, achats, permissions audio et non-régression nécessitent les vérifications documentées avant publication.
 
-[19 WAV et générateur](assets/invertedcrax/audio) · [Archive de toutes les ressources produites](dist/InvertedCrax-Ressources.zip) · [État détaillé des fonctionnalités manquantes](ETAT-INTEGRATION.md).
+Les WAV doivent être importés dans Roblox et leurs vrais IDs configurés pour les entendre en jeu. L’icône SILENCE reste facultative ; le statut fonctionne avec un X et un texte sans image.
 
-Cette archive contient les ressources réalisées ; elle ne contient pas de gameplay InvertedCrax terminé.
+[État détaillé](ETAT-INTEGRATION.md) · [Tests exécutés](integration/invertedcrax/TESTS.md) · [Audit SILENCE](integration/invertedcrax/silence-audit.json)
+
+## Développement
+
+Node.js 22+ et Python 3 sont nécessaires pour les commandes de préparation et de test :
+
+```sh
+npm ci
+npm test
+npm run build:installer
+```
+
+Le générateur reconstruit l’installateur depuis `src/invertedcrax` et l’export inspecté conservé comme fixture. `integration/invertedcrax/patched` fournit les vingt et une sources complètes pour revue. Les scripts de modélisation sont fournis pour traçabilité ; la scène intermédiaire avec corps n’est pas nécessaire à l’installation et n’est pas le personnage livré.

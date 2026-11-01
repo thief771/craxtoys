@@ -1,32 +1,13 @@
 # État réel — InvertedCrax
 
-## Ressources produites
+Le ZIP d’intégration contient maintenant les ressources ET le code : six nouvelles sources, vingt et une sources existantes adaptées, installateur unique, retour arrière et configuration des vrais IDs audio/icône.
 
-- Modèle tête seule, scène Blender, FBX, OBJ/MTL et aperçus.
-- Croix arrière et repères d’alignement pour import Studio.
-- 19 WAV originaux, manifeste avec identifiants Roblox vides et générateur Python.
+Implémenté dans les sources : personnage tête seule, registre épique 120 PV / mêlée 8 / vitesse commune existante, livre à quatre niveaux cumulatifs, casino, utilisation de la sauvegarde/sélection existante, MUTE, SILENCE aux déclenchements, PIRATAGE, vulnérabilité, COPIER-COLLER, CTRL-Z, rendu client et protocole de victoire ERREUR 404.
 
-Les WAV sont vérifiés numériquement (format, durée, absence de saturation) ; ils n’ont pas été écoutés. Les géométries et rendus ont été contrôlés dans Blender. Aucun identifiant Roblox n’est inventé.
+Validation locale : compilation Luau des 30 scripts de production complets ; tests des règles, catalogues réels, moteur serveur et véritable CombatHealth avec services simulés ; exécution de l’installateur/retour arrière et du cycle VFX client sur objets simulés. Détails dans `integration/invertedcrax/TESTS.md`.
 
-## Fonctionnalités non livrées
+À faire dans Roblox Studio : exécuter l’installateur sur la place correspondante, importer/autoriser les WAV et fournir l’icône éventuelle, puis vérifier deux clients, rendu, DataStores, achats et non-régression des autres Crax. Aucun de ces tests Studio n’a été effectué ici et aucune place n’a été publiée.
 
-Aucun des éléments suivants n’est encore implémenté ou raccordé pour InvertedCrax :
+Les aperçus sont des rendus Blender. Le rig jouable est une copie/recoloration du vrai rig natif, incluant sa croix courbe existante ; la nouvelle croix lissée du FBX est une ressource supplémentaire sans ID fictif. Les WAV sont originaux et vérifiés numériquement, mais non écoutés ici.
 
-- Catalogue Épique et statistiques 120 PV / 8 de mêlée / vitesse normale existante.
-- Possession, sauvegarde, sélection, aperçu en jeu et tirage au casino.
-- Achats et application des niveaux dans le livre.
-- MUTE et SILENCE aux points de déclenchement de toutes les capacités.
-- PIRATAGE et vulnérabilité dans le moteur et le pipeline de dégâts.
-- COPIER-COLLER au troisième impact de mêlée réellement reçu.
-- CTRL-Z synchronisé avec l’horloge active, la position interne et les PV.
-- Cinématique de victoire ERREUR 404, VFX et lecture des sons en jeu.
-- Installateur unique relançable et retour arrière des modifications du jeu.
-- Tests à deux clients, sauvegarde réelle et non-régression.
-
-Ce dépôt et l’archive de ressources ne constituent donc PAS une version jouable complète. Ils ne doivent pas être publiés comme une intégration terminée.
-
-## Ressources Roblox nécessaires au raccordement
-
-Importer les nouvelles pièces dans Studio sous le propriétaire de l’expérience ; transmettre ensuite leur modèle .rbxm avec les vrais MeshId pour vérifier les transformations. Les WAV s’importent séparément ; leurs futurs IDs seront configurables et leur absence ne devra pas bloquer le gameplay.
-
-L’icône SILENCE reste à fournir. Les règles de réapplication et le cas SILENCE à la seconde 10 de CTRL-Z doivent être explicités avant une intégration complète. Ces étapes ne remplacent pas le développement et les tests du code serveur et client qui restent à faire.
+Le paquet est prêt à être essayé sur une copie de la place ; il ne doit pas être décrit comme validé en production avant les vérifications Studio documentées.

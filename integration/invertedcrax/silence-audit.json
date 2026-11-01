@@ -1,0 +1,42 @@
+[
+  {
+    "path": "ServerScriptService.ArenaMovement",
+    "guards": 4
+  },
+  {
+    "path": "ServerScriptService.MonsterBiteAbilities",
+    "guards": 1
+  },
+  {
+    "path": "ServerScriptService.GhostyNight",
+    "guards": 3
+  },
+  {
+    "path": "ServerScriptService.CraxSpideyRuntime",
+    "guards": 1
+  },
+  {
+    "path": "ServerScriptService.FantasticRuntime",
+    "guards": 1
+  },
+  {
+    "path": "ServerScriptService.CraxPlumberRuntime",
+    "guards": 2
+  },
+  {
+    "path": "ServerScriptService.CraxPlumberLevels",
+    "guards": 2
+  },
+  {
+    "path": "ServerScriptService.CraxGoldenRuntime",
+    "guards": 4
+  },
+  {
+    "path": "ServerScriptService.FleauRuntime",
+    "guards": 2
+  },
+  {
+    "path": "ServerScriptService.CraxDeadlyRuntime",
+    "guards": 10
+  }
+]

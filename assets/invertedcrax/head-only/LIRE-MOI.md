@@ -18,4 +18,4 @@ Pour examiner le modèle dans Studio, Play arrêté, importer InvertedCrax_TeteS
 
 Le futur installateur utilisera la base native clonée pour garder ses conventions de combat, et le mesh de croix importé. InvertedCrax_Croix_IMPORT.fbx remplace le précédent fichier InvertedCrax_NewParts_IMPORT.fbx qui contenait le corps. Garder les noms et les pièces séparées à l'import.
 
-Aucun catalogue, profil, script de combat ou pouvoir n'est modifié par ces fichiers. Le gameplay n'est pas encore raccordé. Les tests réalisés ici concernent la scène Blender, ses exports et la géométrie ; pas l'exécution Roblox.
+Ce dossier décrit les ressources visuelles seulement. Le raccordement serveur/client et son installateur sont désormais fournis dans integration/invertedcrax à la racine du paquet TOTAL. Aucun lancement de Roblox Studio n’a été effectué ici.

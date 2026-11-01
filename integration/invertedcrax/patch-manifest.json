@@ -1,0 +1,149 @@
+[
+  {
+    "path": "ReplicatedStorage.CraxCatalog",
+    "originalBytes": 8499,
+    "originalHash": 2768530650,
+    "originalSha256": "59b843e48dc74ed474e5e1daeec1fe823adb9c83c8e8a433595506bb9d402aa2",
+    "patchedSha256": "69e21b65c663882d98d728bc369c2a7d4f80b205610da905e72c7a4c1fc87d56"
+  },
+  {
+    "path": "ReplicatedStorage.CraxSkillCatalog",
+    "originalBytes": 27878,
+    "originalHash": 4041584108,
+    "originalSha256": "9876e778107e511fcd898f5541d3291b02659dee71ca994796d565e424dd778d",
+    "patchedSha256": "904ba5a5cbb7e5ed6adfd5a534f932267b1b93fb841d9c12cfe2b5ff1e8ede09"
+  },
+  {
+    "path": "ReplicatedStorage.CraxEffectsCatalog",
+    "originalBytes": 1993,
+    "originalHash": 158614282,
+    "originalSha256": "a6b309d55a0e48819e69772cff87bc56af19b51bc68b2e917a78b5183af41331",
+    "patchedSha256": "0a3850253f55d96fb480d6f427a8d789602f42264631d01d8ed587a26297d867"
+  },
+  {
+    "path": "ReplicatedStorage.CraxRouletteConfig",
+    "originalBytes": 3586,
+    "originalHash": 3392980361,
+    "originalSha256": "9dc07fd6d9bebba6c36e63d03b244c58fdc5af3cff17228c2485c3ac56a5f8ea",
+    "patchedSha256": "463fb4132bf6a1b5f18632c5e6b7012d534ab8f5f1fef38efc3d4db4d3dd53dc"
+  },
+  {
+    "path": "ReplicatedStorage.CraxVictoryCatalog",
+    "originalBytes": 6404,
+    "originalHash": 1677452964,
+    "originalSha256": "1e8452714cdf163ab207353a5685d8e6995e0f462586ca61c329246fac6a0b8f",
+    "patchedSha256": "0f822b9db0020b21315fcf6038ac54fcc90bbf9189a2648070a37cde929ba2e5"
+  },
+  {
+    "path": "ServerScriptService.CraxSkinServer",
+    "originalBytes": 11390,
+    "originalHash": 1098656612,
+    "originalSha256": "c31357ca175b7277c54fee6b2217af3fa815f6e475722d5a8d18e828636712a6",
+    "patchedSha256": "89c2f3eb2f1a26dcaf1d9145432aba379390804ace756bc5a620a2e3fde78152"
+  },
+  {
+    "path": "StarterPlayer.StarterPlayerScripts.CopEmClient",
+    "originalBytes": 80452,
+    "originalHash": 3536119428,
+    "originalSha256": "88c4abc7ae4e21e2120492d21f000421d27fa90e099d95a89e47cd153c599503",
+    "patchedSha256": "7e5c5b28e255e1c7a0098a5f20569061a615cf25b26fdbfc96e5678b23ef2a7e"
+  },
+  {
+    "path": "ReplicatedStorage.CraxBookCinema",
+    "originalBytes": 11453,
+    "originalHash": 2561612631,
+    "originalSha256": "2f21ea7e6480433ae78212a2ff789a7de3ea94c1ffc6c183734ca28677d9c8c6",
+    "patchedSha256": "02fc9ad39f0696d4073eadb19e52271c70f537cd48ac2212e55d2c1596832079"
+  },
+  {
+    "path": "ServerScriptService.ArenaMovement",
+    "originalBytes": 33935,
+    "originalHash": 2630459306,
+    "originalSha256": "136f088b2d061853a0bc7a350d15f6774b76a257749baa082fe35390bab68443",
+    "patchedSha256": "532f3c0b120d7453a730e3efe33030bee2b4c0a6ed619ef26734f12103abce79"
+  },
+  {
+    "path": "ServerScriptService.CombatHealth",
+    "originalBytes": 11488,
+    "originalHash": 2363038626,
+    "originalSha256": "cb52f72ccbe4fb77eae18b0014e9b4e88582c409883bbc54e8277fc317c2dfd4",
+    "patchedSha256": "a3867dca3805f4f6efd861bf9431ce61c872da0bf87113d3755bdf936226f6e2"
+  },
+  {
+    "path": "ServerScriptService.MonsterBiteAbilities",
+    "originalBytes": 25997,
+    "originalHash": 1229180526,
+    "originalSha256": "79febf0bf7b46a4dbde34f0fc6a9c76656fa3937d355630252b661576e897aa8",
+    "patchedSha256": "3842b7df4b0c5dde294730bf9b147f63a5eea46d3a4c1adff33d0b6203d77841"
+  },
+  {
+    "path": "ServerScriptService.GhostyNight",
+    "originalBytes": 14301,
+    "originalHash": 108944490,
+    "originalSha256": "0d2d38de3877d7947206611778644543edc926cdd08e659b7e3ce377b98c4e6f",
+    "patchedSha256": "f1d1fed2ccbcd5e21d8451256472a105596af8e687e70c20ed766e7d5f4cfd53"
+  },
+  {
+    "path": "ServerScriptService.CraxSpideyRuntime",
+    "originalBytes": 7169,
+    "originalHash": 1675742918,
+    "originalSha256": "5d12680d2432a0b3061f25723f7de9dd38556d9be0addbe0c7e3a6c1bedcfef6",
+    "patchedSha256": "fe8db1aa289d74610fc1240541d3c8185f2aab9f401a5d3a466eec3c8ec37aab"
+  },
+  {
+    "path": "ServerScriptService.FantasticSchedule",
+    "originalBytes": 2180,
+    "originalHash": 472560005,
+    "originalSha256": "040e555e76517fab5b04603e6f13a3d51c5f7422e73d10d9b3354b6cd273ef21",
+    "patchedSha256": "1507956f893f59043795bb0635664b4ca8cf129d999fca115219caf5c6ce49e5"
+  },
+  {
+    "path": "ServerScriptService.FantasticRuntime",
+    "originalBytes": 12307,
+    "originalHash": 4063111269,
+    "originalSha256": "89e53cfd984515755c53e6c0c74ea0f0f85f17ae2e9dc253af64b605311d7801",
+    "patchedSha256": "a26bc2b66e5f73218a11a9eb569aa1b7f4282866f63e1986fc9b292d1b6007f6"
+  },
+  {
+    "path": "ServerScriptService.CraxPlumberRuntime",
+    "originalBytes": 8620,
+    "originalHash": 1436226123,
+    "originalSha256": "3aa03b3f60e0a723df46a7f2829991fdd46979a98dc9a1366cbfe0aecba9ce4e",
+    "patchedSha256": "e24006f45d5d18498e0dca3f7425860f76555a1ecd65817be1d61b3421e87c5d"
+  },
+  {
+    "path": "ServerScriptService.CraxPlumberLevels",
+    "originalBytes": 10306,
+    "originalHash": 1055463276,
+    "originalSha256": "bb5da58094e13e955637568d9f9ec3ad235fc33bf9d821594ffb284c1f7ab570",
+    "patchedSha256": "34b8a8126315a6ac3ec15f21a486bb91d4e3c4bf26e164c4aa83ad7d00d23bcf"
+  },
+  {
+    "path": "ServerScriptService.CraxGoldenRuntime",
+    "originalBytes": 13105,
+    "originalHash": 1066574375,
+    "originalSha256": "83f95c64eb45a0d78c4496ca5b11cd6ce4f78f0d84ffd83a1da0e027eda9c87f",
+    "patchedSha256": "f5757754092452c8c3637e31a0e4b7c71fdbc798ff0741800d70190b3dace0b7"
+  },
+  {
+    "path": "ReplicatedStorage.CraxFleau.FleauRules",
+    "originalBytes": 3268,
+    "originalHash": 3386548031,
+    "originalSha256": "0657ce49a72e1712722637523743bf12761a2357e646200139dce1b83caf95ab",
+    "patchedSha256": "94eee3530470cac041969265fbeaf17c7564f573d9c7afac87fdab3f46b7cc34"
+  },
+  {
+    "path": "ServerScriptService.FleauRuntime",
+    "originalBytes": 10344,
+    "originalHash": 3062763416,
+    "originalSha256": "51172e9c1b80db6efedc1c587ef53e1916285a6af31b6bb8e89b44b0f248dfb8",
+    "patchedSha256": "78637ce8a42d448de065676496d6b02892b0491ad930ed770c5d2d5dc13adc00"
+  },
+  {
+    "path": "ServerScriptService.CraxDeadlyRuntime",
+    "originalBytes": 78341,
+    "originalHash": 457837360,
+    "originalSha256": "3514d9024b615760f02f52cd0cff915e9522af5aa592eea4f6a591892d7d512f",
+    "patchedSha256": "cd0120b7499939a67aa09486e5cf70e7e03f0c00d4db93ec71236e2680d114bf"
+  }
+]
