@@ -1,0 +1,23 @@
+{
+  "characterMeshes": 25,
+  "bodyMeshes": 0,
+  "headCenter": [
+    0,
+    0,
+    0
+  ],
+  "boundsMin": [
+    -4.0,
+    -4.161426067352295,
+    -4.0
+  ],
+  "boundsMax": [
+    4.0,
+    4.01800012588501,
+    4.0
+  ],
+  "sourceHeadVertexMaxError": 4.76837158203125e-07,
+  "renderEngine": "Blender Cycles, 72 samples",
+  "nativeRobloxRig": "Not replaced or modified",
+  "RobloxIntegration": "Not installed"
+}
