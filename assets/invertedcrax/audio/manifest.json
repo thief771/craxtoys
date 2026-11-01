@@ -1,0 +1,154 @@
+[
+  {
+    "name": "MuteTrigger",
+    "file": "MuteTrigger.wav",
+    "seconds": 0.85,
+    "peak": 0.55,
+    "rms": 0.1086,
+    "robloxId": ""
+  },
+  {
+    "name": "SilenceApply",
+    "file": "SilenceApply.wav",
+    "seconds": 0.45,
+    "peak": 0.55,
+    "rms": 0.1095,
+    "robloxId": ""
+  },
+  {
+    "name": "SilenceEnd",
+    "file": "SilenceEnd.wav",
+    "seconds": 0.4,
+    "peak": 0.55,
+    "rms": 0.1598,
+    "robloxId": ""
+  },
+  {
+    "name": "HackActivate",
+    "file": "HackActivate.wav",
+    "seconds": 0.65,
+    "peak": 0.55,
+    "rms": 0.0973,
+    "robloxId": ""
+  },
+  {
+    "name": "HackDirection01",
+    "file": "HackDirection01.wav",
+    "seconds": 0.15,
+    "peak": 0.55,
+    "rms": 0.1327,
+    "robloxId": ""
+  },
+  {
+    "name": "HackDirection02",
+    "file": "HackDirection02.wav",
+    "seconds": 0.16,
+    "peak": 0.55,
+    "rms": 0.1302,
+    "robloxId": ""
+  },
+  {
+    "name": "HackDirection03",
+    "file": "HackDirection03.wav",
+    "seconds": 0.14,
+    "peak": 0.55,
+    "rms": 0.1423,
+    "robloxId": ""
+  },
+  {
+    "name": "CopyCapture",
+    "file": "CopyCapture.wav",
+    "seconds": 0.65,
+    "peak": 0.55,
+    "rms": 0.108,
+    "robloxId": ""
+  },
+  {
+    "name": "CopyImpact",
+    "file": "CopyImpact.wav",
+    "seconds": 0.5,
+    "peak": 0.55,
+    "rms": 0.0918,
+    "robloxId": ""
+  },
+  {
+    "name": "RewindMark",
+    "file": "RewindMark.wav",
+    "seconds": 0.8,
+    "peak": 0.55,
+    "rms": 0.1176,
+    "robloxId": ""
+  },
+  {
+    "name": "RewindBuild",
+    "file": "RewindBuild.wav",
+    "seconds": 2.0,
+    "peak": 0.55,
+    "rms": 0.1295,
+    "robloxId": ""
+  },
+  {
+    "name": "TeleportDepart",
+    "file": "TeleportDepart.wav",
+    "seconds": 0.7,
+    "peak": 0.55,
+    "rms": 0.0935,
+    "robloxId": ""
+  },
+  {
+    "name": "TeleportArrive",
+    "file": "TeleportArrive.wav",
+    "seconds": 0.75,
+    "peak": 0.55,
+    "rms": 0.1035,
+    "robloxId": ""
+  },
+  {
+    "name": "MarkCancel",
+    "file": "MarkCancel.wav",
+    "seconds": 0.4,
+    "peak": 0.55,
+    "rms": 0.1411,
+    "robloxId": ""
+  },
+  {
+    "name": "MaxRise",
+    "file": "MaxRise.wav",
+    "seconds": 2.5,
+    "peak": 0.55,
+    "rms": 0.1237,
+    "robloxId": ""
+  },
+  {
+    "name": "MaxLoop",
+    "file": "MaxLoop.wav",
+    "seconds": 2.0,
+    "peak": 0.55,
+    "rms": 0.1686,
+    "robloxId": ""
+  },
+  {
+    "name": "MaxFragment",
+    "file": "MaxFragment.wav",
+    "seconds": 1.2,
+    "peak": 0.55,
+    "rms": 0.0825,
+    "robloxId": ""
+  },
+  {
+    "name": "MaxSuction",
+    "file": "MaxSuction.wav",
+    "seconds": 1.8,
+    "peak": 0.55,
+    "rms": 0.1206,
+    "robloxId": ""
+  },
+  {
+    "name": "MaxClose",
+    "file": "MaxClose.wav",
+    "seconds": 0.65,
+    "peak": 0.55,
+    "rms": 0.0929,
+    "robloxId": ""
+  }
+]

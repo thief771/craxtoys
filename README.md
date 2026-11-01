@@ -26,3 +26,9 @@ Contrôle Blender : 25 pièces de tête, aucune pièce de corps, échelle conser
 **Ces fichiers ne constituent pas encore l’intégration du personnage dans le jeu.** Les pouvoirs, le casino, les achats, la sauvegarde et la cinématique ne sont pas raccordés. Aucun test dans Roblox Studio ou à deux clients n’est annoncé.
 
 Pour examiner le modèle, importer le FBX complet dans un modèle temporaire, avec Play arrêté. Ne pas remplacer directement les combattants ou le Crax Sourire original. Les trois objets `FIT_…` du fichier de croix sont uniquement des repères techniques à retirer des futures copies jouables.
+
+## Audio et archive de ressources
+
+[19 WAV et générateur](assets/invertedcrax/audio) · [Archive de toutes les ressources produites](dist/InvertedCrax-Ressources.zip) · [État détaillé des fonctionnalités manquantes](ETAT-INTEGRATION.md).
+
+Cette archive contient les ressources réalisées ; elle ne contient pas de gameplay InvertedCrax terminé.
