@@ -1,0 +1,173 @@
+[
+  {
+    "name": "SteelStart",
+    "file": "SteelStart.wav",
+    "seconds": 0.55,
+    "loop": false,
+    "peak": 0.48000000000000004,
+    "rms": 0.13926278437981082,
+    "robloxId": ""
+  },
+  {
+    "name": "CircleDash",
+    "file": "CircleDash.wav",
+    "seconds": 0.5,
+    "loop": true,
+    "peak": 0.48000000000000004,
+    "rms": 0.2071504473718096,
+    "robloxId": ""
+  },
+  {
+    "name": "DashHit",
+    "file": "DashHit.wav",
+    "seconds": 0.33,
+    "loop": false,
+    "peak": 0.48,
+    "rms": 0.1152436671956008,
+    "robloxId": ""
+  },
+  {
+    "name": "SteelEnd",
+    "file": "SteelEnd.wav",
+    "seconds": 0.35,
+    "loop": false,
+    "peak": 0.48000000000000004,
+    "rms": 0.14591034388734547,
+    "robloxId": ""
+  },
+  {
+    "name": "LaserStart",
+    "file": "LaserStart.wav",
+    "seconds": 0.35,
+    "loop": false,
+    "peak": 0.48,
+    "rms": 0.13969496677884669,
+    "robloxId": ""
+  },
+  {
+    "name": "LaserLoop",
+    "file": "LaserLoop.wav",
+    "seconds": 0.5,
+    "loop": true,
+    "peak": 0.48000000000000004,
+    "rms": 0.22582110157888105,
+    "robloxId": ""
+  },
+  {
+    "name": "LaserEnd",
+    "file": "LaserEnd.wav",
+    "seconds": 0.32,
+    "loop": false,
+    "peak": 0.48,
+    "rms": 0.14018079814580817,
+    "robloxId": ""
+  },
+  {
+    "name": "FrostCharge",
+    "file": "FrostCharge.wav",
+    "seconds": 2.0,
+    "loop": false,
+    "peak": 0.4799999999999999,
+    "rms": 0.09437906215380243,
+    "robloxId": ""
+  },
+  {
+    "name": "FrostLoop",
+    "file": "FrostLoop.wav",
+    "seconds": 0.7,
+    "loop": true,
+    "peak": 0.48,
+    "rms": 0.12588026868639554,
+    "robloxId": ""
+  },
+  {
+    "name": "FreezeApply",
+    "file": "FreezeApply.wav",
+    "seconds": 0.65,
+    "loop": false,
+    "peak": 0.48,
+    "rms": 0.07621926140459921,
+    "robloxId": ""
+  },
+  {
+    "name": "IceShatter",
+    "file": "IceShatter.wav",
+    "seconds": 0.9,
+    "loop": false,
+    "peak": 0.48,
+    "rms": 0.06840700963011659,
+    "robloxId": ""
+  },
+  {
+    "name": "LastStand",
+    "file": "LastStand.wav",
+    "seconds": 0.85,
+    "loop": false,
+    "peak": 0.48,
+    "rms": 0.1379091511628677,
+    "robloxId": ""
+  },
+  {
+    "name": "KryptoniteSpawn",
+    "file": "KryptoniteSpawn.wav",
+    "seconds": 1.1,
+    "loop": false,
+    "peak": 0.48,
+    "rms": 0.13552022057279478,
+    "robloxId": ""
+  },
+  {
+    "name": "KryptonitePickup",
+    "file": "KryptonitePickup.wav",
+    "seconds": 0.5,
+    "loop": false,
+    "peak": 0.48,
+    "rms": 0.1414692531833323,
+    "robloxId": ""
+  },
+  {
+    "name": "KryptoniteDeath",
+    "file": "KryptoniteDeath.wav",
+    "seconds": 1.05,
+    "loop": false,
+    "peak": 0.48,
+    "rms": 0.11758868016509284,
+    "robloxId": ""
+  },
+  {
+    "name": "FinaleFly",
+    "file": "FinaleFly.wav",
+    "seconds": 1.1,
+    "loop": false,
+    "peak": 0.48,
+    "rms": 0.12364487886106323,
+    "robloxId": ""
+  },
+  {
+    "name": "FinaleLaserCharge",
+    "file": "FinaleLaserCharge.wav",
+    "seconds": 1.5,
+    "loop": false,
+    "peak": 0.48,
+    "rms": 0.182034017174365,
+    "robloxId": ""
+  },
+  {
+    "name": "FinaleLaserShot",
+    "file": "FinaleLaserShot.wav",
+    "seconds": 0.55,
+    "loop": false,
+    "peak": 0.48,
+    "rms": 0.1335515287546093,
+    "robloxId": ""
+  },
+  {
+    "name": "FinaleShatter",
+    "file": "FinaleShatter.wav",
+    "seconds": 1.55,
+    "loop": false,
+    "peak": 0.48000000000000004,
+    "rms": 0.061405151460245264,
+    "robloxId": ""
+  }
+]

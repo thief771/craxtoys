@@ -1,0 +1,252 @@
+{
+  "headOnly": true,
+  "nativeHeadPieces": 24,
+  "newMeshParts": 15,
+  "sourceHeadVertexMaxError": 0,
+  "sourceOBJ_SHA256": "f731f741feb90a6857d9d2014bb1d23c43a06c47d99ae0e648915238b3718158",
+  "accessoryTriangles": 24524,
+  "physicalHeadDiameter": 8,
+  "sourceParts": [
+    {
+      "name": "Innerlower1",
+      "vertices": 1009,
+      "faces": 1944
+    },
+    {
+      "name": "Innerupper1",
+      "vertices": 1009,
+      "faces": 1944
+    },
+    {
+      "name": "Eyeright1",
+      "vertices": 370,
+      "faces": 720
+    },
+    {
+      "name": "Eyeleft1",
+      "vertices": 370,
+      "faces": 720
+    },
+    {
+      "name": "Tooth171",
+      "vertices": 738,
+      "faces": 1472
+    },
+    {
+      "name": "Tooth161",
+      "vertices": 739,
+      "faces": 1474
+    },
+    {
+      "name": "Tooth151",
+      "vertices": 738,
+      "faces": 1472
+    },
+    {
+      "name": "Tooth141",
+      "vertices": 738,
+      "faces": 1472
+    },
+    {
+      "name": "Tooth131",
+      "vertices": 738,
+      "faces": 1472
+    },
+    {
+      "name": "Tooth121",
+      "vertices": 738,
+      "faces": 1472
+    },
+    {
+      "name": "Tooth111",
+      "vertices": 739,
+      "faces": 1474
+    },
+    {
+      "name": "Tooth101",
+      "vertices": 738,
+      "faces": 1472
+    },
+    {
+      "name": "Tooth071",
+      "vertices": 738,
+      "faces": 1472
+    },
+    {
+      "name": "Tooth061",
+      "vertices": 738,
+      "faces": 1472
+    },
+    {
+      "name": "Tooth051",
+      "vertices": 738,
+      "faces": 1472
+    },
+    {
+      "name": "Tooth041",
+      "vertices": 738,
+      "faces": 1472
+    },
+    {
+      "name": "Tooth031",
+      "vertices": 738,
+      "faces": 1472
+    },
+    {
+      "name": "Tooth021",
+      "vertices": 738,
+      "faces": 1472
+    },
+    {
+      "name": "Tooth011",
+      "vertices": 738,
+      "faces": 1472
+    },
+    {
+      "name": "Tooth001",
+      "vertices": 738,
+      "faces": 1472
+    },
+    {
+      "name": "Lowergums1",
+      "vertices": 588,
+      "faces": 1019
+    },
+    {
+      "name": "Uppergums1",
+      "vertices": 1185,
+      "faces": 2191
+    },
+    {
+      "name": "Lowershell1",
+      "vertices": 2475,
+      "faces": 4767
+    },
+    {
+      "name": "Uppershell1",
+      "vertices": 3473,
+      "faces": 6753
+    },
+    {
+      "name": "Crossstroke1",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke2",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke3",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke4",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke5",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke6",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke7",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke8",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke9",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke10",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke11",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke12",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke13",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke14",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke15",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke16",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke17",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke18",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke19",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke20",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke21",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke22",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke23",
+      "vertices": 24,
+      "faces": 12
+    },
+    {
+      "name": "Crossstroke24",
+      "vertices": 24,
+      "faces": 12
+    }
+  ],
+  "photo": "User-supplied chat reference, blue/red character; no local image file provided"
+}

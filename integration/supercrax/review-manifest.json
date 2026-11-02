@@ -1,0 +1,86 @@
+[
+  {
+    "path": "ReplicatedStorage.CraxCatalog",
+    "mode": "wrap",
+    "reviewBaseSha256": "69e21b65c663882d98d728bc369c2a7d4f80b205610da905e72c7a4c1fc87d56",
+    "resultSha256": "6b1eaa6f1c0333526dfc00997fe4720120a8801d1e4affedccfddd4c8363a9cc"
+  },
+  {
+    "path": "ReplicatedStorage.CraxSkillCatalog",
+    "mode": "wrap",
+    "reviewBaseSha256": "904ba5a5cbb7e5ed6adfd5a534f932267b1b93fb841d9c12cfe2b5ff1e8ede09",
+    "resultSha256": "c6cb9fe9bc1177d53b3894e2031bd4d0484a28d127f85e8b078e65a8fd2b5723"
+  },
+  {
+    "path": "ReplicatedStorage.CraxEffectsCatalog",
+    "mode": "wrap",
+    "reviewBaseSha256": "0a3850253f55d96fb480d6f427a8d789602f42264631d01d8ed587a26297d867",
+    "resultSha256": "ca9f6e42e4366336f6bae35961a3ecc854b9ded1c5858d734925852da86ba31c"
+  },
+  {
+    "path": "ReplicatedStorage.CraxRouletteConfig",
+    "mode": "wrap",
+    "reviewBaseSha256": "463fb4132bf6a1b5f18632c5e6b7012d534ab8f5f1fef38efc3d4db4d3dd53dc",
+    "resultSha256": "df87946ae7df65bf456890c918e6d073f96c813107aff5099cfcfc71aa322c65"
+  },
+  {
+    "path": "ReplicatedStorage.CraxVictoryCatalog",
+    "mode": "wrap",
+    "reviewBaseSha256": "0f822b9db0020b21315fcf6038ac54fcc90bbf9189a2648070a37cde929ba2e5",
+    "resultSha256": "7b7c5934ce79a186cc2db794a05705393263de5eec397442fea8fb85d490acd8"
+  },
+  {
+    "path": "ServerScriptService.CraxSkinServer",
+    "mode": "wrap",
+    "reviewBaseSha256": "89c2f3eb2f1a26dcaf1d9145432aba379390804ace756bc5a620a2e3fde78152",
+    "resultSha256": "dd9e819bea0cb7ccf41f82bd537054d10b9c29df0f94958bddeaeaf43e2bf306"
+  },
+  {
+    "path": "ServerScriptService.ArenaMovement",
+    "mode": "patch",
+    "reviewBaseSha256": "532f3c0b120d7453a730e3efe33030bee2b4c0a6ed619ef26734f12103abce79",
+    "resultSha256": "06fcb3fd33365991a2d7b814bc10b3e4c97e4eb38472ef45fef8d62b47b0348a"
+  },
+  {
+    "path": "ServerScriptService.CraxPositionLock",
+    "mode": "patch",
+    "reviewBaseSha256": "e740500a958c9c5bfe92b16b066e3335f48931229e27e624888cd14f2d13a721",
+    "resultSha256": "3a5522f4f1dd439c9694c4c761cd5190de31b0798dfaa4c97954c02026ed895c"
+  },
+  {
+    "path": "ServerScriptService.CraxDeadlyRuntime",
+    "mode": "patch",
+    "reviewBaseSha256": "cd0120b7499939a67aa09486e5cf70e7e03f0c00d4db93ec71236e2680d114bf",
+    "resultSha256": "e7d814353d0dc5f0d2af6e60bdd9a97e9c5398d71e0def8da9e34dbdbdad1788"
+  },
+  {
+    "path": "ServerScriptService.FleauRuntime",
+    "mode": "patch",
+    "reviewBaseSha256": "78637ce8a42d448de065676496d6b02892b0491ad930ed770c5d2d5dc13adc00",
+    "resultSha256": "dc5ef7e8b4f8e9fc347522440edba459ef74a661d959046445f9871a97170eb4"
+  },
+  {
+    "path": "ServerScriptService.CombatHealth",
+    "mode": "patch",
+    "reviewBaseSha256": "a3867dca3805f4f6efd861bf9431ce61c872da0bf87113d3755bdf936226f6e2",
+    "resultSha256": "9ed532a159b9811f640e74744c54b2f74e973f5a9c411ee7b4f11166561fcae2"
+  },
+  {
+    "path": "ServerScriptService.RoundManager",
+    "mode": "patch",
+    "reviewBaseSha256": "29f627c233507e87d636c5ae035aef659d0a106cb40aab9e6f9f0001c934e65a",
+    "resultSha256": "4caf58013f97fa75813b3f6c132d480ae38061b309d2d2a46f77709904c0f706"
+  },
+  {
+    "path": "StarterPlayer.StarterPlayerScripts.CopEmClient",
+    "mode": "patch",
+    "reviewBaseSha256": "7e5c5b28e255e1c7a0098a5f20569061a615cf25b26fdbfc96e5678b23ef2a7e",
+    "resultSha256": "d7e268f3db972f6e44a6c7aa1f4445438b2aba95096a56acd1b28c271a8ca31a"
+  },
+  {
+    "path": "ReplicatedStorage.CraxBookCinema",
+    "mode": "patch",
+    "reviewBaseSha256": "02fc9ad39f0696d4073eadb19e52271c70f537cd48ac2212e55d2c1596832079",
+    "resultSha256": "47a7e686eb6acaac8590a77c506b797a790c544961a2e3a3439ac66b559770cc"
+  }
+]

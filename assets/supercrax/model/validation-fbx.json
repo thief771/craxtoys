@@ -1,0 +1,28 @@
+{
+  "reimport": "Blender 4.3.2 FBX",
+  "meshParts": 15,
+  "fitMarkers": 3,
+  "orthogonal": true,
+  "allPartsNonempty": true,
+  "bodyParts": 0,
+  "names": [
+    "FIT_Front",
+    "FIT_HeadCenter",
+    "FIT_Up",
+    "SuperChinBlue",
+    "SuperCurl",
+    "SuperCurl_Ridge",
+    "SuperEmblem_RedShield",
+    "SuperEmblem_S",
+    "SuperEmblem_YellowField",
+    "SuperHairCap",
+    "SuperHairLock_00",
+    "SuperHairLock_01",
+    "SuperHairLock_02",
+    "SuperHairLock_03",
+    "SuperHairLock_04",
+    "SuperHairLock_05",
+    "SuperTemple_-1",
+    "SuperTemple_1"
+  ]
+}

@@ -1,0 +1,220 @@
+[
+  {
+    "path": "ReplicatedStorage.CraxCatalog",
+    "kind": "wrap",
+    "addition": "assert(not data.Crax_Super,'SuperCrax existe déjà dans le catalogue')\nlocal C=require(game:GetService('ReplicatedStorage'):WaitForChild('CraxSuperConfig'))\nlocal base=assert(data.Crax_Monster,'CraxSourire réel absent')\ndata.Crax_Super={DisplayName='SuperCrax',Rarity='Commun',TemplateName='Crax_Super',MaxHealth=C.Health,Speed=assert(base.Speed),CollisionDamage=C.Melee,\n Description='Le vrai sourire Craxtoys, une boucle héroïque et une volonté d’acier.',\n PowerDescription='Dash circulaire : trois tours en 1,5 seconde, Homme d’acier durant l’activation et 16 dégâts par ennemi et par tour. Délai serveur de 8 à 12 secondes actives.',\n Effects={'SuperSteel','SuperFreeze','SuperKryptonite'},Ability={Id=C.AbilityId,DisplayName='Dash circulaire',Damage=C.Melee,Cooldown=C.DashWait[1]}}"
+  },
+  {
+    "path": "ReplicatedStorage.CraxSkillCatalog",
+    "kind": "wrap",
+    "addition": "assert(not data.Crax_Super,'SuperCrax existe déjà dans le livre')\nlocal reference=assert(data.Crax_Monster).Upgrades\nlocal upgrades={\n {Id='SuperLaser',Name='RAYON LASER',Description='Deux rayons rouges aux directions aléatoires indépendantes, pendant 2,5 s. Au maximum 15 PV/s par victime, même si les deux rayons touchent : 37,5 dégâts de base pour une exposition complète. Délai de 5 à 8 s actives après la fin.'},\n {Id='SuperFrost',Name='SOUFFLE GELÉ',Description='Après trois mêlées efficaces : canalisation mobile de 2 s, puis souffle de 3,5 s vers le coin le plus éloigné de l’arène. Gel entretenu jusqu’à 5 s après la dernière exposition. Une nouvelle mêlée de SuperCrax brise ce gel pour 35 dégâts au total, sans regel par ce même souffle.'},\n {Id='SuperInvincible',Name=\"L’INVINCIBLE SUPERCRAX\",Description='Un dégât ordinaire mortel est intercepté avant la mort : maintien strict à 1 PV, aucun soin et protection ordinaire pour le reste du round. Les pouvoirs restent actifs. Une kryptonite liée au héros apparaît : le toucher tue le héros, même en acier. Un ennemi peut la porter pour +50 % de vitesse.'},\n {Id='SuperFinale',Name='EXÉCUTION MAX',Description='À chaque victoire de SuperCrax MAX : vol près du vaincu, congélation complète, charge rouge des yeux de 1,5 s, lasers puis éclatement de la victime et de la glace. Aucun dégât ni récompense supplémentaire.'}}\nfor i,u in ipairs(upgrades)do local p=assert(reference[i]);u.Coins=assert(p.Coins);u.Gems=assert(p.Gems);u.Status=u.Name end\nlocal order=0;for _,v in pairs(data)do if type(v)=='table'then order=math.max(order,v.Order or 0)end end\ndata.Crax_Super={Order=order+1,AbilityId='SuperHero',DisplayName='SuperCrax',Enabled=true,Upgrades=upgrades,Finale=upgrades[4]}"
+  },
+  {
+    "path": "ReplicatedStorage.CraxEffectsCatalog",
+    "kind": "wrap",
+    "addition": "data.SuperSteel={DisplayName=\"HOMME D’ACIER\",Description='Invulnérable aux dégâts ordinaires pendant les 1,5 s du dash. La kryptonite du héros reste mortelle.',Icon='Steel',Image='',Color=Color3.fromRGB(177,205,223),Duration=1.5}\ndata.SuperFreeze={DisplayName='GEL',Description='Immobilisé. Durée de 5 s rafraîchie sous le souffle. Une mêlée du SuperCrax poseur brise sa glace pour 35 dégâts au total, sans cumul de vulnérabilité générale.',Icon='Ice',Image='',Color=Color3.fromRGB(154,235,255),Duration=5}\ndata.SuperKryptonite={DisplayName='KRYPTONITE',Description='Cristal lié à un SuperCrax invincible. Le porteur gagne 50 % de vitesse sans cumul ; toucher le héros concerné le tue immédiatement.',Icon='Crystal',Image='',Color=Color3.fromRGB(78,239,82)}"
+  },
+  {
+    "path": "ReplicatedStorage.CraxRouletteConfig",
+    "kind": "wrap",
+    "addition": "local catalog=require(game:GetService('ReplicatedStorage'):WaitForChild('CraxCatalog'))\nlocal common,total={},0\nfor _,e in ipairs(data.Pool)do\n assert(e.Id~='Crax_Super','SuperCrax déjà présent dans le tirage')\n if catalog[e.Id]and catalog[e.Id].Rarity=='Commun'then common[#common+1]=e;total=total+e.Weight end\nend\nassert(#common>0 and total>0,'Groupe Commun absent')\nlocal share=total/(#common+1);for _,e in ipairs(common)do e.Weight=share end\ndata.Pool[#data.Pool+1]={Id='Crax_Super',Weight=total-share*#common}\nassert(data.DuplicateGems.Commun~=nil,'Compensation des doublons Commune absente')"
+  },
+  {
+    "path": "ReplicatedStorage.CraxVictoryCatalog",
+    "kind": "wrap",
+    "addition": "local C=require(game:GetService('ReplicatedStorage'):WaitForChild('CraxSuperConfig'))\ndata.Crax_Super={Id='SuperFinale',DisplayName='EXÉCUTION MAX',MinimumLevel=4,IntroDuration=0,Duration=C.Finale.ReturnEnd,ZoomDuration=0,HoldDuration=0,Description='Gel, charge laser de 1,5 s, puis éclatement du vaincu. Présentation de victoire uniquement.'}"
+  },
+  {
+    "path": "ServerScriptService.CraxSkinServer",
+    "kind": "wrap",
+    "addition": "local appearance=require(game:GetService('ReplicatedStorage'):WaitForChild('CraxSuperAppearance'))\nlocal apply=data.Apply\nfunction data.Apply(model,id,config)\n appearance.Restore(model);apply(model,id,config)\n if id=='Crax_Super'then appearance.Apply(model,assert(game:GetService('ReplicatedStorage'):FindFirstChild('CraxSuperImportedAssets'),'Importer les accessoires de SuperCrax'))end\nend"
+  },
+  {
+    "path": "ServerScriptService.ArenaMovement",
+    "kind": "patch",
+    "prepend": "local SuperCraxV1=require(game:GetService('ServerScriptService'):WaitForChild('CraxSuperRuntime'))\n",
+    "replacements": [
+      {
+        "before": "local function launch()",
+        "after": "local function launch()\n SuperCraxV1.Begin(fighters)"
+      },
+      {
+        "before": "Golden.Step(step*Deadly.CinematicScale(),fighters,alive and not frozen)",
+        "after": "SuperCraxV1.Step(step*Deadly.CinematicScale(),fighters,alive and not frozen and not state:GetAttribute('GhostNightActive')and workspace:GetServerTimeNow()>=(state:GetAttribute('GhostFreezeUntil')or 0))\n  alive=alive and state:GetAttribute('Phase')=='Fighting'\n  Golden.Step(step*Deadly.CinematicScale(),fighters,alive and not frozen)"
+      },
+      {
+        "before": "if alive and not frozen and(state:GetAttribute('GhostNightActive')or not Fantastic.Hold(f))",
+        "after": "if alive and not frozen and not SuperCraxV1.Held(f.model)and(state:GetAttribute('GhostNightActive')or not Fantastic.Hold(f))"
+      },
+      {
+        "before": "f.velocity * Plumber.Speed(f)",
+        "after": "f.velocity * SuperCraxV1.Speed(f.model) * Plumber.Speed(f)"
+      },
+      {
+        "before": "f.velocity.Magnitude*Plumber.Speed(f)",
+        "after": "f.velocity.Magnitude*SuperCraxV1.Speed(f.model)*Plumber.Speed(f)"
+      },
+      {
+        "before": "elseif distance < radius and not Plumber.Hold(a.model)",
+        "after": "elseif distance < radius and not SuperCraxV1.SuppressNormalContact(a.model,b.model)and not Plumber.Hold(a.model)"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.CraxPositionLock",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "function M.Lock(f)\n if records[f.model]then return end",
+        "after": "function M.Lock(f,reason)\n reason=reason or 'Fantastic'\n if records[f.model]then records[f.model].reasons[reason]=true;return end"
+      },
+      {
+        "before": "restoring=false}",
+        "after": "restoring=false,reasons={[reason]=true}}"
+      },
+      {
+        "before": "function M.Unlock(f)\n local r=records[f.model];if not r then return end",
+        "after": "function M.Unlock(f,reason)\n local r=records[f.model];if not r then return end\n r.reasons[reason or 'Fantastic']=nil;if next(r.reasons)then return end"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.CraxDeadlyRuntime",
+    "kind": "patch",
+    "prepend": "local _superBridge\nlocal function SuperCraxBridgeV1()if not _superBridge then _superBridge=require(game:GetService('ServerScriptService'):WaitForChild('CraxSuperRuntime'))end;return _superBridge end\n",
+    "replacements": [
+      {
+        "before": "speed=speed*M.Slow(n.model)",
+        "after": "speed=speed*SuperCraxBridgeV1().Speed(n.model)*M.Slow(n.model)"
+      },
+      {
+        "before": "local budget=math.max(0,dt)*100*math.max(0,slow)",
+        "after": "local budget=math.max(0,dt)*100*SuperCraxBridgeV1().Speed(n.model)*math.max(0,slow)"
+      },
+      {
+        "before": "+dt*2.8",
+        "after": "+dt*2.8*SuperCraxBridgeV1().Speed(n.model)"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.FleauRuntime",
+    "kind": "patch",
+    "prepend": "local _superBridge\nlocal function SuperCraxBridgeV1()if not _superBridge then _superBridge=require(game:GetService('ServerScriptService'):WaitForChild('CraxSuperRuntime'))end;return _superBridge end\n",
+    "replacements": [
+      {
+        "before": "local from=f.position;local step=math.min(d.Magnitude,speed*dt)",
+        "after": "speed=speed*SuperCraxBridgeV1().Speed(m)\n     local from=f.position;local step=math.min(d.Magnitude,speed*dt)"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.CombatHealth",
+    "kind": "patch",
+    "prepend": "local SuperCraxV1=require(game:GetService('ServerScriptService'):WaitForChild('CraxSuperRuntime'))\n",
+    "replacements": [
+      {
+        "before": "local function report(a,b,lost,kind)",
+        "after": "local function report(a,b,lost,kind)\n SuperCraxV1.PowerResult(a,b,lost,kind)"
+      },
+      {
+        "before": "local a,b=states[attacker],states[defender];if not a or not b or a.health<=0 or b.health<=0 then return end",
+        "after": "local a,b=states[attacker],states[defender];if not a or not b or a.health<=0 or b.health<=0 then return end\n if SuperCraxV1.TryCrystalContact(attacker,defender)then return end"
+      },
+      {
+        "before": "if amount==nil then amount=attacker:GetAttribute('BiteDamage')or 0 end",
+        "after": "if amount==nil then amount=attacker:GetAttribute('BiteDamage')or 0 end\n if collision then amount=SuperCraxV1.ContactDamage(attacker,defender,amount)end"
+      },
+      {
+        "before": "local fleauRecoilMode",
+        "after": "if collision then recoil=SuperCraxV1.ContactDamage(defender,attacker,recoil)end\n local fleauRecoilMode"
+      },
+      {
+        "before": "local lost=math.min(b.health,amount);local attackerLost=math.min(a.health,incoming)",
+        "after": "amount=SuperCraxV1.Incoming(defender,amount,b.health,attacker,kind)\n if collision then incoming=SuperCraxV1.Incoming(attacker,incoming,a.health,defender,'Collision')end\n local lost=math.min(b.health,amount);local attackerLost=math.min(a.health,incoming)"
+      },
+      {
+        "before": "update(attacker);update(defender);",
+        "after": "update(attacker);update(defender);SuperCraxV1.Confirm(attacker,defender,lost,attackerLost,collision);"
+      },
+      {
+        "before": "if not Fleau.HealAllowed(model)then return end",
+        "after": "if not Fleau.HealAllowed(model)then return end\n amount=SuperCraxV1.AllowHeal(model,amount);if amount<=0 then return end"
+      },
+      {
+        "before": "state:SetAttribute('HealthReady',true)",
+        "after": "SuperCraxV1.KillHealthBatch=function(requests,expectedRound,expectedMatch)\n if #requests==0 or state:GetAttribute('Phase')~='Fighting'or state:GetAttribute('RoundId')~=expectedRound or state:GetAttribute('CraxMatchToken')~=expectedMatch then return false end\n local unique={}\n for _,request in ipairs(requests)do\n  local model=request.model;local r=states[model]\n  if unique[model]or not r or r.health<=0 or not SuperCraxV1.ValidateCrystalKill(model,request.carrier,expectedRound,expectedMatch,request.token)then return false end\n  unique[model]=true\n end\n for _,request in ipairs(requests)do local model=request.model;local r=states[model];local loss=r.health;r.health=0;update(model);if request.carrier then report(request.carrier,model,loss,'SuperKryptonite')end end\n finish();return true\nend\nstate:SetAttribute('HealthReady',true)"
+      },
+      {
+        "variants": [
+          {
+            "before": "amount=Inverted.Final(defender,adjust(defender,Inverted.RawInput(attacker,defender,amount),kind),attacker)",
+            "after": "amount=kind=='SuperLaser'and adjust(defender,amount,kind)or Inverted.Final(defender,adjust(defender,Inverted.RawInput(attacker,defender,amount),kind),attacker)"
+          },
+          {
+            "before": "amount=adjust(defender,math.floor(amount+.5),kind)",
+            "after": "amount=kind=='SuperLaser'and adjust(defender,amount,kind)or adjust(defender,math.floor(amount+.5),kind)"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.RoundManager",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "state:SetAttribute(\"RoundVictoryStartedAt\",start)",
+        "after": "if model and model:GetAttribute('CraxId')=='Crax_Super'then\n  state:SetAttribute('SuperVictoryCrax','Crax_Super');state:SetAttribute('SuperVictoryLevel',model:GetAttribute('CraxSkillLevel')or 0)\n  state:SetAttribute('SuperVictoryMatch',state:GetAttribute('CraxMatchToken'));state:SetAttribute('SuperVictoryOwner',model.Name)\n end\n state:SetAttribute(\"RoundVictoryStartedAt\",start)"
+      }
+    ]
+  },
+  {
+    "path": "StarterPlayer.StarterPlayerScripts.CopEmClient",
+    "kind": "patch",
+    "prepend": "local function superSkillIconV1(parent,kind,x,y,size)\n local C=require(game:GetService('ReplicatedStorage'):WaitForChild('CraxSuperConfig'))\n local key=({SuperLaser='Laser',SuperFrost='Frost',SuperInvincible='Invincible',SuperFinale='Max'})[kind]\n local holder=Instance.new('Frame');holder.Position=UDim2.fromOffset(x,y);holder.Size=UDim2.fromOffset(size,size);holder.BackgroundColor3=Color3.fromRGB(14,33,63);holder.BorderSizePixel=0;holder.Parent=parent\n local corner=Instance.new('UICorner');corner.CornerRadius=UDim.new(.2,0);corner.Parent=holder\n if key and C.Icons[key]~=''then local image=Instance.new('ImageLabel');image.Size=UDim2.fromScale(1,1);image.BackgroundTransparency=1;image.ScaleType=Enum.ScaleType.Fit;image.Image=C.Icons[key];image.ZIndex=4;image.Parent=holder\n else\n  local text=Instance.new('TextLabel');text.Size=UDim2.fromScale(1,1);text.BackgroundTransparency=1;text.Font=Enum.Font.FredokaOne;text.TextScaled=true;text.Text=({SuperLaser='LASER',SuperFrost='GEL',SuperInvincible='1 PV',SuperFinale='MAX'})[kind]or'S';text.TextColor3=key=='Laser'and Color3.fromRGB(255,55,55)or(key=='Invincible'and Color3.fromRGB(90,240,105)or Color3.fromRGB(200,243,255));text.ZIndex=4;text.Parent=holder\n end\n return holder\nend\n",
+    "replacements": [
+      {
+        "before": "local function emblem(parent,kind,color,x,y,size)",
+        "after": "local function emblem(parent,kind,color,x,y,size)\n if type(kind)=='string'and kind:sub(1,5)=='Super'then superSkillIconV1(parent,kind,x,y,size);return end"
+      },
+      {
+        "variants": [
+          {
+            "before": "if currentCrax~=\"Crax_Inverted\"and lv>=4 and TrophyIcons then",
+            "after": "if currentCrax~=\"Crax_Super\"and currentCrax~=\"Crax_Inverted\"and lv>=4 and TrophyIcons then"
+          },
+          {
+            "before": "if lv>=4 and TrophyIcons then",
+            "after": "if currentCrax~=\"Crax_Super\"and lv>=4 and TrophyIcons then"
+          }
+        ]
+      },
+      {
+        "variants": [
+          {
+            "before": "if i==4 and currentCrax==\"Crax_Inverted\"then",
+            "after": "    if i==4 and currentCrax==\"Crax_Super\"then\n     if revealed then superSkillIconV1(node,upgrade.Id,3,3,56)else local mark=text(node,\"?\",0,0,62,62,35,C.muted);mark.TextXAlignment=Enum.TextXAlignment.Center end\n    elseif i==4 and currentCrax==\"Crax_Inverted\"then"
+          },
+          {
+            "before": "    if i==4 then\n     local holder=",
+            "after": "    if i==4 and currentCrax==\"Crax_Super\"then\n     if revealed then superSkillIconV1(node,upgrade.Id,3,3,56)else local mark=text(node,\"?\",0,0,62,62,35,C.muted);mark.TextXAlignment=Enum.TextXAlignment.Center end\n    elseif i==4 then\n     local holder="
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "path": "ReplicatedStorage.CraxBookCinema",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "self.trophyArt:ClearAllChildren()",
+        "after": "self.trophyArt:ClearAllChildren()\n if id=='Crax_Super'then\n  local C=require(game:GetService('ReplicatedStorage'):WaitForChild('CraxSuperConfig'));local image=C.Icons.Max\n  if image~=''then make('ImageLabel',{Size=UDim2.fromScale(1,1),BackgroundTransparency=1,Image=image,ScaleType=Enum.ScaleType.Fit,ZIndex=113},self.trophyArt)\n  else make('TextLabel',{Size=UDim2.fromScale(1,1),BackgroundTransparency=1,Text='SUPER MAX',TextScaled=true,Font=Enum.Font.FredokaOne,TextColor3=Color3.fromRGB(246,192,42),ZIndex=113},self.trophyArt)end\n  self.trophyIcon.TrophyTitle.Text='EXÉCUTION MAX';return\n end"
+      }
+    ]
+  }
+]

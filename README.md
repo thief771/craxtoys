@@ -1,4 +1,18 @@
-# 7 Deadly Crax — InvertedCrax
+# 7 Deadly Crax — SuperCrax et InvertedCrax
+
+**[Télécharger SuperCrax-TOTAL.zip](dist/SuperCrax-TOTAL.zip)** · [Installation Studio](docs/supercrax/INSTALLATION.md) · [État réel et imports restants](docs/supercrax/ETAT.md)
+
+SuperCrax : tête seule dérivée du vrai CraxSourire, chevelure sculptée avec boucle, écusson rouge/jaune, trois pouvoirs cumulatifs et exécution MAX. Sources Blender/FBX/OBJ, quatre illustrations du livre, 19 WAV originaux, VFX, intégration aux systèmes existants, installateur réversible et tests inclus.
+
+![SuperCrax, rendu du modèle livré](assets/supercrax/model/trois-quarts.png)
+
+[Face](assets/supercrax/model/face.png) · [Profil](assets/supercrax/model/profil.png) · [Dos](assets/supercrax/model/dos.png) · [Comparaison avec la vraie base](assets/supercrax/model/comparaison-base-super.png) · [Choix confirmés et provisoires](docs/supercrax/DECISIONS.md) · [Tests exécutés](docs/supercrax/TESTS.md)
+
+**Ce lot nécessite l’import FBX, des sons et des images dans Roblox Studio.** Aucune ressource Roblox fictive, aucune place publiée ou testée ici. Après import des accessoires, la [commande complète](integration/supercrax/INSTALLER_SUPERCRAX.lua) s’exécute en STOP dans la place existante ; elle préserve les sources actuelles et leurs correctifs indépendants. Nouveau Play requis ensuite.
+
+---
+
+# InvertedCrax
 
 Personnage **tête seule**, dérivé du véritable Crax Sourire : vinyle noir, yeux blancs, sourire à dents noires et X blanc derrière la tête.
 

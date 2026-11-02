@@ -4,8 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node tests/run_inverted.mjs && node tests/run_installer.mjs && node tests/run_client.mjs",
-    "build:installer": "python3 tools/build_inverted_package.py"
+    "test": "node tests/run_inverted.mjs && node tests/run_installer.mjs && node tests/run_client.mjs && npm run test:super",
+    "build:installer": "python3 tools/build_inverted_package.py",
+    "test:super": "node tests/run_super.mjs && node tests/run_super_catalog.mjs && node tests/run_super_installer.mjs && SUPER_BASE=1 node tests/run_super_installer.mjs && node tests/run_super_client.mjs",
+    "build:super": "python3 tools/build_super_package.py",
+    "package:super": "python3 tools/build_super_zip.py"
   },
   "devDependencies": {
     "luau-web": "1.5.1"
