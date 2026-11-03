@@ -1,0 +1,15 @@
+local n=0;local function check(v,msg)n+=1;assert(v,msg)end
+local rand=function(a,b)return(a+b)*.5 end
+local r=R.New(1,rand,C);local other=R.New(1,rand,C)
+local count,burst=R.Mark(r,'first',0,C);check(count==0 and not burst,'zero damage no mark')
+count,burst=R.Mark(r,'first',8,C);check(count==1 and not burst,'first effective mark')
+R.Mark(r,'second',8,C);check(r.marks.second.count==1 and r.marks.first.count==1,'victims isolated')
+R.Mark(other,'first',8,C);check(other.marks.first.count==1,'owners isolated')
+R.Mark(r,'first',8,C);count,burst=R.Mark(r,'first',8,C);check(count==0 and burst and r.marks.first==nil,'third consumes exactly three')
+r.time=20;count=R.Mark(r,'second',8,C);check(count==1,'old marks expire')
+local base=R.New(0,rand,C);count,burst=R.Mark(base,'first',8,C);check(count==0 and not burst,'base has no marks')
+r=R.New(2,rand,C);check(not R.Lost(r,29,C,true),'threshold below30');check(R.Lost(r,5,C,true)and r.lost==0,'threshold30 and overshoot discarded');check(R.Reduce(r,20,C)==13,'exact35 percent reduction');check(not R.Lost(r,70,C,true)and r.lost==0,'no recharge while active');r.time=4;check(R.Reduce(r,20,C)==20,'reduction expires exactly4');check(not R.Lost(r,30,C,false),'silence delays new armour');check(r.lost==30,'threshold retained pending next eligible hit')
+local a=Vector2.new(0,0);local b=Vector2.new(10,0);local p=Vector2.new(5,0);local yes,t=R.Sweep(a,b,p,1);check(yes and math.abs(t-.4)<1e-9,'first continuous capsule contact, not closest center');check(not R.Sweep(a,b,Vector2.new(5,3),1),'wide miss');yes,t=R.Sweep(a,a,a,1);check(yes and t==0,'zero move overlapping');check(not R.Sweep(a,a,p,1),'zero move outside');check((R.StepTowards(a,b,2)-Vector2.new(2,0)).Magnitude<1e-9,'bounded pull movement');check((R.StepTowards(a,b,20)-b).Magnitude<1e-9,'no overshoot')
+check(C.Health==125 and C.Melee==8 and C.Damage==16,'creator fixed stats');check(C.BurstDamage==15 and C.BurstHeal==5,'confirmed contamination');check(C.ArmourReduction==.35 and C.ArmourDuration==4,'confirmed armour');check(C.ParasiteDuration*C.ParasiteDPS==9 and C.ParasiteSlow==.75,'confirmed parasite budget');check(C.PricesEnabled,'creator confirmed Epic price grid');check(C.AtlasId==''and C.Icons.Max=='','no invented production asset IDs')
+local portrait=R.FitDistance(14,10,9,.5,36);local landscape=R.FitDistance(14,10,9,2,36);check(portrait>landscape,'portrait reserves wider silhouette');check((portrait-4.5)*2*math.tan(math.rad(18))*.5>=14,'all tentacles fit viewport width');check((landscape-4.5)*2*math.tan(math.rad(18))>=10,'full head fits viewport height')
+print('SYM PURE RULES PASS',n,'assertions')

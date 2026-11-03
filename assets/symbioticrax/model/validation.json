@@ -1,0 +1,10 @@
+{
+  "nativeVerticesChecked": 22865,
+  "nativeVertexMaxError": 0,
+  "accessoryMeshes": 31,
+  "markers": 13,
+  "orthogonal": true,
+  "fbxRoundtrip": "Blender 4.3.2",
+  "body": false,
+  "trianglesAfterImport": 56359
+}

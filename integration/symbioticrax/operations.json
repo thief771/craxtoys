@@ -1,0 +1,210 @@
+[
+  {
+    "path": "ReplicatedStorage.CraxCatalog",
+    "kind": "wrap",
+    "addition": "assert(not data.Crax_Symbioti,'SymbiotiCrax déjà défini')\nlocal C=require(game:GetService('ReplicatedStorage').CraxSymConfig);local base=assert(data.Crax_Monster);local epic=assert(data.Crax_Ghosty)\ndata.Crax_Symbioti={DisplayName='SymbiotiCrax',Rarity=epic.Rarity,RarityColor=epic.RarityColor,TemplateName=C.Id,MaxHealth=C.Health,CollisionDamage=C.Melee,Speed=base.Speed,\n Description='Le vrai Crax Sourire transformé : langue recourbée, crocs et filaments noirs.',PowerDescription='Langue prédatrice : capture et traction progressive, puis morsure à 16 dégâts. Délai de 8 à 12 secondes actives après rétraction. Les contacts ordinaires ne s’ajoutent pas à la capture.',Effects={'SymMarks','SymArmour','SymParasite'},Ability={Id=C.AbilityId,DisplayName='LANGUE PRÉDATRICE',Damage=C.Damage,Cooldown=C.Wait[1]}}"
+  },
+  {
+    "path": "ReplicatedStorage.CraxSkillCatalog",
+    "kind": "wrap",
+    "addition": "assert(not data.Crax_Symbioti)\nlocal C=require(game:GetService('ReplicatedStorage').CraxSymConfig);local prices=assert(data.Crax_Ghosty).Upgrades\nlocal list={\n {Id='SymMarks',Name='CONTAMINATION',Description='Trois mêlées ayant réellement retiré des PV sur la même victime font éclater les marques : 15 dégâts supplémentaires, puis 5 PV soignés seulement si l’explosion retire des PV. Marques : 15 s, rafraîchies ; langue et parasite exclus.'},\n {Id='SymArmour',Name='ARMURE VIVANTE',Description='Après 30 PV réellement perdus : réduction de 35 % pendant 4 s sur les coups suivants. Dépassement perdu, recharge suspendue pendant la protection. Aucun sauvetage mortel.'},\n {Id='SymParasite',Name='NOUS SOMMES DEUX',Description='Un parasite poursuit une cible pendant au plus 4 s, s’accroche 3 s : vitesse ×0,75 et 3 dégâts/s, puis revient. 5 PV de soin au retour uniquement après dégâts effectifs. Un seul parasite par héros ; délai 12–16 s après retour.'},\n {Id='SymFinale',Name=C.TrophyTitle,Status=C.TrophyTitle,TrophyId=C.TrophyId,Description='À chaque victoire MAX : déploiement d’une énorme mâchoire, capture du vrai vaincu, traction et morsure, rétraction puis pose et titre doré. Présentation uniquement, aucun gain supplémentaire.'}}\nfor i,u in ipairs(list)do u.Coins=assert(prices[i].Coins);u.Gems=assert(prices[i].Gems)end\nlocal order=0;for _,v in pairs(data)do if type(v)=='table'then order=math.max(order,v.Order or 0)end end\ndata.Crax_Symbioti={Order=order+1,AbilityId=C.AbilityId,DisplayName='SymbiotiCrax',Enabled=C.PricesEnabled,Upgrades=list,Finale=list[4]}"
+  },
+  {
+    "path": "ReplicatedStorage.CraxEffectsCatalog",
+    "kind": "wrap",
+    "addition": "data.SymMarks={DisplayName='CONTAMINATION',Description='Trois marques du même SymbiotiCrax déclenchent 15 dégâts supplémentaires. Expiration après 15 s sans nouvelle marque.',Icon='SymMarks',Image='',Color=Color3.fromRGB(110,115,130)}\ndata.SymArmour={DisplayName='ARMURE VIVANTE',Description='35 % de dégâts reçus en moins pendant 4 s. Aucun soin ou sauvetage automatique.',Icon='SymArmour',Image='',Duration=4,Color=Color3.fromRGB(80,86,100)}\ndata.SymParasite={DisplayName='PARASITE',Description='Vitesse ×0,75 pendant l’accrochage ; 3 dégâts/s durant au plus 3 s.',Icon='SymParasite',Image='',Duration=3,Color=Color3.fromRGB(178,73,100)}"
+  },
+  {
+    "path": "ReplicatedStorage.CraxRouletteConfig",
+    "kind": "wrap",
+    "addition": "local catalog=require(game:GetService('ReplicatedStorage').CraxCatalog);local epic={};local total=0\nfor _,e in ipairs(data.Pool)do assert(e.Id~='Crax_Symbioti');if catalog[e.Id].Rarity==catalog.Crax_Symbioti.Rarity then epic[#epic+1]=e;total+=e.Weight end end\nassert(#epic>0 and total>0);local share=total/(#epic+1);for _,e in ipairs(epic)do e.Weight=share end\ndata.Pool[#data.Pool+1]={Id='Crax_Symbioti',Weight=total-share*#epic} -- provisional equal redistribution within unchanged Epic mass\n"
+  },
+  {
+    "path": "ReplicatedStorage.CraxVictoryCatalog",
+    "kind": "wrap",
+    "addition": "local C=require(game:GetService('ReplicatedStorage').CraxSymConfig)\ndata.Crax_Symbioti={Id='SymFinale',DisplayName=C.TrophyTitle,TrophyId=C.TrophyId,TrophyColor=Color3.fromRGB(255,211,87),MinimumLevel=4,IntroDuration=0,Duration=C.Finale.ReturnEnd,ZoomDuration=0,HoldDuration=0,Description='Victoire MAX : mâchoire, capture, morsure et retour. Aucun dégât ni récompense supplémentaire.'}"
+  },
+  {
+    "path": "ServerScriptService.CraxSkinServer",
+    "kind": "wrap",
+    "addition": "local appearance=require(game:GetService('ReplicatedStorage').CraxSymAppearance);local apply=data.Apply\nfunction data.Apply(model,id,config)appearance.Restore(model);apply(model,id,config);if id=='Crax_Symbioti'then appearance.Apply(model,assert(game:GetService('ReplicatedStorage'):FindFirstChild('CraxSymImportedAssets')))end end"
+  },
+  {
+    "path": "ServerScriptService.CraxPositionLock",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "return M",
+        "after": "-- A controlled pull may move ONLY its own exclusive lock. Other statuses keep priority.\nfunction M.Move(f,reason,position)\n local r=records[f.model];if not r or not r.reasons[reason]then return false end\n for key in pairs(r.reasons)do if key~=reason then return false end end\n r.position=position;r.pivot=CFrame.new(position.X,position.Y,r.depth)*r.rotation;f.position=position\n f.model:SetAttribute('FantasticAnchorPosition',Vector3.new(position.X,position.Y,r.depth));M.Enforce(f);return true\nend\nreturn M"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.ArenaMovement",
+    "kind": "patch",
+    "prepend": "local SymV1=require(game:GetService('ServerScriptService'):WaitForChild('CraxSymRuntime'))\n",
+    "replacements": [
+      {
+        "before": " SuperCraxV1.Begin(fighters)",
+        "after": " SuperCraxV1.Begin(fighters)\n SymV1.Begin(fighters)"
+      },
+      {
+        "before": "  alive=alive and state:GetAttribute('Phase')=='Fighting'",
+        "after": "  SymV1.Step(step*Deadly.CinematicScale(),fighters,alive and not frozen and not state:GetAttribute('GhostNightActive')and workspace:GetServerTimeNow()>=(state:GetAttribute('GhostFreezeUntil')or 0))\n  alive=alive and state:GetAttribute('Phase')=='Fighting'"
+      },
+      {
+        "before": "not SuperCraxV1.Held(f.model)and",
+        "after": "not SymV1.Held(f.model)and not SuperCraxV1.Held(f.model)and"
+      },
+      {
+        "before": "f.velocity * SuperCraxV1.Speed(f.model)",
+        "after": "f.velocity * SymV1.Speed(f.model) * SuperCraxV1.Speed(f.model)"
+      },
+      {
+        "before": "f.velocity.Magnitude*SuperCraxV1.Speed(f.model)",
+        "after": "f.velocity.Magnitude*SymV1.Speed(f.model)*SuperCraxV1.Speed(f.model)"
+      },
+      {
+        "before": "not SuperCraxV1.SuppressNormalContact(a.model,b.model)",
+        "after": "not SymV1.SuppressContact(a.model,b.model)and not SuperCraxV1.SuppressNormalContact(a.model,b.model)"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.CraxDeadlyRuntime",
+    "kind": "patch",
+    "prepend": "local function SymBridgeV1()return require(game:GetService('ServerScriptService'):WaitForChild('CraxSymRuntime'))end\n",
+    "replacements": [
+      {
+        "before": "speed=speed*SuperCraxBridgeV1().Speed(n.model)",
+        "after": "speed=speed*SymBridgeV1().Speed(n.model)*SuperCraxBridgeV1().Speed(n.model)"
+      },
+      {
+        "before": "*100*SuperCraxBridgeV1().Speed(n.model)",
+        "after": "*100*SymBridgeV1().Speed(n.model)*SuperCraxBridgeV1().Speed(n.model)"
+      },
+      {
+        "before": "+dt*2.8*SuperCraxBridgeV1().Speed(n.model)",
+        "after": "+dt*2.8*SymBridgeV1().Speed(n.model)*SuperCraxBridgeV1().Speed(n.model)"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.FleauRuntime",
+    "kind": "patch",
+    "prepend": "local function SymBridgeV1()return require(game:GetService('ServerScriptService'):WaitForChild('CraxSymRuntime'))end\n",
+    "replacements": [
+      {
+        "before": "speed=speed*SuperCraxBridgeV1().Speed(m)",
+        "after": "speed=speed*SymBridgeV1().Speed(m)*SuperCraxBridgeV1().Speed(m)"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.CombatHealth",
+    "kind": "patch",
+    "prepend": "local SymV1=require(game:GetService('ServerScriptService'):WaitForChild('CraxSymRuntime'))\n",
+    "replacements": [
+      {
+        "before": "local function report(a,b,lost,kind)",
+        "after": "local function report(a,b,lost,kind)\n SymV1.PowerResult(a,b,lost,kind)"
+      },
+      {
+        "before": "amount=kind=='SuperLaser'and",
+        "after": "amount=(kind=='SuperLaser'or kind=='SymParasite')and"
+      },
+      {
+        "before": "amount=SuperCraxV1.Incoming(defender,amount,b.health,attacker,kind)",
+        "after": "amount=SymV1.Reduce(defender,amount);incoming=SymV1.Reduce(attacker,incoming)\n amount=SuperCraxV1.Incoming(defender,amount,b.health,attacker,kind)"
+      },
+      {
+        "before": "SuperCraxV1.Confirm(attacker,defender,lost,attackerLost,collision);",
+        "after": "SymV1.Confirm(attacker,defender,lost,attackerLost,collision);SuperCraxV1.Confirm(attacker,defender,lost,attackerLost,collision);"
+      },
+      {
+        "before": "if Deadly.OnHeal then Deadly.OnHeal(model,r.health-before,source)end",
+        "after": "SymV1.Healed(model,r.health-before)\n if Deadly.OnHeal then Deadly.OnHeal(model,r.health-before,source)end"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.RoundManager",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "state:SetAttribute(\"RoundVictoryStartedAt\",start)",
+        "after": "if model and model:GetAttribute('CraxId')=='Crax_Symbioti'then\n state:SetAttribute('SymVictoryCrax','Crax_Symbioti');state:SetAttribute('SymVictoryLevel',model:GetAttribute('CraxSkillLevel')or 0);state:SetAttribute('SymVictoryMatch',state:GetAttribute('CraxMatchToken'))\n end\n state:SetAttribute(\"RoundVictoryStartedAt\",start)"
+      }
+    ]
+  },
+  {
+    "path": "StarterPlayer.StarterPlayerScripts.CopEmClient",
+    "kind": "patch",
+    "prepend": "local function symIconV1(parent,id,x,y,size)\n local C=require(game:GetService('ReplicatedStorage').CraxSymConfig);local key=({SymMarks='Marks',SymArmour='Armour',SymParasite='Parasite',SymFinale='Max'})[id]\n local f=Instance.new('Frame');f.Size=UDim2.fromOffset(size,size);f.Position=UDim2.fromOffset(x,y);f.BackgroundColor3=Color3.fromRGB(16,18,26);f.BorderSizePixel=0;f.Parent=parent\n local corner=Instance.new('UICorner');corner.CornerRadius=UDim.new(.2,0);corner.Parent=f\n if key and C.Icons[key]~=''then local i=Instance.new('ImageLabel');i.Size=UDim2.fromScale(1,1);i.BackgroundTransparency=1;i.Image=C.Icons[key];i.ScaleType=Enum.ScaleType.Fit;i.ZIndex=5;i.Parent=f\n else local t=Instance.new('TextLabel');t.Size=UDim2.fromScale(1,1);t.Text=({Marks='3',Armour='35%',Parasite='DUO',Max='MAX'})[key]or'S';t.Font=Enum.Font.FredokaOne;t.TextScaled=true;t.BackgroundTransparency=1;t.TextColor3=key=='Max'and Color3.fromRGB(255,211,87)or Color3.fromRGB(240,240,226);t.ZIndex=5;t.Parent=f end\n return f\nend\n",
+    "replacements": [
+      {
+        "before": "local function emblem(parent,kind,color,x,y,size)",
+        "after": "local function emblem(parent,kind,color,x,y,size)\n if type(kind)=='string'and kind:sub(1,3)=='Sym'then symIconV1(parent,kind,x,y,size);return end"
+      },
+      {
+        "before": "    if i==4 and currentCrax==\"Crax_Super\"then",
+        "after": "    if i==4 and currentCrax==\"Crax_Symbioti\"then\n     if revealed then symIconV1(node,upgrade.Id,3,3,56)else local t=text(node,\"?\",0,0,62,62,35,C.muted);t.TextXAlignment=Enum.TextXAlignment.Center end\n    elseif i==4 and currentCrax==\"Crax_Super\"then"
+      }
+    ]
+  },
+  {
+    "path": "ReplicatedStorage.CraxBookCinema",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "self.trophyArt:ClearAllChildren()",
+        "after": "self.trophyArt:ClearAllChildren()\n if self._symTitleScaled==nil then self._symTitleScaled=self.trophyIcon.TrophyTitle.TextScaled end\n self.trophyIcon.TrophyTitle.TextScaled=self._symTitleScaled\n if id=='Crax_Symbioti'then\n  local C=require(game:GetService('ReplicatedStorage').CraxSymConfig);local image=C.Icons.Max\n  if image~=''then make('ImageLabel',{Size=UDim2.fromScale(1,1),BackgroundTransparency=1,Image=image,ScaleType=Enum.ScaleType.Fit,ZIndex=113},self.trophyArt)\n  else make('TextLabel',{Size=UDim2.fromScale(1,1),BackgroundTransparency=1,Text='MAX',TextScaled=true,Font=Enum.Font.FredokaOne,TextColor3=Color3.fromRGB(255,211,87),ZIndex=113},self.trophyArt)end\n  self.trophyIcon.TrophyTitle.Text=C.TrophyTitle;self.trophyIcon.TrophyTitle.TextScaled=true;return\n end"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.CraxTrophyServer",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "label.Text=title;label.Font=Enum.Font.GothamBlack;label.TextSize=22",
+        "after": "label.Text=title;label.Font=Enum.Font.GothamBlack;label.TextSize=22\n  if entry.crax==\"Crax_Symbioti\"then label.TextScaled=true end"
+      }
+    ]
+  },
+  {
+    "path": "StarterPlayer.StarterPlayerScripts.ArenaCamera",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "local function beginDefeat() -- FantasticExclusiveFinale_v4",
+        "after": "local function beginDefeat() -- FantasticExclusiveFinale_v4\n if state:GetAttribute('RoundVictoryKind')=='SymFinale'and state:GetAttribute('RoundVictoryRound')==state:GetAttribute('RoundId')then clearDefeat();return end"
+      },
+      {
+        "before": "function()\n\t\tlocal seated = player:GetAttribute(\"ArenaSeat\") ~= nil",
+        "after": "function()\n  if player:GetAttribute(\"SymCameraOwner\")then if defeat then clearDefeat()end;return end\n\t\tlocal seated = player:GetAttribute(\"ArenaSeat\") ~= nil"
+      }
+    ]
+  },
+  {
+    "path": "ReplicatedStorage.CraxDeadlyVisuals",
+    "kind": "wrap",
+    "addition": "local fit=data.Fit\nfunction data.Fit(view,model)\n if model:GetAttribute('SymPreview')then return require(game:GetService('ReplicatedStorage'):WaitForChild('CraxSymPreview')).Bind(view,model)end\n return fit(view,model)\nend"
+  },
+  {
+    "path": "StarterGui.InventoryGui.InventoryClient",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "if model:GetAttribute('DeadlySpiral')then local cf,sz=model:GetBoundingBox();center=cf.Position;radius=math.max(sz.X,sz.Y)/2 end",
+        "after": "if model:GetAttribute('DeadlySpiral')or model:GetAttribute('SymPreview')then local cf,sz=model:GetBoundingBox();center=cf.Position;radius=math.max(sz.X,sz.Y)/2 end"
+      }
+    ]
+  }
+]

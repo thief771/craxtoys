@@ -1,0 +1,133 @@
+{
+  "sampleRate": 44100,
+  "duration": 13.47,
+  "atlasRobloxId": "",
+  "segments": {
+    "TonguePrepare": {
+      "Start": 0.0,
+      "End": 0.35,
+      "Loop": false,
+      "file": "TonguePrepare.wav"
+    },
+    "TongueLaunch": {
+      "Start": 0.47,
+      "End": 0.79,
+      "Loop": false,
+      "file": "TongueLaunch.wav"
+    },
+    "TongueMiss": {
+      "Start": 0.91,
+      "End": 1.31,
+      "Loop": false,
+      "file": "TongueMiss.wav"
+    },
+    "Capture": {
+      "Start": 1.43,
+      "End": 1.68,
+      "Loop": false,
+      "file": "Capture.wav"
+    },
+    "Pull": {
+      "Start": 1.8,
+      "End": 2.4,
+      "Loop": true,
+      "file": "Pull.wav"
+    },
+    "Bite": {
+      "Start": 2.52,
+      "End": 2.86,
+      "Loop": false,
+      "file": "Bite.wav"
+    },
+    "Mark": {
+      "Start": 2.98,
+      "End": 3.16,
+      "Loop": false,
+      "file": "Mark.wav"
+    },
+    "Burst": {
+      "Start": 3.28,
+      "End": 3.93,
+      "Loop": false,
+      "file": "Burst.wav"
+    },
+    "Heal": {
+      "Start": 4.05,
+      "End": 4.5,
+      "Loop": false,
+      "file": "Heal.wav"
+    },
+    "ArmourStart": {
+      "Start": 4.62,
+      "End": 5.22,
+      "Loop": false,
+      "file": "ArmourStart.wav"
+    },
+    "ArmourHit": {
+      "Start": 5.34,
+      "End": 5.5,
+      "Loop": false,
+      "file": "ArmourHit.wav"
+    },
+    "ArmourEnd": {
+      "Start": 5.62,
+      "End": 6.12,
+      "Loop": false,
+      "file": "ArmourEnd.wav"
+    },
+    "ParasiteStart": {
+      "Start": 6.24,
+      "End": 6.64,
+      "Loop": false,
+      "file": "ParasiteStart.wav"
+    },
+    "ParasiteAttach": {
+      "Start": 6.76,
+      "End": 7.06,
+      "Loop": false,
+      "file": "ParasiteAttach.wav"
+    },
+    "ParasiteReturn": {
+      "Start": 7.18,
+      "End": 7.58,
+      "Loop": false,
+      "file": "ParasiteReturn.wav"
+    },
+    "ParasiteMerge": {
+      "Start": 7.7,
+      "End": 8.25,
+      "Loop": false,
+      "file": "ParasiteMerge.wav"
+    },
+    "MaxDeploy": {
+      "Start": 8.37,
+      "End": 9.67,
+      "Loop": false,
+      "file": "MaxDeploy.wav"
+    },
+    "MaxCapture": {
+      "Start": 9.79,
+      "End": 10.49,
+      "Loop": false,
+      "file": "MaxCapture.wav"
+    },
+    "MaxBite": {
+      "Start": 10.61,
+      "End": 11.41,
+      "Loop": false,
+      "file": "MaxBite.wav"
+    },
+    "MaxRetract": {
+      "Start": 11.53,
+      "End": 12.53,
+      "Loop": false,
+      "file": "MaxRetract.wav"
+    },
+    "MaxTitle": {
+      "Start": 12.65,
+      "End": 13.35,
+      "Loop": false,
+      "file": "MaxTitle.wav"
+    }
+  }
+}

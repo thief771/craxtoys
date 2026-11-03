@@ -1,3 +1,19 @@
+# 7 Deadly Crax — SymbiotiCrax
+
+**[Télécharger SymbiotiCrax-TOTAL.zip](dist/SymbiotiCrax-TOTAL.zip)** · [Installation Studio](docs/symbioticrax/INSTALLATION.md) · [État réel](docs/symbioticrax/ETAT.md)
+
+SymbiotiCrax : vraie tête CraxSourire transformée, asymétrie noire/blanche, crocs, langue recourbée et neuf tentacules. Langue prédatrice, contamination, armure vivante, parasite, scène MAX et trophée doré ; prix repris du barème Épique GhostyCrax confirmé.
+
+![Rendu du modèle SymbiotiCrax livré](assets/symbioticrax/model/trois-quarts.png)
+
+[Face](assets/symbioticrax/model/face.png) · [Profils](assets/symbioticrax/model/profil-droit.png) · [Dos interprété](assets/symbioticrax/model/dos.png) · [Comparaison avec la vraie base](assets/symbioticrax/model/comparaison-base-symbioti.png) · [Bouche ouverte](assets/symbioticrax/model/bouche-ouverte.png) · [Choix de réalisation](docs/symbioticrax/DECISIONS.md)
+
+Le ZIP contient modèles modifiables/importables, rendus, illustrations, 21 sons originaux individuels et **un seul atlas WAV de 13,47 s à importer**, sources, VFX, tests et installateur réversible. [Écouter les WAV avant import](assets/symbioticrax/audio/ECOUTER.html).
+
+**Import et tests Studio encore nécessaires.** Aucune place ou ressource Roblox n’a été publiée depuis cet environnement. Après import des accessoires, [la commande complète](integration/symbioticrax/INSTALLER_SYMBIOTICRAX.lua) s’exécute en STOP dans la place existante avec SuperCrax déjà installé. Elle lit le contenu de l’éditeur et refuse les conflits, sans restaurer d’anciennes versions. Les tests réels du moteur sont distingués des [tests locaux exécutés](docs/symbioticrax/TESTS.md).
+
+---
+
 # 7 Deadly Crax — SuperCrax et InvertedCrax
 
 **[Télécharger SuperCrax-TOTAL.zip](dist/SuperCrax-TOTAL.zip)** · [Installation Studio](docs/supercrax/INSTALLATION.md) · [État réel et imports restants](docs/supercrax/ETAT.md)
