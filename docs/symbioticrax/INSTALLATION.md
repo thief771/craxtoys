@@ -2,6 +2,8 @@
 
 **Le kit contient du code et de vrais meshes. Il faut encore les importer puis tester dans Roblox Studio. Aucune place n’a été exécutée ou publiée depuis cet environnement.** Les images sont des rendus du modèle livré.
 
+Pour mettre à jour une installation existante, suivre [la procédure de refonte](REFONTE.md#mise-à-jour-dune-installation-existante) : la simple réexécution de l’installateur ne met pas une V1 à jour.
+
 ## Ordre court
 
 1. **Arrêter Play** et enregistrer une copie de la place actuelle. Ce lot vise les systèmes de `7 Deadly Crax / Arène cubique`, avec le raccordement SuperCrax déjà installé. Il n’installe pas un jeu autonome dans une place vide. Conserver les corrections actuelles : ne pas réinstaller une ancienne version des scripts pour satisfaire un ancrage.

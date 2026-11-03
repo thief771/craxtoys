@@ -25,8 +25,10 @@ function M.Apply(m,assets)
  end end
  local model=Instance.new('Model');model.Name='SymAccessories'
  for _,p in ipairs(assets:GetDescendants())do if p:IsA('MeshPart')and p.Name:match('^Sym')then
-  local c=p:Clone();c.Size=p.Size*scale;c.CFrame=fit(p.CFrame);c.Anchored=true;c.CanCollide=false;c.CanTouch=false;c.CanQuery=false;c.Massless=true;c.Material=Enum.Material.SmoothPlastic;c.Reflectance=.04;c.TextureID=''
+  local c=p:Clone();c.Size=p.Size*scale;c.CFrame=fit(p.CFrame);c.Anchored=true;c.CanCollide=false;c.CanTouch=false;c.CanQuery=false;c.Massless=true;c.Material=Enum.Material.SmoothPlastic;c.Reflectance=.14;c.TextureID=''
   local n=c.Name;local row,index=n:match('^SymFang_Tooth([01])([0-7])1$');if row then c:SetAttribute('SymJawRow',row=='1'and'Lower'or'Upper')end;c.Color=(n:find('Eye',1,true)or n:find('White',1,true)or n:find('Fang',1,true))and Color3.fromRGB(239,240,226)or(n:find('Tongue',1,true)and Color3.fromRGB(196,54,79)or Color3.fromRGB(8,11,17))
+  if n:find('Groove',1,true)then c.Color=Color3.fromRGB(112,22,46)end
+  if n:find('Fang',1,true)or n:find('White',1,true)or n:find('Eye',1,true)then c.Reflectance=.035 end
   for _,d in ipairs(c:GetDescendants())do if d:IsA('LuaSourceContainer')or d:IsA('SurfaceAppearance')or d:IsA('Sound')then d:Destroy()end end
   local index=n:match('^SymTentacle_(%d+)$');if index then local root=assets:FindFirstChild('SYM_Root_'..index,true);assert(root,'Repère tentacule absent');c:SetAttribute('SymRootLocal',h.CFrame:ToObjectSpace(fit(root.CFrame)))end
   c.Parent=model

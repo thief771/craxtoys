@@ -1,5 +1,7 @@
 # 7 Deadly Crax — SymbiotiCrax
 
+[Refonte des VFX, de la langue, du modèle et des sons — mise à jour Studio](docs/symbioticrax/REFONTE.md)
+
 **[Télécharger SymbiotiCrax-TOTAL.zip](dist/SymbiotiCrax-TOTAL.zip)** · [Installation Studio](docs/symbioticrax/INSTALLATION.md) · [État réel](docs/symbioticrax/ETAT.md)
 
 SymbiotiCrax : vraie tête CraxSourire transformée, asymétrie noire/blanche, crocs, langue recourbée et neuf tentacules. Langue prédatrice, contamination, armure vivante, parasite, scène MAX et trophée doré ; prix repris du barème Épique GhostyCrax confirmé.

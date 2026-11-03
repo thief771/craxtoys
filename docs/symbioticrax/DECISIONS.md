@@ -26,7 +26,7 @@ Ces choix rendent le lot exécutable ; ils ne sont pas présentés comme des arb
 | Économie casino | Politique de redistribution égale à l’intérieur du groupe Épique déjà employée par le lot Inverted. Masse totale Épique, autres raretés, prix et compensations inchangés. Poids individuel à confirmer si une autre politique est souhaitée. |
 | Trophée | ID `SymbiotiTogether`, titre de travail **NOUS SOMMES SYMBIOTICRAX**, même ID au niveau 4 et registre de victoire. Le serveur existant le dérive du niveau sauvegardé, sans nouvelle récompense. |
 | MAX | Durée 9 s : déploiement, capture à 2,3 s, fermeture à 4,3 s, impact à 5,1 s, rétraction à 6 s, pose/titre à 7,2 s puis restitution. Le registre et le client utilisent cette même chronologie. |
-| Langue animée | Mesh continu sculpté au repos ; chaîne volumétrique de sections ellipsoïdales recouvrantes en action (10 mobile / 18 standard), attache dans la bouche, enroulement visuel. À vérifier de près dans Studio ; ce n’est pas un rig osseux importé. |
+| Langue animée | Mesh continu sculpté au repos ; chaîne volumétrique de sections ellipsoïdales recouvrantes, sillon sombre et relief pulsé en action (32 mobile / 56 standard), attache dans la bouche, enroulement visuel. À vérifier de près dans Studio ; ce n’est pas un rig osseux importé. |
 | Tentacules | Neuf meshes continus de formes variées, légère oscillation autour de racines nommées. Arrière/profondeur interprétés à partir de l’unique photo. |
 | Audio | 21 sons originaux, atlas unique 13,47 s avec 120 ms entre passages ; plages natives pour lecture et boucle. Choix pratique de conditionnement, à écouter et valider. |
 

@@ -19,25 +19,74 @@ local function ball(parent,size,color,alpha)
  return make('Part',{Shape=Enum.PartType.Ball,Size=size,Color=color,Material=Enum.Material.SmoothPlastic,Transparency=alpha or 0,Anchored=true,CanCollide=false,CanTouch=false,CanQuery=false,CastShadow=false},parent)
 end
 local function path(parent,color,count)
- local chain={};for i=1,count do chain[i]=ball(parent,Vector3.one*.1,color,1)end;return chain
+ local chain={};for i=1,count do chain[i]=ball(parent,Vector3.one*.1,color,1);chain[i].Reflectance=.12 end
+ if color==RED then
+  chain.grooves={};for i=1,count do chain.grooves[i]=ball(parent,Vector3.one*.02,Color3.fromRGB(112,22,46),1)end
+ end
+ return chain
 end
 local function bezier(a,b,c,d,t)local u=1-t;return a*u^3+b*3*u*u*t+c*3*u*t*t+d*t^3 end
 local function updatePath(chain,a,b,color,thickness,coil,time)
  local d=b-a;local side=frame():VectorToWorldSpace(Vector3.new(0,1,0));local last=a
  for i,p in ipairs(chain)do
   local u=i/#chain;local pos=bezier(a,a+d*.25+side*math.sin(time*2)*.6,a+d*.7+side*.3,b,u)
-  if coil and u>.74 then local angle=(u-.74)/.26*math.pi*1.7;local radius=type(coil)=='number'and coil or 2;pos=b+frame():VectorToWorldSpace(Vector3.new(math.cos(angle)*radius,math.sin(angle)*radius,-.3))*(u-.74)/.26 end
-  local delta=pos-last;local width=thickness*(1-.78*u^1.4)
-  p.Size=Vector3.new(width*2,width*1.65,math.max(width*1.7,delta.Magnitude*1.6));p.CFrame=delta.Magnitude>.0001 and CFrame.lookAt((last+pos)*.5,pos,frame().UpVector)or CFrame.new(pos);p.Color=color;p.Transparency=0;last=pos
+  if coil and u>.74 then local angle=(u-.74)/.26*math.pi*1.7;local radius=type(coil)=='number'and coil or 2;local v=(u-.74)/.26;angle=v*math.pi*2.5;local entry=b+frame():VectorToWorldSpace(Vector3.new(radius,0,-radius*.45));pos=entry:Lerp(b+frame():VectorToWorldSpace(Vector3.new(math.cos(angle)*radius,math.sin(angle)*radius,(v-.5)*radius*.9)),math.min(1,v*6)) end
+  local delta=pos-last;local width=thickness*(1-.66*u^1.4)*(1+.035*math.sin(u*72-time*8))
+  p.Size=Vector3.new(width*2,width*1.65,math.max(width*1.7,delta.Magnitude*1.6));p.CFrame=delta.Magnitude>.0001 and CFrame.lookAt((last+pos)*.5,pos,frame().UpVector)or CFrame.new(pos);p.Color=color;p.Transparency=0
+  if chain.grooves then local g=chain.grooves[i];g.Size=Vector3.new(width*.11,width*.10,p.Size.Z*.94);g.CFrame=p.CFrame*CFrame.new(0,width*.77,0);g.Transparency=p.Transparency end
+  last=pos
  end
 end
-local function destroyPath(p)for _,o in ipairs(p or{})do o:Destroy()end end
+local function destroyPath(p)for _,o in ipairs(p or{})do o:Destroy()end;if p and p.grooves then for _,o in ipairs(p.grooves)do o:Destroy()end end end
+-- Three equal angular sectors conform to the front hemisphere of the real head.
+-- Everything belongs to one local Model, so expiration/round changes remove every tendril.
+local function contamination(owner,target,count,terminal)
+ marks[owner]=marks[owner]or{}
+ local old=marks[owner][target];if old then old:Destroy();marks[owner][target]=nil end
+ if count<=0 or not head(target)then return end
+ local model=make('Model',{Name='SymContamination'},root)
+ model:SetAttribute('Stacks',math.clamp(count,1,3));model:SetAttribute('Born',os.clock())
+ if terminal then model:SetAttribute('Terminal',true)end
+ local columns=low and 9 or 15;local rows=low and 6 or 10
+ for x=1,columns do for y=1,rows do
+  local cell=ball(model,Vector3.one*.1,BLACK,1);cell.Name='Coat';cell.Reflectance=.16
+  cell:SetAttribute('U',(x-.5)/columns);cell:SetAttribute('V',(y-.5)/rows)
+ end end
+ for i=1,(low and 5 or 9)do
+  for j=1,5 do local cell=ball(model,Vector3.one*.1,BLACK,1);cell.Name='Tendril';cell.Reflectance=.2;cell:SetAttribute('Branch',i);cell:SetAttribute('Segment',j)end
+ end
+ marks[owner][target]=model
+end
+local function animateContamination(model,h,now)
+ local count=model:GetAttribute('Stacks');local age=now-model:GetAttribute('Born');local spread=math.clamp(age/.24,0,1)
+ local cf=frame()*h.CFrame;local sx,sy,sz=h.Size.X*.52,h.Size.Y*.52,h.Size.Z*.52
+ for _,p in ipairs(model:GetChildren())do
+  if p.Name=='Coat'then
+   local u,v=p:GetAttribute('U'),p:GetAttribute('V');local active=u<=count/3
+   local longitude=(u-.5)*2.85;local latitude=(v-.5)*2.65
+   local pulse=1+.009*math.sin(now*4+u*19+v*11)
+   local pos=Vector3.new(math.sin(longitude)*math.cos(latitude)*sx,math.sin(latitude)*sy,-math.cos(longitude)*math.cos(latitude)*sz)*pulse
+   p.Size=Vector3.new(sx*(low and .40 or .24),sy*(low and .49 or .30),.13)*(.85+.15*spread)
+   p.CFrame=cf*CFrame.new(pos)*CFrame.Angles(latitude,-longitude,math.sin(now*2+u*20)*.04)
+   p.Transparency=active and (1-spread)*.85 or 1
+  else
+   local i,j=p:GetAttribute('Branch'),p:GetAttribute('Segment');local u=(i-.5)/(low and 5 or 9)*count/3
+   local angle=(u-.5)*2.7;local v=j/5;local phase=now*3+i*2
+   local pos=Vector3.new(math.sin(angle)*sx+math.sin(v*5+phase)*v*sx*.13,math.cos(i*2.399)*sy*.72+v*sy*.22,-math.cos(angle)*sz-.07-v*.24)
+   local width=(1-v*.85)*sx*.075
+   p.Size=Vector3.new(width,width,sy*.17);p.CFrame=cf*CFrame.new(pos)*CFrame.Angles(math.sin(phase+v)*.6,angle,phase*.15+v*2)
+   p.Transparency=1-spread
+  end
+ end
+ return model:GetAttribute('Terminal')and age>.65
+end
 local function burst(pos,color,inward)
  local list={};for i=1,(low and 8 or 17)do local a=i*2.399;list[i]={p=ball(root,Vector3.one*(i%3==0 and .25 or .13),color),offset=Vector3.new(math.cos(a),math.sin(a),(i%5-2)*.15)*(1+i%3)}end
  bursts[#bursts+1]={items=list,start=os.clock(),position=pos,inward=inward}
 end
 local function restTongue(m,alpha)local accessories=m and m:FindFirstChild('SymAccessories');if accessories then for _,p in ipairs(accessories:GetChildren())do if p.Name:find('Tongue',1,true)then p.LocalTransparencyModifier=alpha end end end end
 local function clearActor(m)
+ if marks[m]then for _,v in pairs(marks[m])do v:Destroy()end;marks[m]=nil end
  local a=actors[m];if a then destroyPath(a.tongue);if a.parasite then a.parasite.model:Destroy()end;Audio.Stop(a.loop);actors[m]=nil end
  restTongue(m,0)
 end
@@ -94,7 +143,8 @@ local function beginScene()
  for m in pairs(idle)do restoreIdle(m)end
  local folder=make('Folder',{Name='SymFinale'},root);local s={folder=folder,winner=winner,loser=loser,round=round,match=token,start=state:GetAttribute('RoundVictoryStartedAt'),camera=cam,kind=cam.CameraType,subject=cam.CameraSubject,fov=cam.FieldOfView,cf=cam.CFrame,focus=cam.Focus,hidden={},cues={},previousOwner=player:GetAttribute('SymCameraOwner')}
  if type(s.start)~='number'then folder:Destroy();return end
- s.hero=clone(winner,folder);s.victim=clone(loser,folder);s.jaw=makeJaw(winner,folder);s.tongue=path(folder,RED,low and 12 or 22);s.filaments={}
+ s.hero=clone(winner,folder);s.victim=clone(loser,folder);s.jaw=makeJaw(winner,folder);s.tongue=path(folder,RED,low and 36 or 64);s.filaments={};s.saliva={}
+ for i=1,(low and 3 or 6)do s.saliva[i]=path(folder,Color3.fromRGB(151,87,109),low and 3 or 5)end
  for i=1,(low and 4 or 8)do s.filaments[i]=path(folder,BLACK,low and 5 or 8)end
  s.gui=make('ScreenGui',{Name='SymFinaleTitle',IgnoreGuiInset=true,ResetOnSpawn=false,DisplayOrder=95},player:WaitForChild('PlayerGui'))
  s.title=make('TextLabel',{Size=UDim2.fromScale(.9,.12),Position=UDim2.fromScale(.05,.80),Text=C.TrophyTitle,TextScaled=true,BackgroundTransparency=1,TextColor3=GOLD,TextStrokeColor3=BLACK,TextStrokeTransparency=.2,Font=Enum.Font.FredokaOne,Visible=false},s.gui)
@@ -113,15 +163,22 @@ local function beginScene()
   local size=math.max(.001,deploy*(1-retract));s.jaw.cavity.Size=Vector3.new(13,10,5)*size;s.jaw.cavity.CFrame=jawCF
   for _,row in ipairs({{s.jaw.upper,1},{s.jaw.lower,-1}})do for _,v in ipairs(row[1])do v.part.CFrame=jawCF*CFrame.new(0,row[2]*open*1.8,0)*CFrame.Angles(row[2]*open*.14,0,0)*v.rel;v.part.Transparency=1-size end end
   local endPos=t<F.Capture and(center*CFrame.new(0,0,0)).Position or head(s.victim).Position
-  updatePath(s.tongue,jawCF.Position+frame():VectorToWorldSpace(Vector3.new(0,0,-3)),endPos,RED,.65,t>=F.Capture and t<F.Close,t)
-  for _,p in ipairs(s.tongue)do p.Transparency=(t<F.Deploy or t>=F.Impact)and 1 or 0 end
+  updatePath(s.tongue,jawCF.Position+frame():VectorToWorldSpace(Vector3.new(0,0,-3)),endPos,RED,.65,t>=F.Capture and t<F.Close and head(s.victim).Size.X*.53,t)
+  for i,p in ipairs(s.tongue)do p.Transparency=(t<F.Deploy or t>=F.Impact)and 1 or 0;if s.tongue.grooves then s.tongue.grooves[i].Transparency=p.Transparency end end
   for i,chain in ipairs(s.filaments)do local a=i*2.399;local start=(center*CFrame.new(math.cos(a)*7,-5,1)).Position;local finish=(center*CFrame.new(math.cos(a)*3,math.sin(a)*3,1)).Position;updatePath(chain,start,start:Lerp(finish,deploy*(1-retract)),BLACK,.18,false,t+i)end
+  for i,chain in ipairs(s.saliva)do
+   local x=(i/(#s.saliva+1)-.5)*8
+   local upper=(jawCF*CFrame.new(x,open*2.3,-2.6)).Position
+   local lower=(jawCF*CFrame.new(x+.2,-open*2.3,-2.6)).Position
+   updatePath(chain,upper,lower,Color3.fromRGB(151,87,109),.025,false,t+i)
+   for _,p in ipairs(chain)do p.Transparency=(t<F.Deploy or t>=F.Impact)and 1 or .45 end
+  end
   if t>=F.Impact and not s.impact then s.impact=true;burst(jawCF.Position,BLACK,false);burst(jawCF.Position,WHITE,false)end
   s.title.Visible=t>=F.Pose
-  for _,cue in ipairs({{0,'MaxDeploy'},{F.Capture,'MaxCapture'},{F.Impact,'MaxBite'},{F.Retract,'MaxRetract'},{F.Pose,'MaxTitle'}})do if t>=cue[1]and not s.cues[cue[2]]then s.cues[cue[2]]=true;Audio.Play(cue[2],jawCF.Position,false,true)end end
+  for _,cue in ipairs({{0,'MaxDeploy'},{F.Capture,'MaxCapture'},{F.Close-.35,'TonguePrepare'},{F.Close,'Bite'},{F.Impact,'MaxBite'},{F.Retract,'MaxRetract'},{F.Pose,'MaxTitle'}})do if t>=cue[1]and not s.cues[cue[2]]then s.cues[cue[2]]=true;Audio.Play(cue[2],jawCF.Position,false,true)end end
   local target=(center*CFrame.new(-5,1,0)).Position;local aspect=cam.ViewportSize.X/math.max(1,cam.ViewportSize.Y);local distance=math.max(30,24/(2*math.tan(math.rad(22))*math.max(.35,aspect)))
   local wanted=CFrame.lookAt(target+frame():VectorToWorldSpace(Vector3.new(0,3,-distance)),target,frame().UpVector);local finish=math.clamp((t-(F.ReturnEnd-.7))/.7,0,1)
-  cam.CameraType=Enum.CameraType.Scriptable;cam.FieldOfView=44+(s.fov-44)*finish;cam.CFrame=wanted:Lerp(s.cf,finish);cam.Focus=CFrame.new(target)
+  cam.CameraType=Enum.CameraType.Scriptable;cam.FieldOfView=44+(s.fov-44)*finish;cam.CFrame=(wanted*CFrame.Angles(0,0,math.sin(t*47)*.012*math.max(0,1-math.abs(t-F.Impact)/.28))):Lerp(s.cf,finish);cam.Focus=CFrame.new(target)
  end)
 end
 connect(FX.OnClientEvent,function(kind,d)
@@ -129,7 +186,7 @@ connect(FX.OnClientEvent,function(kind,d)
  local m=d.Owner;local pos=loc(m)
  if kind=='Clear'then clearCombat();return elseif kind=='OwnerClear'then clearActor(m);return end
  if not m or not m.Parent then return end
- if kind=='TongueStart'then local a=actors[m]or{};actors[m]=a;a.tongue=path(root,RED,low and 10 or 18);a.tip=mouth(m);a.mode='Prepare';a.id=d.Activation;restTongue(m,1);Audio.Play('TonguePrepare',pos)
+ if kind=='TongueStart'then local a=actors[m]or{};actors[m]=a;a.tongue=path(root,RED,low and 32 or 56);a.tip=mouth(m);a.mode='Prepare';a.id=d.Activation;restTongue(m,1);Audio.Play('TonguePrepare',pos)
  elseif kind=='TongueLaunch'then Audio.Play('TongueLaunch',pos)
  elseif kind=='TongueState'then local a=actors[m];if a and a.id==d.Activation then a.tip=(frame()*CFrame.new(d.Position)).Position;a.mode=d.Mode;a.target=d.Target;if d.Mode=='Return'then Audio.Stop(a.loop);a.loop=nil end end
  elseif kind=='Capture'then local a=actors[m];if a then a.loop=Audio.Play('Pull',pos,true)end;Audio.Play('Capture',pos)
@@ -139,9 +196,8 @@ connect(FX.OnClientEvent,function(kind,d)
  elseif kind=='ArmourHit'then Audio.Play('ArmourHit',pos);burst(pos,WHITE,false)
  elseif kind=='Bite'then local a=actors[m];if a then a.biteUntil=os.clock()+.18 end;local p=loc(d.Target);if p then burst(p,d.Damage>0 and RED or WHITE,false);Audio.Play('Bite',p)end
  elseif kind=='Marks'then
-  marks[m]=marks[m]or{};if marks[m][d.Target]then marks[m][d.Target]:Destroy();marks[m][d.Target]=nil end
-  if d.Count>0 and d.Target and head(d.Target)then local mark=make('Model',{},root);for i=1,d.Count do local b=ball(mark,Vector3.new(.7,.55,.3),BLACK);b.Name=tostring(i)end;if d.Count==2 then local link=ball(mark,Vector3.new(.8,.07,.07),BLACK);link.Name='Link'end;marks[m][d.Target]=mark;Audio.Play('Mark',loc(d.Target))end
- elseif kind=='Burst'then local p=loc(d.Target);if p then burst(p,BLACK,false);Audio.Play('Burst',p)end
+  contamination(m,d.Target,d.Count);if d.Count>0 then Audio.Play('Mark',loc(d.Target))end
+ elseif kind=='Burst'then local p=loc(d.Target);if p then contamination(m,d.Target,3,true);burst(p,BLACK,false);Audio.Play('Burst',p)end
  elseif kind=='Heal'then burst(pos,WHITE,true);Audio.Play('Heal',pos)
  elseif kind=='Armour'then Audio.Play(d.Active and'ArmourStart'or'ArmourEnd',pos)
  elseif kind=='ParasiteStart'then local a=actors[m]or{};actors[m]=a;if a.parasite then a.parasite.model:Destroy()end;a.parasite=parasiteModel();a.parasiteId=d.Activation;a.parasitePosition=pos;Audio.Play('ParasiteStart',pos)
@@ -174,14 +230,14 @@ connect(Run.Heartbeat,function(dt)
  for m,a in pairs(actors)do
   if not m.Parent or(m:GetAttribute('Health')or 0)<=0 or m:GetAttribute('CraxId')~=C.Id then clearActor(m)
   else
-   if a.tongue and a.tip then local radius=a.mode=='Pull'and a.target and head(a.target)and head(a.target).Size.X*.5+.2;local tip=radius and a.tip+frame().LookVector*radius or a.tip;updatePath(a.tongue,mouth(m),tip,RED,.5,radius,now)end
+   if a.tongue and a.tip then local radius=a.mode=='Pull'and a.target and head(a.target)and head(a.target).Size.X*.5+.2;local tip=radius and loc(a.target)or a.tip;updatePath(a.tongue,mouth(m),tip,RED,.5,radius,now)end
    if a.loop then Audio.Pause(a.loop,Clock.Paused(m))end
    if a.parasite and a.parasitePosition then moveParasite(a.parasite,a.parasitePosition+Vector3.new(0,math.sin(now*7)*.13,0),now)end
   end
  end
  for owner,targets in pairs(marks)do for target,model in pairs(targets)do
   local h=head(target);if not owner.Parent or not target.Parent or not h or(target:GetAttribute('Health')or 0)<=0 then model:Destroy();targets[target]=nil
-  else for _,p in ipairs(model:GetChildren())do local i=tonumber(p.Name);if i then p.CFrame=frame()*h.CFrame*CFrame.new((i-1.5)*.85,1,-h.Size.Z*.48);p.Size=Vector3.new(.65,.55,.25)*(1+math.sin(now*2+i)*.07)else p.CFrame=frame()*h.CFrame*CFrame.new(0,1,-h.Size.Z*.49)end end end
+  elseif animateContamination(model,h,now)then model:Destroy();targets[target]=nil end
  end end
  for i=#bursts,1,-1 do local b=bursts[i];local t=(now-b.start)/.65;if t>=1 then for _,v in ipairs(b.items)do v.p:Destroy()end;table.remove(bursts,i)else for _,v in ipairs(b.items)do v.p.Position=b.position+v.offset*(b.inward and 1-t or t);v.p.Transparency=t end end end
 end)

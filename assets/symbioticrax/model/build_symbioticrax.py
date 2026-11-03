@@ -13,7 +13,14 @@ base=collection('CraxSourire_Native');extra=collection('SymbiotiCrax_ACCESSORIES
 ref.hide_render=True;ref.hide_viewport=True
 def mat(n,c,r=.29):
  m=bpy.data.materials.new(n);m.diffuse_color=(*c,1);m.use_nodes=True;p=m.node_tree.nodes['Principled BSDF'];p.inputs['Base Color'].default_value=(*c,1);p.inputs['Roughness'].default_value=r;p.inputs['Specular IOR Level'].default_value=.35;return m
-black=mat('LivingBlack',(.005,.008,.012),.29);ridge=mat('SymbioteRidges',(.009,.014,.020),.3);white=mat('VinylWhite',(.89,.90,.85),.37);pink=mat('Gums',(.65,.18,.23),.4);red=mat('Tongue',(.64,.055,.11),.34)
+black=mat('LivingBlack',(.005,.007,.010),.19);ridge=mat('SymbioteRidges',(.012,.017,.023),.23);white=mat('VinylWhite',(.89,.90,.85),.37);pink=mat('Gums',(.65,.18,.23),.4);red=mat('Tongue',(.66,.075,.15),.28)
+# Fine organic relief is a shading detail; larger ribs below survive FBX import.
+for material,scale,strength in [(black,18,.18),(ridge,24,.12),(red,48,.22)]:
+ nodes=material.node_tree.nodes;links=material.node_tree.links;p=nodes['Principled BSDF']
+ noise=nodes.new('ShaderNodeTexNoise');noise.inputs['Scale'].default_value=scale;noise.inputs['Detail'].default_value=3
+ bump=nodes.new('ShaderNodeBump');bump.inputs['Strength'].default_value=strength;bump.inputs['Distance'].default_value=.035
+ links.new(noise.outputs['Fac'],bump.inputs['Height']);links.new(bump.outputs['Normal'],p.inputs['Normal'])
+ p.inputs['Coat Weight'].default_value=.28;p.inputs['Coat Roughness'].default_value=.18
 def mesh(n,vs,fs,col,m):
  d=bpy.data.meshes.new(n);d.from_pydata(vs,[],fs);d.update();o=bpy.data.objects.new(n,d);col.objects.link(o);o.data.materials.append(m)
  for f in d.polygons:f.use_smooth=True
@@ -40,7 +47,14 @@ for n,faces in g.items():
    for x,y,z in coords:
     u=(hi-z)/(hi-lo)if top else(z-lo)/(hi-lo);f=1-.98*u**.7
     new.append((center.x+(x-center.x)*f,center.y+(y-center.y)*(1-.35*u),(hi+(-1.18-hi)*u)if top else(lo+(-1.34-lo)*u)))
-   nn='SymFang_'+n;mesh(nn,new,polys,extra,white);o.hide_render=True;hidden.append(n);fangs.append(nn)
+   # Two narrower interlocking fangs per native root on the transformed half.
+   # Keep the original object name and native root mapping used by the installer.
+   width=max(p[0]for p in coords)-min(p[0]for p in coords);split=[];split_faces=[]
+   for side in [-1,1]:
+    offset=len(split)
+    for x,y,z in new:split.append((center.x+(x-center.x)*.48+side*width*.24,y,z+side*.065))
+    split_faces.extend([tuple(offset+k for k in face)for face in polys])
+   nn='SymFang_'+n;mesh(nn,split,split_faces,extra,white);o.hide_render=True;hidden.append(n);fangs.append(nn)
 def smooth(points,steps=8):
  p=[Vector(x)for x in points];q=[]
  for i in range(len(p)-1):
@@ -52,7 +66,11 @@ def tube(n,points,radius,m,taper=.9,flat=1):
  ps=smooth(points,12);vs=[];fs=[];sides=18;previous=None
  for i,p in enumerate(ps):
   u=i/(len(ps)-1);t=(ps[min(i+1,len(ps)-1)]-ps[max(0,i-1)]).normalized();axis=Vector((0,0,1))if abs(t.z)<.92 else Vector((1,0,0));a=(previous-t*previous.dot(t)).normalized()if previous is not None else t.cross(axis).normalized();previous=a;b=t.cross(a).normalized();r=radius*(1-taper*u**1.3)
-  for j in range(sides):vs.append(p+r*(a*math.cos(j*math.tau/sides)+b*math.sin(j*math.tau/sides)*flat))
+  for j in range(sides):
+   angle=j*math.tau/sides
+   # Geometry relief remains visible in Studio without uploaded texture IDs.
+   relief=1+(.026*math.sin(u*math.tau*38+angle*2)if 'Tongue'in n else .035*math.sin(angle*5+u*12))
+   vs.append(p+r*relief*(a*math.cos(angle)+b*math.sin(angle)*flat))
  for i in range(len(ps)-1):
   for j in range(sides):a=i*sides+j;b=i*sides+(j+1)%sides;fs.append((a,b,b+sides,a+sides))
  vs.extend([ps[0],ps[-1]]);end=len(vs)-1
@@ -86,7 +104,7 @@ vs=[];fs=[];around=100;bands=52
 for j in range(bands+1):
  polar=math.pi*j/bands
  for k in range(around):
-  a=math.tau*k/around;frontward=max(0,-math.sin(a));relief=(.018+.018*math.sin(a*7+polar*3)*math.sin(polar*9+a*2))*frontward+(.04+.055*math.sin(a*5+polar*7)**2)*(1-frontward)
+  a=math.tau*k/around;frontward=max(0,-math.sin(a));relief=(.018+.018*math.sin(a*7+polar*3)*math.sin(polar*9+a*2))*frontward+(.04+.085*math.sin(a*9+polar*11)**6)*(1-frontward)
   r=4.012+relief;vs.append((r*math.sin(polar)*math.cos(a),r*math.sin(polar)*math.sin(a),r*math.cos(polar)))
 for j in range(bands):
  for k in range(around):

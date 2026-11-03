@@ -10,7 +10,15 @@ for i,(name,duration)in enumerate(specs):
  n=round(rate*duration);rng=random.Random(77103+i);samples=[];low=0;phase=0
  for j in range(n):
   t=j/rate;u=j/(n-1);low=.86*low+.14*rng.uniform(-1,1);freq=max(30,115+(i%5)*28+(100 if 'Start'in name or 'Prepare'in name else -70)*u);phase+=math.tau*freq/rate
-  voice=.5*math.sin(phase+2*math.sin(math.tau*8*t))+.2*math.sin(phase*1.49)+.8*low
+  # Distinct layers: wet tongue, adhesive contamination, and a deep MAX impact.
+  wet=math.sin(phase+3.2*math.sin(math.tau*(17+13*u)*t))*low
+  if name.startswith('Max'):
+   sub=math.sin(math.tau*(42*t-8*t*t));crack=rng.uniform(-1,1)*math.exp(-t*30)
+   voice=.65*sub+.42*low+.30*wet+.45*crack
+   if name=='MaxTitle':voice+=.20*math.sin(math.tau*220*t)+.15*math.sin(math.tau*330*t)
+  elif name in ('Mark','Burst','Capture','Pull','Bite')or name.startswith('Tongue'):
+   voice=.25*math.sin(phase)+1.15*wet+.55*low+.18*math.sin(phase*2.03)*math.exp(-t*18)
+  else:voice=.5*math.sin(phase+2*math.sin(math.tau*8*t))+.2*math.sin(phase*1.49)+.8*low
   env=min(1,t/.009,(duration-t)/.014)*(1-u)**(.6 if name=='Pull'else 1.5);samples.append(voice*max(0,env))
  peak=max(map(abs,samples));pcm=[round(v*.46/peak*32767)for v in samples];write(out/(name+'.wav'),pcm)
  start=len(atlas)/rate;atlas.extend(pcm);manifest[name]={'Start':start,'End':len(atlas)/rate,'Loop':name=='Pull','file':name+'.wav'};atlas.extend([0]*round(.12*rate))
