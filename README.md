@@ -1,3 +1,17 @@
+# 7 Deadly Crax — LuckyCrax
+
+**[Télécharger LuckyCrax-TOTAL.zip](dist/LuckyCrax-TOTAL.zip)** · [Installation Studio](docs/luckycrax/INSTALLATION.md) · [État réel et limites](docs/luckycrax/ETAT.md) · [Tests](docs/luckycrax/TESTS.md)
+
+Vraie tête CraxSourire blanche à dents dorées, Rare, 105 PV, Pile ou Face, dés, trèfle, jackpots et proposition MAX « LE GROS LOT ». Modèles Blender/FBX/OBJ, bibliothèque de 32 meshes, quatre illustrations transparentes, 25 sons originaux et atlas 16,24 s, code serveur/client, intégration et sauvegarde réversible.
+
+![LuckyCrax — rendu Blender du vrai modèle livré](assets/luckycrax/model/trois-quarts.png)
+
+[Illustrations du livre](assets/luckycrax/illustrations/) · [Bibliothèque VFX](assets/luckycrax/illustrations/Bibliotheque-FX-Blender.png) · [Écouter les sons](assets/luckycrax/audio/ECOUTER.html) · [Analyse des systèmes existants](docs/luckycrax/ANALYSE.md) · [Réglages provisoires](docs/luckycrax/DECISIONS.md)
+
+**Prototype intégrable, validation complète encore ouverte.** Les sources BlackSpida manquent pour son adaptateur Triche. Les imports et tests Roblox Studio n’ont pas été réalisés ici. Les [instructions](docs/luckycrax/INSTALLATION.md) distinguent installation, branchement des vrais IDs et essais en moteur. La [commande complète STOP](integration/luckycrax/INSTALLER_LUCKYCRAX.lua) lit l’éditeur actuel, conserve ses corrections et refuse les conflits. Aucun ID Roblox inventé et aucune place publiée.
+
+---
+
 # 7 Deadly Crax — SymbiotiCrax
 
 **[Télécharger SymbiotiCrax-TOTAL.zip](dist/SymbiotiCrax-TOTAL.zip)** · [Installation Studio](docs/symbioticrax/INSTALLATION.md) · [État réel](docs/symbioticrax/ETAT.md)

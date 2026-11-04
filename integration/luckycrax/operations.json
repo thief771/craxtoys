@@ -1,0 +1,436 @@
+[
+  {
+    "path": "ReplicatedStorage.CraxCatalog",
+    "kind": "wrap",
+    "addition": "assert(not data.Crax_Lucky,'LuckyCrax existe déjà');local C=require(game:GetService('ReplicatedStorage').CraxLuckyConfig);local base=assert(data.Crax_Monster);local rare=assert(data.Crax_Spidey)\ndata.Crax_Lucky={DisplayName='LuckyCrax',Rarity=rare.Rarity,RarityColor=rare.RarityColor,TemplateName='Crax_Lucky',MaxHealth=105,CollisionDamage=8,Speed=base.Speed,Description='Tête de vinyle blanche, grand sourire et dents dorées du vrai CraxSourire.',PowerDescription='PILE OU FACE : tir direct 12 dégâts ou tir à deux rebonds 16 dégâts. Tirage serveur toutes les 6 à 9 secondes actives ; les pièces ne donnent pas de monnaie.',Effects={'LuckyCheat'},Ability={Id='LuckyCoin',DisplayName='PILE OU FACE',Damage=8,Cooldown=6}}"
+  },
+  {
+    "path": "ReplicatedStorage.CraxSkillCatalog",
+    "kind": "wrap",
+    "addition": "local C=require(game:GetService('ReplicatedStorage').CraxLuckyConfig);local price=assert(data.Crax_Spidey).Upgrades\nlocal list={{Id='LuckyDice',Name='DÉS PIPÉS',Description='Prototype : toutes les 12–16 s, deux dés indépendants de 1 à 6. Zone de rayon 5 ; 2 × somme, +8 sur un double. Une seule application par ennemi.'},{Id='LuckyClover',Name='PORTE-BONHEUR',Description='Prototype : après trois attaques distinctes ayant retiré des PV, prépare une esquive pour le prochain coup admissible. Une charge, durée 4 s. Le troisième coup est subi.'},{Id='LuckyJackpot',Name='JACKPOT',Description='Trois colonnes, exactement trois signes et toujours un triplet gagnant : soin nominal 25 plafonné à 105, six pièces à 5 dégâts vivant 4 s, ou Triche 7 s. Prototype : 45/45/10 %, délai 18–24 s.'},{Id='LuckyFinale',Name=C.MaxTitle,TrophyId=C.TrophyId,Description='Proposition MAX : LE GROS LOT. Scène de casino, vraie victime, combinaison gagnante et pluie de pièces purement cosmétiques. Aucun gain réel.'}}\nfor i,u in ipairs(list)do u.Coins=assert(price[i].Coins);u.Gems=assert(price[i].Gems)end\nlocal order=0;for _,v in pairs(data)do if type(v)=='table'then order=math.max(order,v.Order or 0)end end\ndata.Crax_Lucky={Order=order+1,AbilityId='LuckyCoin',DisplayName='LuckyCrax',Enabled=true,Upgrades=list,Finale=list[4]}"
+  },
+  {
+    "path": "ReplicatedStorage.CraxEffectsCatalog",
+    "kind": "wrap",
+    "addition": "data.LuckyCheat={DisplayName='TRICHE',Description='Compétences interrompues et bloquées pendant 7 secondes actives ; déplacement et mêlée ordinaires conservés.',Duration=7,Icon='LuckyCheat',Image='',Color=Color3.fromRGB(168,90,225)}"
+  },
+  {
+    "path": "ReplicatedStorage.CraxVictoryCatalog",
+    "kind": "wrap",
+    "addition": "local C=require(game:GetService('ReplicatedStorage').CraxLuckyConfig);data.Crax_Lucky={Id='LuckyFinale',DisplayName=C.MaxTitle,TrophyId=C.TrophyId,TrophyColor=Color3.fromRGB(255,211,87),MinimumLevel=4,IntroDuration=0,Duration=C.Finale.End,ZoomDuration=0,HoldDuration=0}"
+  },
+  {
+    "path": "ReplicatedStorage.CraxRouletteConfig",
+    "kind": "wrap",
+    "addition": "local cat=require(game:GetService('ReplicatedStorage').CraxCatalog);local entries,total={},0\nfor _,e in ipairs(data.Pool)do assert(e.Id~='Crax_Lucky');if cat[e.Id].Rarity==cat.Crax_Lucky.Rarity then entries[#entries+1]=e;total+=e.Weight end end\nassert(#entries>0 and total>0);local weight=total/(#entries+1);for _,e in ipairs(entries)do e.Weight=weight end;data.Pool[#data.Pool+1]={Id='Crax_Lucky',Weight=total-weight*#entries} -- prototype: equal redistribution of unchanged Rare mass\n"
+  },
+  {
+    "path": "ServerScriptService.CraxSkinServer",
+    "kind": "wrap",
+    "addition": "local appearance=require(game:GetService('ReplicatedStorage').CraxLuckyAppearance);local apply=data.Apply\nfunction data.Apply(model,id,c)appearance.Restore(model);apply(model,id,c);if id=='Crax_Lucky'then appearance.Apply(model)end end"
+  },
+  {
+    "path": "ReplicatedStorage.CraxSilenceGate",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "model:GetAttribute('InvertedSilenced')~=true",
+        "after": "model:GetAttribute('InvertedSilenced')~=true and model:GetAttribute('LuckyTricked')~=true"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.ArenaMovement",
+    "kind": "patch",
+    "prepend": "local LuckyV1=require(game:GetService('ServerScriptService'):WaitForChild('CraxLuckyRuntime'))\n",
+    "replacements": [
+      {
+        "before": " SymV1.Begin(fighters)",
+        "after": " SymV1.Begin(fighters)\n LuckyV1.Begin(fighters)"
+      },
+      {
+        "before": "  SymV1.Step(step*Deadly.CinematicScale()",
+        "after": "  LuckyV1.Step(step*Deadly.CinematicScale(),fighters,alive and not frozen and not state:GetAttribute('GhostNightActive')and workspace:GetServerTimeNow()>=(state:GetAttribute('GhostFreezeUntil')or 0))\n  if LuckyV1.ClearWebs then clearWebs();LuckyV1.ClearWebs=false end\n  SymV1.Step(step*Deadly.CinematicScale()"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.CombatHealth",
+    "kind": "patch",
+    "prepend": "local LuckyV1=require(game:GetService('ServerScriptService'):WaitForChild('CraxLuckyRuntime'))\n",
+    "replacements": [
+      {
+        "before": "function(attacker,defender,damage,collision,kind,recoilSnapshot)",
+        "after": "function(attacker,defender,damage,collision,kind,recoilSnapshot,attackId)"
+      },
+      {
+        "before": "local a,b=states[attacker],states[defender];if not a or not b or a.health<=0 or b.health<=0 then return end",
+        "after": "local a,b=states[attacker],states[defender];if not a or not b or a.health<=0 or b.health<=0 then return end\n if attacker:GetAttribute('LuckyTricked')and not collision then return end\n attackId=LuckyV1.AttackId(attacker,kind,attackId)"
+      },
+      {
+        "before": "local function protected(model)",
+        "after": "local function protected(model)\n if model:GetAttribute(\"LuckyTricked\")then return false end"
+      },
+      {
+        "before": "local function adjust(model,amount,kind)",
+        "after": "local function adjust(model,amount,kind)\n if model:GetAttribute(\"LuckyTricked\")then return amount end"
+      },
+      {
+        "before": "amount=Golden.Outgoing(attacker,amount)",
+        "after": "amount=Golden.Outgoing(attacker,amount)\n if collision and attacker:GetAttribute(\"LuckyTricked\")then amount=require(game:GetService(\"ReplicatedStorage\").CraxCatalog)[attacker:GetAttribute(\"CraxId\")].CollisionDamage end"
+      },
+      {
+        "before": " local incoming=collision and finite(recoil)",
+        "after": " if collision and defender:GetAttribute('LuckyTricked')then recoil=require(game:GetService('ReplicatedStorage').CraxCatalog)[defender:GetAttribute('CraxId')].CollisionDamage end\n local incoming=collision and finite(recoil)"
+      },
+      {
+        "before": " if amount>0 and amount>=b.health",
+        "after": " local luckyDef=LuckyV1.Dodge(defender,amount,attacker,kind,attackId);local luckyAtk=collision and LuckyV1.Dodge(attacker,incoming,defender,'Collision',nil)\n if luckyDef then amount=0 end;if luckyAtk then incoming=0 end\n if amount>0 and amount>=b.health"
+      },
+      {
+        "before": "local lost=math.min(b.health,amount);local attackerLost=math.min(a.health,incoming)",
+        "after": "if luckyDef then amount=0 end;if luckyAtk then incoming=0 end\n local lost=math.min(b.health,amount);local attackerLost=math.min(a.health,incoming)"
+      },
+      {
+        "before": "Fleau.CommitContact(attacker,defender,fleauAttackMode);Fleau.CommitContact(defender,attacker,fleauRecoilMode)",
+        "after": "if not luckyDef then Fleau.CommitContact(attacker,defender,fleauAttackMode)end;if not luckyAtk then Fleau.CommitContact(defender,attacker,fleauRecoilMode)end "
+      },
+      {
+        "before": "SymV1.Confirm(attacker,defender,lost,attackerLost,collision);",
+        "after": "LuckyV1.Confirm(attacker,defender,lost,attackerLost,collision,kind,attackId);SymV1.Confirm(attacker,defender,lost,attackerLost,collision);"
+      },
+      {
+        "before": "SymV1.Healed(model,r.health-before)",
+        "after": "LuckyV1.Healed(model,r.health-before);SymV1.Healed(model,r.health-before)"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.RoundManager",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "state:SetAttribute(\"RoundVictoryStartedAt\",start)",
+        "after": "if model and model:GetAttribute('CraxId')=='Crax_Lucky'then state:SetAttribute('LuckyVictoryMatch',state:GetAttribute('CraxMatchToken'))end\n state:SetAttribute(\"RoundVictoryStartedAt\",start)"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.CraxSuperRuntime",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "\nreturn M\n",
+        "after": "\nfunction M.LuckyAttackId(m,kind)local r=records[m];return r and r.cast and r.cast.id end\nfunction M.CancelLucky(m)\n local r=records[m];if r then r.lastStandSpent=r.lastStand or r.lastStandSpent;r.lastStand=false;r.mode=nil;r.age=0;r.cast=nil;r.nextDash=r.time+rand(C.DashWait[1],C.DashWait[2]);r.nextLaser=r.time+rand(C.LaserWait[1],C.LaserWait[2]);r.ready={};r.contacts=0;setMode(m,r);crystals[m]=nil\n for target,group in pairs(freezes)do if group[m]then releaseFreeze(target,m)end end;emit('OwnerClear',{Owner=m}) end\nend\nreturn M\n"
+      },
+      {
+        "before": "if r.mode=='Dash'or r.lastStand then return 0 end",
+        "after": "if m:GetAttribute('LuckyTricked')then return amount end\n if r.mode=='Dash'or r.lastStand then return 0 end\n if r.lastStandSpent then return amount end"
+      },
+      {
+        "before": "if not r or not alive(a)or damage<=0 then return end",
+        "after": "if not r or a:GetAttribute(\"LuckyTricked\")or not alive(a)or damage<=0 then return end"
+      },
+      {
+        "before": "if r and r.lastStand and C.LastStandHealing",
+        "after": "if r and(r.lastStand or r.lastStandSpent)and C.LastStandHealing"
+      },
+      {
+        "before": "if r then\n   if not alive(f.model)",
+        "after": "if r then\n   if f.model:GetAttribute('LuckyTricked')then continue end\n   if not alive(f.model)"
+      },
+      {
+        "before": "false,'SuperDash')",
+        "after": "false,'SuperDash',nil,tostring(cast.id)..':'..turn)"
+      },
+      {
+        "before": "false,'SuperLaser')",
+        "after": "false,'SuperLaser',nil,cast.id)"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.CraxSymRuntime",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "\nreturn M\n",
+        "after": "\nfunction M.LuckyAttackId(m,kind)local r=records[m];local a=r and(kind=='SymParasite'and r.parasite or r.attack);return a and a.id end\nfunction M.CancelLucky(m)local r=records[m];if r then clear(m,r);records[m]=nil end;for i=#pending,1,-1 do if pending[i].owner==m then table.remove(pending,i)end end end\nreturn M\n"
+      },
+      {
+        "before": "if not live(owner)then return end",
+        "after": "if not live(owner)or owner:GetAttribute(\"LuckyTricked\")then return end"
+      },
+      {
+        "before": "if not live(m)then return end;local r=get(m)",
+        "after": "if not live(m)or m:GetAttribute(\"LuckyTricked\")then return end;local r=get(m)"
+      },
+      {
+        "before": "if r and not Gate.Paused(f.model)",
+        "after": "if r and not f.model:GetAttribute(\"LuckyTricked\")and not Gate.Paused(f.model)"
+      },
+      {
+        "before": "  if first then\n",
+        "after": "  if first and require(SSS.CraxLuckyRuntime).Dodge(first.model,C.Damage,f.model,'SymTongue',a.id)then a.mode='Return';a.age=0;emit('Miss',{Owner=f.model,Activation=a.id});return end\n  if first then\n"
+      },
+      {
+        "before": "if(p.position-t.position).Magnitude<=t.radius+.55 then p.mode='Attached';p.age=0;emit('ParasiteAttach',{Owner=f.model,Target=t.model,Activation=p.id})end",
+        "after": "if(p.position-t.position).Magnitude<=t.radius+.55 then if require(SSS.CraxLuckyRuntime).Dodge(t.model,C.ParasiteDPS,f.model,'SymParasite',p.id)then p.mode='Return';p.age=0 else p.mode='Attached';p.age=0;emit('ParasiteAttach',{Owner=f.model,Target=t.model,Activation=p.id})end end"
+      },
+      {
+        "before": "false,'SymTongue')",
+        "after": "false,'SymTongue',nil,a.id)"
+      },
+      {
+        "before": "false,'SymParasite')",
+        "after": "false,'SymParasite',nil,p.id)"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.CraxInvertedRuntime",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "\nreturn M\n",
+        "after": "\nfunction M.CancelLucky(m)\n local r=records[m];if r then r.mark=nil;r.pending=nil;r.count=0;r.markAttempted=true;r.nextMute=r.time+random(5,9);publish(m,r)end\n for target,s in pairs(statuses)do if s.owner==m then attrs(target,nil);statuses[target]=nil end end\n emit('Cancel',{Owner=m})\nend\nreturn M\n"
+      },
+      {
+        "before": "statuses[m]=Rules.ApplyStatus(statuses[m],time,r.level>=1);attrs(m,statuses[m])",
+        "after": "statuses[m]=Rules.ApplyStatus(statuses[m],time,r.level>=1);statuses[m].owner=f.model;attrs(m,statuses[m])"
+      },
+      {
+        "before": "local ra,rb=records[a],records[b]",
+        "after": "local ra,rb=records[a],records[b];if a:GetAttribute(\"LuckyTricked\")then ra=nil end;if b:GetAttribute(\"LuckyTricked\")then rb=nil end"
+      },
+      {
+        "before": "function M.Melee(m,normal)",
+        "after": "function M.Melee(m,normal)if m:GetAttribute(\"LuckyTricked\")then return normal end "
+      },
+      {
+        "before": "if r then\n   local e=Rules.Advance",
+        "after": "if r and not f.model:GetAttribute(\"LuckyTricked\")then\n   local e=Rules.Advance"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.FleauRuntime",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "function M.Step(dt,fighters,enabled)",
+        "after": "function M.Step(dt,fighters,enabled)\n for _,f in ipairs(fighters)do if f.model:GetAttribute(\"CraxId\")==\"Crax_Fleau\"and f.model:GetAttribute(\"LuckyTricked\")then return end end"
+      },
+      {
+        "before": "local function rec(m)\n if not is(m)then return end",
+        "after": "local function rec(m)\n if not is(m)or m:GetAttribute(\"LuckyTricked\")then return end"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.GhostyNight",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "\nreturn Night\n",
+        "after": "\nfunction Night.CancelLucky(m,fighters)local spent=escapes[m];Night.Reset(fighters);escapes[m]=spent;m:SetAttribute('GhostEscapeUsed',spent==true)end\nreturn Night\n"
+      },
+      {
+        "before": "function Night.Step(clock,dt,fighters,clearWebs)",
+        "after": "function Night.Step(clock,dt,fighters,clearWebs)\n for _,f in ipairs(fighters)do if ghost(f)and f.model:GetAttribute(\"LuckyTricked\")then return false end end"
+      },
+      {
+        "before": "false,\"GhostBleed\")",
+        "after": "false,\"GhostBleed\",nil,tostring(bleed))"
+      },
+      {
+        "before": "false,\"GhostSlash\")",
+        "after": "false,\"GhostSlash\",nil,record.sequence)"
+      },
+      {
+        "before": "    if amount>0 then spent[target]",
+        "after": "    local luckyMiss=amount>0 and require(SSS.CraxLuckyRuntime).Dodge(target,amount,owner,\"GhostSlash\",record.sequence)\n    if amount>0 then spent[target]"
+      },
+      {
+        "before": "if numeric(target,\"Health\",0)>0 and not bleeds[target]",
+        "after": "if not luckyMiss and numeric(target,\"Health\",0)>0 and not bleeds[target]"
+      },
+      {
+        "before": "bleeds[target]={source=owner,timer=0,remaining=10}",
+        "after": "bleeds[target]={source=owner,timer=0,remaining=10,luckyAttackId=record.sequence}"
+      },
+      {
+        "before": "nil,tostring(bleed))",
+        "after": "nil,bleed.luckyAttackId)"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.CraxDeadlyRuntime",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "function M.Step(dt,fighters)",
+        "after": "function M.CancelLucky(model)cleanup();M.luckyRestart=true end\nfunction M.Step(dt,fighters)\n if M.luckyRestart then local blocked=false;for _,f in ipairs(fighters)do if f.model:GetAttribute('LuckyTricked')then blocked=true end end;if not blocked then start();M.luckyRestart=false end end"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.MonsterBiteAbilities",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "local enabled = f.model:GetAttribute(\"AbilityId\") == \"MonsterBite\"",
+        "after": "local enabled = f.model:GetAttribute(\"AbilityId\") == \"MonsterBite\"and not f.model:GetAttribute(\"LuckyTricked\")"
+      }
+    ]
+  },
+  {
+    "path": "StarterPlayer.StarterPlayerScripts.CraxBiteSmoothClient",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "if not allowed()or not f.head.Parent or f.model:GetAttribute(\"AbilityId\")~=\"MonsterBite\"then",
+        "after": "if f.model:GetAttribute(\"LuckyTricked\")or not allowed()or not f.head.Parent or f.model:GetAttribute(\"AbilityId\")~=\"MonsterBite\"then"
+      }
+    ]
+  },
+  {
+    "path": "StarterPlayer.StarterPlayerScripts.CopEmClient",
+    "kind": "patch",
+    "prepend": "local function luckyIconV1(parent,kind,x,y,size)\n local C=require(game:GetService('ReplicatedStorage').CraxLuckyConfig);local key=({LuckyDice='Dice',LuckyClover='Clover',LuckyJackpot='Jackpot',LuckyFinale='Max'})[kind]\n local f=Instance.new('Frame');f.Size=UDim2.fromOffset(size,size);f.Position=UDim2.fromOffset(x,y);f.BackgroundTransparency=1;f.Parent=parent\n if C.Icons[key]~=''then local i=Instance.new('ImageLabel');i.Size=UDim2.fromScale(1,1);i.BackgroundTransparency=1;i.Image=C.Icons[key];i.ScaleType=Enum.ScaleType.Fit;i.ZIndex=5;i.Parent=f\n else local t=Instance.new('TextLabel');t.Size=UDim2.fromScale(1,1);t.Text=({Dice='2 DÉS',Clover='CHANCE',Jackpot='JACKPOT',Max='MAX'})[key];t.Font=Enum.Font.FredokaOne;t.TextScaled=true;t.TextColor3=Color3.fromRGB(255,211,87);t.BackgroundTransparency=1;t.ZIndex=5;t.Parent=f end\n return f\nend\n",
+    "replacements": [
+      {
+        "before": "local function emblem(parent,kind,color,x,y,size)",
+        "after": "local function emblem(parent,kind,color,x,y,size)\n if type(kind)=='string'and kind:sub(1,5)=='Lucky'then luckyIconV1(parent,kind,x,y,size);return end"
+      },
+      {
+        "before": "    if i==4 and currentCrax==\"Crax_Symbioti\"then",
+        "after": "    if i==4 and currentCrax==\"Crax_Lucky\"then\n     if revealed then luckyIconV1(node,upgrade.Id,3,3,56)else local mark=text(node,\"?\",0,0,62,62,35,C.muted);mark.TextXAlignment=Enum.TextXAlignment.Center end\n    elseif i==4 and currentCrax==\"Crax_Symbioti\"then"
+      }
+    ]
+  },
+  {
+    "path": "ReplicatedStorage.CraxBookCinema",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "self.trophyArt:ClearAllChildren()",
+        "after": "self.trophyArt:ClearAllChildren()\n if id=='Crax_Lucky'then local C=require(game:GetService('ReplicatedStorage').CraxLuckyConfig);if C.Icons.Max~=''then make('ImageLabel',{Size=UDim2.fromScale(1,1),BackgroundTransparency=1,Image=C.Icons.Max,ScaleType=Enum.ScaleType.Fit,ZIndex=113},self.trophyArt)else make('TextLabel',{Size=UDim2.fromScale(1,1),BackgroundTransparency=1,Text='MAX',TextScaled=true,Font=Enum.Font.FredokaOne,TextColor3=Color3.fromRGB(255,211,87),ZIndex=113},self.trophyArt)end;self.trophyIcon.TrophyTitle.Text=C.MaxTitle;return end"
+      }
+    ]
+  },
+  {
+    "path": "StarterPlayer.StarterPlayerScripts.ArenaCamera",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "local function beginDefeat() -- FantasticExclusiveFinale_v4",
+        "after": "local function beginDefeat() -- FantasticExclusiveFinale_v4\n if state:GetAttribute('RoundVictoryKind')=='LuckyFinale'and state:GetAttribute('RoundVictoryRound')==state:GetAttribute('RoundId')then clearDefeat();return end"
+      },
+      {
+        "before": "if player:GetAttribute(\"SymCameraOwner\")then",
+        "after": "if player:GetAttribute(\"LuckyCameraOwner\")then if defeat then clearDefeat()end;return end\n  if player:GetAttribute(\"SymCameraOwner\")then"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.FantasticRuntime",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "function M.Step(dt,fighters)",
+        "after": "function M.Step(dt,fighters)\n for _,f in ipairs(fighters)do if f.model:GetAttribute(\"CraxId\")==\"Crax_Fantastic\"and f.model:GetAttribute(\"LuckyTricked\")then return end end"
+      },
+      {
+        "before": "false,'FantasticElastic')",
+        "after": "false,'FantasticElastic',nil,h.id)"
+      },
+      {
+        "before": "   if chosen then enemy=chosen end",
+        "after": "   if chosen and require(SSS.CraxLuckyRuntime).Dodge(chosen.model,2,r.f.model,'FantasticElastic',h.id)then h.stage='return';h.index=#h.path;return end\n   if chosen then enemy=chosen end"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.CraxGoldenRuntime",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "function M.Step(dt,fighters,active)",
+        "after": "function M.Step(dt,fighters,active)\n for _,f in ipairs(fighters)do if f.model:GetAttribute(\"CraxId\")==\"Crax_Golden\"and f.model:GetAttribute(\"LuckyTricked\")then return end end"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.CraxPlumberRuntime",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "function M.Step(dt,enabled)",
+        "after": "function M.Step(dt,enabled)\n for _,f in ipairs(fighters)do if f.model:GetAttribute(\"CraxId\")==\"Crax_Plumber\"and f.model:GetAttribute(\"LuckyTricked\")then return end end"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.CraxBurning",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "function M.Apply(attacker,target)",
+        "after": "function M.CancelLuckyOwner(owner)\n local Deadly=require(SSS.CraxDeadlyRuntime);local targets={};for target,r in pairs(records)do if r.attacker==owner or Deadly.Root(r.attacker)==owner then targets[#targets+1]=target end end;for _,target in ipairs(targets)do M.Clear(target)end\nend\nfunction M.Apply(attacker,target)\n if attacker and attacker:GetAttribute('LuckyTricked')then return false end"
+      },
+      {
+        "before": "false,\"Burning\")",
+        "after": "false,\"Burning\",nil,tostring(r))"
+      },
+      {
+        "before": "local M={};local records={}",
+        "after": "local M={};local records={};local luckySerial=0"
+      },
+      {
+        "before": "else record={attacker=attacker,remaining=3,tick=0,round=state:GetAttribute(\"RoundId\")};records[target]=record end",
+        "after": "else luckySerial+=1;record={attacker=attacker,remaining=3,tick=0,round=state:GetAttribute(\"RoundId\"),luckyAttackId=luckySerial};records[target]=record end"
+      },
+      {
+        "before": "nil,tostring(r))",
+        "after": "nil,r.luckyAttackId)"
+      }
+    ]
+  },
+  {
+    "path": "ServerScriptService.CraxSpideyRuntime",
+    "kind": "patch",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "false,\"SpideyPoison\")",
+        "after": "false,\"SpideyPoison\",nil,tostring(p))"
+      },
+      {
+        "before": " poisons[defender]={attacker=attacker,round=state:GetAttribute(\"RoundId\"),next=now+1,remaining=4}",
+        "after": " serial+=1;poisons[defender]={attacker=attacker,round=state:GetAttribute(\"RoundId\"),next=now+1,remaining=4,luckyAttackId=serial}"
+      },
+      {
+        "before": "nil,tostring(p))",
+        "after": "nil,p.luckyAttackId)"
+      }
+    ]
+  }
+]

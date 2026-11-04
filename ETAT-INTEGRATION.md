@@ -1,3 +1,5 @@
+Le dernier lot est **LuckyCrax** : [état réel, limites et imports restants](docs/luckycrax/ETAT.md), [installation](docs/luckycrax/INSTALLATION.md), [tests locaux](docs/luckycrax/TESTS.md). Le statut ci-dessous concerne le lot historique InvertedCrax.
+
 # État réel — InvertedCrax
 
 Le ZIP d’intégration contient maintenant les ressources ET le code : six nouvelles sources, vingt et une sources existantes adaptées, installateur unique, retour arrière et configuration des vrais IDs audio/icône.

@@ -1,0 +1,157 @@
+{
+  "sampleRate": 44100,
+  "duration": 16.24,
+  "atlasRobloxId": "",
+  "segments": {
+    "CoinFlip": {
+      "Start": 0.0,
+      "End": 0.42,
+      "Loop": false,
+      "file": "CoinFlip.wav"
+    },
+    "CoinRevealPile": {
+      "Start": 0.54,
+      "End": 0.86,
+      "Loop": false,
+      "file": "CoinRevealPile.wav"
+    },
+    "CoinRevealFace": {
+      "Start": 0.98,
+      "End": 1.38,
+      "Loop": false,
+      "file": "CoinRevealFace.wav"
+    },
+    "CoinLaunch": {
+      "Start": 1.5,
+      "End": 1.8,
+      "Loop": false,
+      "file": "CoinLaunch.wav"
+    },
+    "CoinBounce": {
+      "Start": 1.92,
+      "End": 2.1,
+      "Loop": false,
+      "file": "CoinBounce.wav"
+    },
+    "CoinHit": {
+      "Start": 2.22,
+      "End": 2.5,
+      "Loop": false,
+      "file": "CoinHit.wav"
+    },
+    "DiceLaunch": {
+      "Start": 2.62,
+      "End": 3.12,
+      "Loop": false,
+      "file": "DiceLaunch.wav"
+    },
+    "DiceBounce": {
+      "Start": 3.24,
+      "End": 3.46,
+      "Loop": false,
+      "file": "DiceBounce.wav"
+    },
+    "DiceSettle": {
+      "Start": 3.58,
+      "End": 3.98,
+      "Loop": false,
+      "file": "DiceSettle.wav"
+    },
+    "DiceDouble": {
+      "Start": 4.1,
+      "End": 4.8,
+      "Loop": false,
+      "file": "DiceDouble.wav"
+    },
+    "CloverReady": {
+      "Start": 4.92,
+      "End": 5.47,
+      "Loop": false,
+      "file": "CloverReady.wav"
+    },
+    "CloverDodge": {
+      "Start": 5.59,
+      "End": 5.99,
+      "Loop": false,
+      "file": "CloverDodge.wav"
+    },
+    "CloverExpire": {
+      "Start": 6.11,
+      "End": 6.41,
+      "Loop": false,
+      "file": "CloverExpire.wav"
+    },
+    "ReelsStart": {
+      "Start": 6.53,
+      "End": 6.93,
+      "Loop": false,
+      "file": "ReelsStart.wav"
+    },
+    "ReelsLoop": {
+      "Start": 7.05,
+      "End": 7.65,
+      "Loop": true,
+      "file": "ReelsLoop.wav"
+    },
+    "ReelStop": {
+      "Start": 7.77,
+      "End": 7.99,
+      "Loop": false,
+      "file": "ReelStop.wav"
+    },
+    "JackpotHeal": {
+      "Start": 8.11,
+      "End": 8.81,
+      "Loop": false,
+      "file": "JackpotHeal.wav"
+    },
+    "JackpotCoins": {
+      "Start": 8.93,
+      "End": 9.63,
+      "Loop": false,
+      "file": "JackpotCoins.wav"
+    },
+    "JackpotCheat": {
+      "Start": 9.75,
+      "End": 10.6,
+      "Loop": false,
+      "file": "JackpotCheat.wav"
+    },
+    "CoinVolley": {
+      "Start": 10.72,
+      "End": 10.9,
+      "Loop": false,
+      "file": "CoinVolley.wav"
+    },
+    "CheatEnd": {
+      "Start": 11.02,
+      "End": 11.44,
+      "Loop": false,
+      "file": "CheatEnd.wav"
+    },
+    "MaxBuild": {
+      "Start": 11.56,
+      "End": 12.76,
+      "Loop": false,
+      "file": "MaxBuild.wav"
+    },
+    "MaxSuspense": {
+      "Start": 12.88,
+      "End": 13.98,
+      "Loop": false,
+      "file": "MaxSuspense.wav"
+    },
+    "MaxPrize": {
+      "Start": 14.1,
+      "End": 15.1,
+      "Loop": false,
+      "file": "MaxPrize.wav"
+    },
+    "MaxTitle": {
+      "Start": 15.22,
+      "End": 16.12,
+      "Loop": false,
+      "file": "MaxTitle.wav"
+    }
+  }
+}

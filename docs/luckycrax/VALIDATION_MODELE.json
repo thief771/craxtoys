@@ -1,0 +1,14 @@
+{
+  "nativeGroups": 48,
+  "nativeVerticesUnchanged": 22865,
+  "fxMeshesReimported": 32,
+  "diceFacesFrontAndUpright": 6,
+  "oppositePairs": [
+    "1/6",
+    "2/5",
+    "3/4"
+  ],
+  "distinctHeartLeaves": 4,
+  "body": false,
+  "engine": "Blender4.3.2; not Roblox Studio"
+}
