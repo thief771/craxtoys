@@ -1,0 +1,27 @@
+{
+  "headOnly": true,
+  "originalGroups": 48,
+  "accessories": [
+    "P_HelmetRedClosed",
+    "P_HelmetBurgundyStripe",
+    "P_PurpleBrow",
+    "P_Cheek_-1",
+    "P_Cheek_1"
+  ],
+  "markers": [
+    "P_FitOrigin",
+    "P_FitUp",
+    "P_FitFront"
+  ],
+  "fx": [
+    "PFX_Shard",
+    "PFX_DialRing",
+    "PFX_DialTicks",
+    "PFX_DialHand",
+    "PFX_TrophyBase",
+    "PFX_Origin",
+    "PFX_Up",
+    "PFX_Front"
+  ],
+  "sourceSHA256": "f731f741feb90a6857d9d2014bb1d23c43a06c47d99ae0e648915238b3718158"
+}

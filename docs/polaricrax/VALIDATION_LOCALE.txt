@@ -1,0 +1,48 @@
+2026-11-05 — validation locale ; doubles des services Roblox, aucun test Studio.
+
+
+> craxtoys-invertedcrax@1.0.0 test
+> node tests/run_inverted.mjs && node tests/run_installer.mjs && node tests/run_client.mjs && npm run test:super && npm run test:sym && npm run test:lucky && npm run test:polari
+
+COMPILE PASS 30 complete Luau scripts
+PURE RULES PASS 75 assertions
+CATALOG PASS 21 assertions
+REAL RUNTIME FIXTURE PASS 21 assertions
+ACTUAL COMBAT HEALTH + RUNTIME PASS 12 assertions
+TOTAL ASSERTIONS 129
+InvertedCrax installé : tête native préservée, livre, casino, serveur et client ajoutés.
+InvertedCrax déjà installé, aucun doublon.
+Intégration InvertedCrax retirée. Les profils et possessions sauvegardés ne sont pas effacés ; conserver les données pour réinstallation.
+InvertedCrax installé : tête native préservée, livre, casino, serveur et client ajoutés.
+ACTUAL INSTALLER / ROLLBACK FIXTURE PASS 62 assertions
+ACTUAL CLIENT VFX LIFECYCLE PASS 10 assertions
+
+> craxtoys-invertedcrax@1.0.0 test:super
+> node tests/run_super.mjs && node tests/run_super_catalog.mjs && node tests/run_super_installer.mjs && SUPER_BASE=1 node tests/run_super_installer.mjs && node tests/run_super_client.mjs
+
+SUPER COMPILE PASS 22 complete scripts
+SUPER PURE RULES PASS 49 assertions
+SUPER REAL RUNTIME PASS 213 assertions
+SUPER REAL COMBAT HEALTH PASS 18 assertions
+SUPER REAL CATALOG / CASINO PASS 50 assertions
+SuperCrax installé avec les sources ACTUELLES préservées et les vrais meshes importés. Sauvegarder la place puis lancer un NOUVEAU Play.
+Configuration : ReplicatedStorage.CraxSuperConfig ; sons/icônes : BRANCHER_ASSETS.lua. Les ressources sans ID ne bloquent pas les pouvoirs.
+SuperCrax déjà installé : aucun doublon.
+SuperCrax retiré ; versions précédentes exactes restaurées. Les données joueur et les IDs utilisateur ne sont pas effacés.
+SuperCrax installé avec les sources ACTUELLES préservées et les vrais meshes importés. Sauvegarder la place puis lancer un NOUVEAU Play.
+Configuration : ReplicatedStorage.CraxSuperConfig ; sons/icônes : BRANCHER_ASSETS.lua. Les ressources sans ID ne bloquent pas les pouvoirs.
+SUPER ACTUAL INSTALL / ROLLBACK PASS 59 assertions
+SuperCrax installé avec les sources ACTUELLES préservées et les vrais meshes importés. Sauvegarder la place puis lancer un NOUVEAU Play.
+Configuration : ReplicatedStorage.CraxSuperConfig ; sons/icônes : BRANCHER_ASSETS.lua. Les ressources sans ID ne bloquent pas les pouvoirs.
+SuperCrax déjà installé : aucun doublon.
+SuperCrax retiré ; versions précédentes exactes restaurées. Les données joueur et les IDs utilisateur ne sont pas effacés.
+SuperCrax installé avec les sources ACTUELLES préservées et les vrais meshes importés. Sauvegarder la place puis lancer un NOUVEAU Play.
+Configuration : ReplicatedStorage.CraxSuperConfig ; sons/icônes : BRANCHER_ASSETS.lua. Les ressources sans ID ne bloquent pas les pouvoirs.
+SUPER ACTUAL INSTALL / ROLLBACK PASS 59 assertions
+SUPER ACTUAL CLIENT LIFECYCLE PASS 22 assertions
+
+Après ajout du diagnostic en lecture seule : POLARI COMPILE PASS 34 scripts complets ; POLARI REAL RUNTIME / HEALTH PASS 51 assertions.
+
+Après ajout des gardes de structure privée : POLARI ACTUAL EDITOR INSTALL / UNDO PASS 99 assertions. Compilation finale : 34 scripts complets.
+
+Dernier passage après étincelle violette et retrait du lanceur : client/caméra/audio31 assertions, installateur99, compilation34 scripts, serveur/santé51. Tous passent.

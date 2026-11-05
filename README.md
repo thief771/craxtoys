@@ -1,3 +1,17 @@
+# 7 Deadly Crax — PolariCrax
+
+**[Télécharger PolariCrax-TOTAL.zip](dist/PolariCrax-TOTAL.zip)** · [Installation Studio et commande complète](docs/polaricrax/INSTALLATION.md) · [Tests et état réel](docs/polaricrax/TESTS_ET_ETAT.md)
+
+Véritable CraxSourire tête seule, vinyle blanc, yeux fermés noirs, sourire ivoire et casque rouge/bordeaux à protections violettes. Rare, 110 PV, mêlée 7. Impulsion magnétique, attraction, inversion et Temps suspendu avec fenêtre d’esquive ; exécution MAX et trophée **L’ULTIME SECONDE**.
+
+![PolariCrax — rendu Blender des meshes livrés](assets/polaricrax/model/trois-quarts.png)
+
+[Face](assets/polaricrax/model/face.png) · [Profil](assets/polaricrax/model/profil.png) · [Dos interprété](assets/polaricrax/model/dos.png) · [Illustrations transparentes](assets/polaricrax/illustrations/) · [Écouter les dix-neuf sons](assets/polaricrax/audio/ECOUTER.html) · [Architecture et réglages configurables](docs/polaricrax/ANALYSE_ET_CHOIX.md)
+
+Les sources, FBX/OBJ/Blender, VFX, atlas audio de 12,22 s, livre, catalogue/casino Rare et commandes d’installation/retrait sont fournis. Les contrôles locaux couvrent le vrai serveur, les pauses imbriquées, le plafond de 18 dégâts même après amplification, l’installation réversible, le client/caméra/audio et la géométrie visible des yeux et du sourire. **Les imports, autorisations et essais Roblox Studio restent à effectuer** ; aucune place ni ressource Roblox n’a été publiée ici. La commande STOP préserve les buffers éditeur actuels et refuse les conflits.
+
+---
+
 # 7 Deadly Crax — LuckyCrax
 
 **[Télécharger LuckyCrax-TOTAL.zip](dist/LuckyCrax-TOTAL.zip)** · [Installation Studio](docs/luckycrax/INSTALLATION.md) · [État réel et limites](docs/luckycrax/ETAT.md) · [Tests](docs/luckycrax/TESTS.md)

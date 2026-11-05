@@ -1,0 +1,70 @@
+{
+  "PolariAttract.png": {
+    "size": [
+      640,
+      640
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "contentBounds": [
+      65,
+      129,
+      534,
+      552
+    ]
+  },
+  "PolariStop.png": {
+    "size": [
+      640,
+      640
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "contentBounds": [
+      66,
+      44,
+      573,
+      552
+    ]
+  },
+  "PolariInvert.png": {
+    "size": [
+      640,
+      640
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "contentBounds": [
+      106,
+      129,
+      575,
+      552
+    ]
+  },
+  "PolariMax.png": {
+    "size": [
+      640,
+      640
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "contentBounds": [
+      66,
+      44,
+      573,
+      552
+    ]
+  }
+}

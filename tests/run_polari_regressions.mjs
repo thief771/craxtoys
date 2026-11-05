@@ -1,0 +1,8 @@
+// Exercise the prior real server suites with Polari's current CombatHealth, not just old snapshots.
+import fs from'node:fs';import path from'node:path';import{spawnSync}from'node:child_process';const root=path.resolve(import.meta.dirname,'..');
+for(const family of['super','sym','lucky']){
+ let code=fs.readFileSync(path.join(root,'tests/run_'+family+'.mjs'),'utf8');const needle="fs.readFileSync(path.join(root,p),'utf8')";if(!code.includes(needle))throw Error('Runner shape changed');
+ code=code.replace(needle,`(()=>{const name=p.split('/').pop();let actual=p;if(name==='CombatHealth.lua')actual='integration/polaricrax/review/ServerScriptService/CombatHealth.lua';else if(['CraxSuperRuntime.lua','CraxSymRuntime.lua','CraxInvertedRuntime.lua'].includes(name))actual='integration/luckycrax/review/ServerScriptService/'+name;let text=fs.readFileSync(path.join(root,actual),'utf8');if(p==='tests/super_runtime_fixture.lua')text+="\\nsss.CraxPolariRuntime='polariStub';modules.polariStub={PowerResult=function()end};sss.CraxLuckyRuntime='luckyStub';modules.luckyStub={AttackId=function(_,_,id)return id end,Dodge=function()return false end,Confirm=function()end,Healed=function()end};sss.CraxSymRuntime='sym';modules.sym={Reduce=function(_,v)return v end,PowerResult=function()end,Confirm=function()end,Healed=function()end}\\n";return text})()`);
+ const file=path.join(root,'tests/.polari-regression-'+family+'.mjs');try{fs.writeFileSync(file,code);const result=spawnSync(process.execPath,[file],{cwd:root,stdio:'inherit'});if(result.status!==0)throw Error(family+' regression failed');}finally{fs.unlinkSync(file);}
+}
+console.log('POLARI CURRENT HEALTH REGRESSIONS PASS: Super, Symbioti, Lucky; real existing runtimes');

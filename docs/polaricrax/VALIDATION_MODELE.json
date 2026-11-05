@@ -1,0 +1,17 @@
+{
+  "engine": "Blender4.3.2, not Roblox Studio",
+  "nativeGroups": 48,
+  "nativeVerticesUnchanged": 22865,
+  "publishedMeshNamesExpected": 16,
+  "restingHelmetHasNoDialOrShards": true,
+  "closedHelmetTop": true,
+  "visibleSourceSamples": {
+    "eyes": 350,
+    "teeth": 2864
+  },
+  "helmetOccludedSourceSamples": {
+    "eyes": 0,
+    "teeth": 0
+  },
+  "shardAxisPointsForward": true
+}

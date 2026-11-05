@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node tests/run_inverted.mjs && node tests/run_installer.mjs && node tests/run_client.mjs && npm run test:super && npm run test:sym && npm run test:lucky",
+    "test": "node tests/run_inverted.mjs && node tests/run_installer.mjs && node tests/run_client.mjs && npm run test:super && npm run test:sym && npm run test:lucky && npm run test:polari",
     "build:installer": "python3 tools/build_inverted_package.py",
     "test:super": "node tests/run_super.mjs && node tests/run_super_catalog.mjs && node tests/run_super_installer.mjs && SUPER_BASE=1 node tests/run_super_installer.mjs && node tests/run_super_client.mjs",
     "build:super": "python3 tools/build_super_package.py",
@@ -14,7 +14,10 @@
     "package:sym": "python3 tools/build_sym_zip.py",
     "test:lucky": "node tests/run_lucky.mjs && node tests/run_lucky_catalog.mjs && node tests/run_lucky_installer.mjs && node tests/run_lucky_client.mjs && node tests/run_lucky_audio.mjs && node tests/run_lucky_family_regressions.mjs && python3 tools/validate_lucky_audio.py",
     "build:lucky": "python3 tools/build_lucky_package.py",
-    "package:lucky": "python3 tools/build_lucky_zip.py"
+    "package:lucky": "python3 tools/build_lucky_zip.py",
+    "test:polari": "node tests/run_polari.mjs && node tests/run_polari_pause.mjs && node tests/run_polari_catalog.mjs && node tests/run_polari_installer.mjs && node tests/run_polari_client.mjs && node tests/run_polari_audio.mjs && node tests/run_polari_regressions.mjs && python3 tools/validate_polari_audio.py",
+    "build:polari": "python3 tools/build_polari_package.py",
+    "package:polari": "python3 tools/build_polari_zip.py"
   },
   "devDependencies": {
     "luau-web": "1.5.1"

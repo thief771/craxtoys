@@ -1,0 +1,10 @@
+-- STOP. Lecture seule des buffers d’éditeur aux points réellement intégrés.
+do
+assert(not game:GetService('RunService'):IsRunning(),'Arrêter Play')
+local SES=game:GetService('ScriptEditorService');local HTTP=game:GetService('HttpService');local wanted={['ReplicatedStorage.CraxCatalog']=true,['ReplicatedStorage.CraxSkillCatalog']=true,['ReplicatedStorage.CraxEffectsCatalog']=true,['ReplicatedStorage.CraxVictoryCatalog']=true,['ReplicatedStorage.CraxRouletteConfig']=true,['ServerScriptService.CraxSkinServer']=true,['ServerScriptService.ArenaMovement']=true,['ServerScriptService.CombatHealth']=true,['ServerScriptService.RoundManager']=true,['ServerScriptService.CraxLuckyAdapters']=true,['ServerScriptService.CraxPlumberRuntime']=true,['ServerScriptService.CraxSpideyRuntime']=true,['ServerScriptService.FleauRuntime']=true,['ServerScriptService.FleauControl']=true,['ServerScriptService.FantasticRuntime']=true,['ServerScriptService.GhostyNight']=true,['ServerScriptService.CraxDeadlyRuntime']=true,['StarterPlayer.StarterPlayerScripts.CopEmClient']=true,['ReplicatedStorage.CraxBookCinema']=true,['StarterPlayer.StarterPlayerScripts.ArenaCamera']=true};local out={scripts={},templates={}}
+for _,service in ipairs({'ReplicatedStorage','ServerScriptService','StarterPlayer'})do for _,o in ipairs(game:GetService(service):GetDescendants())do if o:IsA('LuaSourceContainer')then local path=o:GetFullName();if wanted[path]or o.Name:find('Polari',1,true)then local ok,s=pcall(function()return SES:GetEditorSource(o)end);out.scripts[#out.scripts+1]={path=path,class=o.ClassName,source=ok and s or nil,error=not ok and tostring(s)or nil}end end end end
+local templates=game:GetService('ServerStorage'):FindFirstChild('CraxTemplates');if templates then for _,o in ipairs(templates:GetChildren())do out.templates[#out.templates+1]={name=o.Name,class=o.ClassName}end end
+local text=HTTP:JSONEncode(out);local size=12000;local total=math.ceil(#text/size);print('POLARI_DIAGNOSTIC_BEGIN '..total)
+for i=1,total do print('POLARI_SOURCE_'..i..'/'..total..' '..text:sub((i-1)*size+1,i*size))end
+print('POLARI_DIAGNOSTIC_END — aucune modification')
+end
