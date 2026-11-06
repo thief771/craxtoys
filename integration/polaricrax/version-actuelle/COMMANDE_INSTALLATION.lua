@@ -1,0 +1,30 @@
+-- Coller dans la barre de commande de Studio, Play arrêté.
+do
+ assert(not game:GetService("RunService"):IsRunning(), "Arrêtez Play avant l'installation")
+ local H = game:GetService("HttpService")
+ local url = "https://raw.githubusercontent.com/thief771/craxtoys/c9d0f8231d8ac0f09374bbb044edd0d0761b55a4/integration/polaricrax/version-actuelle/INSTALLER_POLARICRAX_VERSION_ACTUELLE.lua"
+ local enabled = H.HttpEnabled
+ if not enabled then H.HttpEnabled = true end
+ local fetched, source = pcall(function() return H:GetAsync(url, true) end)
+ if not enabled then H.HttpEnabled = false end
+ assert(fetched, "Téléchargement impossible : " .. tostring(source))
+ local install, problem = loadstring(source)
+ assert(install, problem)
+ local SS = game:GetService("ServerStorage")
+ local imported = SS:FindFirstChild("PolariCrax_Import")
+ local oldParent, oldName
+ if not imported and not SS:FindFirstChild("PolariCrax_Backup_V1") then
+  imported = workspace:FindFirstChild("PolariCrax_ACCESSOIRES_IMPORT")
+  assert(imported, "Modèle Polari absent : conserver les 16 meshes importés sous Workspace.PolariCrax_ACCESSOIRES_IMPORT")
+  oldParent, oldName = imported.Parent, imported.Name
+  imported.Name = "PolariCrax_Import"
+  imported.Parent = SS
+ end
+ local ok, err = pcall(install)
+ if not ok and oldParent and not SS:FindFirstChild("PolariCrax_Backup_V1") then
+  imported.Name = oldName
+  imported.Parent = oldParent
+ end
+ assert(ok, tostring(err))
+ print("PolariCrax : installation vérifiée. Enregistrez votre jeu, puis lancez un nouveau Play.")
+end

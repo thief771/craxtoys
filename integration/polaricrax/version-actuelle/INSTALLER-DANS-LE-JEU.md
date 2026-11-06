@@ -1,0 +1,14 @@
+# Installer directement dans le jeu ouvert
+
+Aucun autre fichier de jeu n'est nécessaire. Ouvrir votre jeu actuel dans Roblox Studio, arrêter Play et afficher la **Barre de commande** depuis Affichage ou Fenêtre selon la version de Studio.
+
+1. Copier tout [COMMANDE_INSTALLATION.lua](COMMANDE_INSTALLATION.lua) avec **Raw**, puis coller dans la barre de commande et valider.
+2. La commande récupère l'installateur de cette version précise du dépôt. Elle utilise les 16 meshes déjà importés sous `Workspace.PolariCrax_ACCESSOIRES_IMPORT` ou `ServerStorage.PolariCrax_Import`.
+3. Elle vérifie les sources actuelles avant modification et crée `ServerStorage.PolariCrax_Backup_V1`. Une version incompatible est refusée ; ne pas restaurer d'anciens scripts pour contourner ce refus.
+4. Après le message de réussite, enregistrer et lancer un nouveau Play. L'installation doit être validée à deux clients dans Studio.
+
+Les requêtes HTTP sont activées temporairement pour récupérer la commande, puis leur réglage antérieur est rétabli. Si le téléchargement est refusé, aucun script n'est installé : copier directement le contenu intégral de [l'installateur](INSTALLER_POLARICRAX_VERSION_ACTUELLE.lua) dans la barre de commande, après avoir placé le modèle importé sous `ServerStorage.PolariCrax_Import`.
+
+Pour retirer PolariCrax uniquement : arrêter Play et exécuter [COMMANDE_RETOUR_ARRIERE.lua](COMMANDE_RETOUR_ARRIERE.lua). Elle préserve les modifications concurrentes en refusant d'écraser une source éditée après installation.
+
+Les sons et illustrations nécessitent toujours leurs vrais identifiants Roblox ; voir [le guide](LIRE-MOI.txt). Le modèle n'est pas importé depuis Internet par cette commande : les meshes doivent être présents dans le jeu, comme dans le dernier fichier fourni.

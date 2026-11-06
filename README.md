@@ -1,5 +1,7 @@
 # Dernière version du jeu — Magneto / PolariCrax installé
 
+**[Installer directement dans votre jeu avec une commande Studio](integration/polaricrax/version-actuelle/INSTALLER-DANS-LE-JEU.md)** — sans télécharger une copie du jeu.
+
 **[Lire les scripts sur GitHub](integration/polaricrax/version-actuelle/sources)** · **[Télécharger les sources seules (.zip)](dist/Magneto-PolariCrax-sources.zip)** · [Comment ouvrir le jeu et ses scripts](integration/polaricrax/version-actuelle/OUVRIR-LES-SOURCES.md)
 
 **[Télécharger le jeu Roblox modifié (.rbxl)](dist/copie-jeu-PolariCrax-installe.rbxl)** · **[Pack complet](dist/Magneto-PolariCrax-livraison.zip)** · [Guide et retour arrière](integration/polaricrax/version-actuelle/LIRE-MOI.txt)
