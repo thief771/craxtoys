@@ -14,3 +14,5 @@ Pour retirer PolariCrax uniquement : arrêter Play et exécuter [COMMANDE_RETOUR
 Les sons et illustrations nécessitent toujours leurs vrais identifiants Roblox ; voir [le guide](LIRE-MOI.txt). Le modèle n'est pas importé depuis Internet par cette commande : les meshes doivent être présents dans le jeu, comme dans le dernier fichier fourni.
 
 `CombatState` peut être absent en STOP : RoundManager le crée au lancement. L’installateur vérifie cette initialisation dans le script actif, sans créer de dossier provisoire. Correction vérifiée avec 103 assertions d’installation/retrait, dont installation sans CombatState, refus d’un initialiseur absent ou désactivé, et préservation des éditions concurrentes.
+
+Correction Bat : le raccordement utilise l’entrée unique de `stepLamp` et vérifie la structure de sa minuterie. Le sérialiseur conserve les sauts de ligne des ancrages. Un test compare les 46 chaînes avant/après avec les opérations JSON, applique le raccordement au script Bat transmis et vérifie que la pause décale seulement son échéance absolue. La suite `npm run test:polari` inclut ce contrôle.
