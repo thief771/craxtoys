@@ -12,3 +12,5 @@ Les requêtes HTTP sont activées temporairement pour récupérer la commande, p
 Pour retirer PolariCrax uniquement : arrêter Play et exécuter [COMMANDE_RETOUR_ARRIERE.lua](COMMANDE_RETOUR_ARRIERE.lua). Elle préserve les modifications concurrentes en refusant d'écraser une source éditée après installation.
 
 Les sons et illustrations nécessitent toujours leurs vrais identifiants Roblox ; voir [le guide](LIRE-MOI.txt). Le modèle n'est pas importé depuis Internet par cette commande : les meshes doivent être présents dans le jeu, comme dans le dernier fichier fourni.
+
+`CombatState` peut être absent en STOP : RoundManager le crée au lancement. L’installateur vérifie cette initialisation dans le script actif, sans créer de dossier provisoire. Correction vérifiée avec 103 assertions d’installation/retrait, dont installation sans CombatState, refus d’un initialiseur absent ou désactivé, et préservation des éditions concurrentes.

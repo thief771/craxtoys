@@ -2,7 +2,7 @@
 do
  assert(not game:GetService("RunService"):IsRunning(), "Arrêtez Play avant l'installation")
  local H = game:GetService("HttpService")
- local url = "https://raw.githubusercontent.com/thief771/craxtoys/c9d0f8231d8ac0f09374bbb044edd0d0761b55a4/integration/polaricrax/version-actuelle/INSTALLER_POLARICRAX_VERSION_ACTUELLE.lua"
+ local url = "https://raw.githubusercontent.com/thief771/craxtoys/3a261e0e8974a78ea044a8733c9081d8d3470dbc/integration/polaricrax/version-actuelle/INSTALLER_POLARICRAX_VERSION_ACTUELLE.lua"
  local enabled = H.HttpEnabled
  if not enabled then H.HttpEnabled = true end
  local fetched, source = pcall(function() return H:GetAsync(url, true) end)
