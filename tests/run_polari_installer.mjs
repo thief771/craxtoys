@@ -6,9 +6,16 @@ let fixture=read('tests/super_installer_fixture.lua').replace("module.Name=='Cra
 fixture=fixture.replace("  if key=='GetPivot'then","  if key=='GetFullName'then return function()return object.Name end end\n  if key=='GetPivot'then");
 fixture=fixture.replace("Workspace.ImportedSuper","ServerStorage.PolariCrax_Import").replaceAll('FIT_Front','P_FitFront').replaceAll('FIT_Up','P_FitUp');
 let lua=fixture+`\nfor p,c in pairs({['ReplicatedStorage.CraxAbilityClock']='ModuleScript',['ServerScriptService.CraxAbilityGate']='ModuleScript',['ServerScriptService.CraxSkillResolver']='ModuleScript',['ServerScriptService.BiteHit']='BindableEvent',['ServerScriptService.CraxHeal']='BindableEvent',['Workspace.Arenabottom']='Part',['Workspace.ArenaTop']='Part',['Workspace.CombatState']='Folder'})do create(p,c)end\nlocal editors={};local ses=create('ScriptEditorService','ScriptEditorService');function ses:GetEditorSource(o)return editors[o]or o.Source end\nfunction ses:UpdateSourceAsync(o,fn)local after=fn(self:GetEditorSource(o));o.Source=after;editors[o]=after end\nlocal originals={};local expectedSources={}\n`;
-for(const[p,s]of Object.entries(bases)){expected[p]=apply(s+'\n-- independent editor Killa fix\n',operations.find(o=>o.path===p));lua+=`do local o=create(${q(p)},'ModuleScript');o.Source='-- stale saved buffer';editors[o]=${q(s+'\n-- independent editor Killa fix\n')};originals[ ${q(p)} ]=editors[o];expectedSources[ ${q(p)} ]=${q(expected[p])}end\n`;}
+for(const[p,s]of Object.entries(bases)){expected[p]=apply(s+'\n-- independent editor Killa fix\n',operations.find(o=>o.path===p));lua+=`do local o=create(${q(p)},${q(p==='ServerScriptService.RoundManager'?'Script':'ModuleScript')});o.Source='-- stale saved buffer';editors[o]=${q(s+'\n-- independent editor Killa fix\n')};originals[ ${q(p)} ]=editors[o];expectedSources[ ${q(p)} ]=${q(expected[p])}end\n`;}
 lua+=`local function install()\n${read('integration/polaricrax/INSTALLER_POLARICRAX.lua')}\nend\nlocal function undo()\n${read('integration/polaricrax/RETOUR_ARRIERE_POLARICRAX.lua')}\nend\n`;
 lua+=`
+local editState=game.Workspace:FindFirstChild('CombatState');editState.Parent=nil
+local manager=create('ServerScriptService.RoundManager','Script');local managerSource=editors[manager]
+editors[manager]='-- no runtime initialization'
+check(not pcall(install),'missing runtime state and initializer refused')
+check(not game.ServerStorage:FindFirstChild('PolariCrax_Backup_V1'),'initializer failure changes no sources')
+editors[manager]=managerSource
+manager.Disabled=true;check(not pcall(install),'disabled state initializer refused');manager.Disabled=false
 local target=create('ServerScriptService.CombatHealth','ModuleScript');local before=editors[target]
 do local controller=create('ServerScriptService.CraxPlumberRuntime','ModuleScript');local old=editors[controller];editors[controller]=old:gsub('%f[%a]logic%f[%A]','networkLogic');check(not pcall(install),'changed private runtime structure refused');check(not game.ServerStorage:FindFirstChild('PolariCrax_Backup_V1'),'private structure guard has no mutation');editors[controller]=old end
 local heal=create('ServerScriptService.CraxHeal','BindableEvent');local parent=heal.Parent;heal.Parent=nil;check(not pcall(install)and not game.ServerStorage:FindFirstChild('PolariCrax_Backup_V1'),'missing dependency fails without mutation');heal.Parent=parent
@@ -16,7 +23,7 @@ editors[target]='-- unsupported current editor';check(not pcall(install),'prefli
 failure=target;check(not pcall(install),'editor write failure rolls back')
 for p,s in pairs(originals)do check(ses:GetEditorSource(create(p,'ModuleScript'))==s,'transaction restores visible editor '..p)end
 check(not game.ReplicatedStorage:FindFirstChild('CraxPolariRules'),'failed install removes new sources')
-install();local backup=game.ServerStorage.PolariCrax_Backup_V1;check(backup and not backup:GetAttribute('Incomplete'),'complete backup')
+install();check(not game.Workspace:FindFirstChild('CombatState'),'STOP install leaves CombatState creation to RoundManager');local backup=game.ServerStorage.PolariCrax_Backup_V1;check(backup and not backup:GetAttribute('Incomplete'),'complete backup')
 check(#backup.Entries:GetChildren()==29,'20 editor adaptations plus nine new sources')
 for p in pairs(originals)do local o=create(p,'ModuleScript');check(ses:GetEditorSource(o):find('independent editor Killa fix',1,true),'visible editor fix retained '..p);check(ses:GetEditorSource(o)==expectedSources[p],'exact compiled installed source '..p)end
 local installed=ses:GetEditorSource(target);install();check(#backup.Entries:GetChildren()==29,'repeat creates no duplicates')

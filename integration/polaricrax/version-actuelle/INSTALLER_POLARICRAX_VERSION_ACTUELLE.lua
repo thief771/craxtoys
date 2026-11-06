@@ -526,7 +526,15 @@ if previous then
  print('PolariCrax déjà installé, aucun doublon');return
 end
 for path,class in pairs({['ReplicatedStorage.CraxAbilityClock']='ModuleScript',['ServerScriptService.CraxAbilityGate']='ModuleScript',['ServerScriptService.CraxSkillResolver']='ModuleScript',['ServerScriptService.BiteHit']='BindableEvent',['ServerScriptService.CraxHeal']='BindableEvent',['Workspace.Arenaleft']='BasePart',['Workspace.ArenaRight']='BasePart',['Workspace.Arenabottom']='BasePart',['Workspace.ArenaTop']='BasePart'})do local o=resolve(path);assert(o and o:IsA(class),'Dépendance absente ou mauvais type : '..path)end
-assert(resolve('Workspace.CombatState'),'CombatState absent')
+-- CombatState is created by RoundManager at runtime and may be absent in STOP.
+if not resolve('Workspace.CombatState')then
+ local manager=resolve('ServerScriptService.RoundManager')
+ assert(manager and manager:IsA('Script')and not manager.Disabled,'RoundManager serveur actif requis')
+ local source=read(manager)
+ for _,anchor in ipairs({'state = Instance.new("Folder")','state.Name = "CombatState"','state.Parent = workspace'})do
+  assert(source:find(anchor,1,true),'Initialisation CombatState non reconnue dans RoundManager ; aucun fichier modifié')
+ end
+end
 local plan={};local marker='-- PolariCraxIntegrationV1'
 local function count(s,n)local total,p=0,1;while true do local a,b=s:find(n,p,true);if not a then return total end;total+=1;p=b+1 end end
 for _,op in ipairs(ops)do
