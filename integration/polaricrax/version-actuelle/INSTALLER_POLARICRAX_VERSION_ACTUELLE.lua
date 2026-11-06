@@ -24,38 +24,52 @@ data.Crax_Polari={Order=order+1,AbilityId=C.AbilityId,DisplayName='PolariCrax',E
  PolariV1.PowerResult(a,b,lost,kind)]====]},{[ [====[before]====] ]=[====[ local lost=math.min(b.health,amount);]====],[ [====[after]====] ]=[====[ if kind=='PolariFan'then amount=PolariV1.MaxFanPacket(amount)end
  local lost=math.min(b.health,amount);]====]}}},{[ [====[path]====] ]=[====[ServerScriptService.RoundManager]====],[ [====[kind]====] ]=[====[patch]====],[ [====[prepend]====] ]=[====[]====],[ [====[replacements]====] ]={{[ [====[before]====] ]=[====[state:SetAttribute("RoundVictoryStartedAt",start)]====],[ [====[after]====] ]=[====[if model and model:GetAttribute('CraxId')=='Crax_Polari'then state:SetAttribute('PolariVictoryMatch',state:GetAttribute('CraxMatchToken'))end
  state:SetAttribute("RoundVictoryStartedAt",start)]====]}}},{[ [====[path]====] ]=[====[ServerScriptService.CraxPlumberRuntime]====],[ [====[kind]====] ]=[====[patch]====],[ [====[prepend]====] ]=[====[]====],[ [====[replacements]====] ]={{[ [====[before]====] ]=[====[
+
 return M
 ]====],[ [====[after]====] ]=[====[
+
 function M.PolariDelay(dt)for _,r in pairs(logic.records)do for _,k in ipairs({'boostUntil','impulseUntil','nextWall','nextTransit'})do if type(r[k])=='number'and r[k]>0 then r[k]+=dt end end;local t=r.transit;if t then for _,k in ipairs({'Start','ExitAt','EndAt'})do if t[k]then t[k]+=dt end end end end end
 return M
 ]====]}},[ [====[requires]====] ]={[====[local logic=Core.new();local fighters={};local records={}]====]}},{[ [====[path]====] ]=[====[ServerScriptService.CraxSpideyRuntime]====],[ [====[kind]====] ]=[====[patch]====],[ [====[prepend]====] ]=[====[]====],[ [====[replacements]====] ]={{[ [====[before]====] ]=[====[
+
 return R
 ]====],[ [====[after]====] ]=[====[
+
 function R.PolariDelay(dt)if lastStep then lastStep+=dt end;for m,t in pairs(timers)do timers[m]=t+dt end;for _,p in pairs(poisons)do p.next+=dt end;for _,t in ipairs(traps)do t.expires+=dt;if t.part.Parent then t.part:SetAttribute('Expires',t.expires);local born=t.part:GetAttribute('Born');if born then t.part:SetAttribute('Born',born+dt)end end end end
 return R
 ]====]}},[ [====[requires]====] ]={[====[local R={};local traps,poisons,timers,previous={},{},{},{};local serial=0;local lastStep=nil]====]}},{[ [====[path]====] ]=[====[ServerScriptService.FleauRuntime]====],[ [====[kind]====] ]=[====[patch]====],[ [====[prepend]====] ]=[====[]====],[ [====[replacements]====] ]={{[ [====[before]====] ]=[====[
+
 return M
 ]====],[ [====[after]====] ]=[====[
+
 function M.PolariDelay(dt)for _,r in pairs(records)do for _,k in ipairs({'furyEnds','furyLast','contactSuppressedUntil'})do if type(r[k])=='number'and r[k]>0 then r[k]+=dt end end end end
 return M
 ]====]}},[ [====[requires]====] ]={[====[local M={Health=nil};local records={}]====]}},{[ [====[path]====] ]=[====[ServerScriptService.FleauControl]====],[ [====[kind]====] ]=[====[patch]====],[ [====[prepend]====] ]=[====[]====],[ [====[replacements]====] ]={{[ [====[before]====] ]=[====[
+
 return C
 ]====],[ [====[after]====] ]=[====[
+
 function C.PolariDelay(dt)for _,r in pairs(records)do for k,v in pairs(r)do r[k]=v+dt end end end
 return C
 ]====]}},[ [====[requires]====] ]={[====[local C={};local records=setmetatable({},{__mode='k'})]====]}},{[ [====[path]====] ]=[====[ServerScriptService.FantasticRuntime]====],[ [====[kind]====] ]=[====[patch]====],[ [====[prepend]====] ]=[====[]====],[ [====[replacements]====] ]={{[ [====[before]====] ]=[====[
+
 return M
 ]====],[ [====[after]====] ]=[====[
+
 function M.PolariDelay(dt)started+=dt end
 return M
 ]====]}},[ [====[requires]====] ]={[====[local records={};local round;local started=workspace:GetServerTimeNow()]====]}},{[ [====[path]====] ]=[====[ServerScriptService.GhostyNight]====],[ [====[kind]====] ]=[====[patch]====],[ [====[prepend]====] ]=[====[]====],[ [====[replacements]====] ]={{[ [====[before]====] ]=[====[
+
 return Night
 ]====],[ [====[after]====] ]=[====[
+
 function Night.PolariDelay(dt)if active and active.serverEnd then active.serverEnd+=dt end end
 return Night
 ]====]}},[ [====[requires]====] ]={[====[local active,freezeEnd,sequence=nil,0,0]====]}},{[ [====[path]====] ]=[====[ServerScriptService.CraxDeadlyRuntime]====],[ [====[kind]====] ]=[====[patch]====],[ [====[prepend]====] ]=[====[]====],[ [====[replacements]====] ]={{[ [====[before]====] ]=[====[
+
 return M
 ]====],[ [====[after]====] ]=[====[
+
 function M.PolariDelay(dt)for _,e in pairs(M.cinematics)do e.finish+=dt end end
 return M
 ]====]}},[ [====[requires]====] ]={[====[local M={families={},nodes={},fighters={},aimSpawns={},cinematics={},viceTransits={},Health=nil}]====]}},{[ [====[path]====] ]=[====[StarterPlayer.StarterPlayerScripts.CopEmClient]====],[ [====[kind]====] ]=[====[patch]====],[ [====[prepend]====] ]=[====[local function polariIconV1(parent,kind,x,y,size)
@@ -69,10 +83,10 @@ end
    if currentCrax=='Crax_Killa'then name.Text='TRAQUEUR'end]====]}}},{[ [====[path]====] ]=[====[ReplicatedStorage.CraxBookCinema]====],[ [====[kind]====] ]=[====[patch]====],[ [====[prepend]====] ]=[====[]====],[ [====[replacements]====] ]={{[ [====[before]====] ]=[====[self.trophyArt:ClearAllChildren()]====],[ [====[after]====] ]=[====[self.trophyArt:ClearAllChildren()
  if id=='Crax_Polari'then local C=require(game:GetService('ReplicatedStorage').CraxPolariConfig);if C.Icons.Max~=''then make('ImageLabel',{Size=UDim2.fromScale(1,1),BackgroundTransparency=1,Image=C.Icons.Max,ScaleType=Enum.ScaleType.Fit,ZIndex=113},self.trophyArt)else make('TextLabel',{Size=UDim2.fromScale(1,1),BackgroundTransparency=1,Text='MAX',TextScaled=true,Font=Enum.Font.FredokaOne,TextColor3=Color3.fromRGB(247,201,76),ZIndex=113},self.trophyArt)end;self.trophyIcon.TrophyTitle.Text=C.MaxTitle;return end]====]}}},{[ [====[path]====] ]=[====[StarterPlayer.StarterPlayerScripts.ArenaCamera]====],[ [====[kind]====] ]=[====[patch]====],[ [====[prepend]====] ]=[====[]====],[ [====[replacements]====] ]={{[ [====[before]====] ]=[====[local function beginDefeat()]====],[ [====[after]====] ]=[====[local function beginDefeat()
  if state:GetAttribute('RoundVictoryKind')=='PolariFinale'and state:GetAttribute('RoundVictoryRound')==state:GetAttribute('RoundId')then clearDefeat();return end]====]},{[ [====[before]====] ]=[====[if player:GetAttribute("SymCameraOwner")then]====],[ [====[after]====] ]=[====[if player:GetAttribute("PolariCameraOwner")then if defeat then clearDefeat()end;return end
-  if player:GetAttribute("SymCameraOwner")then]====]}}},{[ [====[path]====] ]=[====[ServerScriptService.CraxBatRuntime]====],[ [====[kind]====] ]=[====[patch]====],[ [====[replacements]====] ]={{[ [====[before]====] ]=[====[
-return M]====],[ [====[after]====] ]=[====[
-function M.PolariDelay(dt)for _,r in pairs(records)do if r.lamp then r.lamp.Started+=dt end end end
-return M]====]}}}}
+  if player:GetAttribute("SymCameraOwner")then]====]}}},{[ [====[path]====] ]=[====[ServerScriptService.CraxBatRuntime]====],[ [====[kind]====] ]=[====[patch]====],[ [====[replacements]====] ]={{[ [====[before]====] ]=[====[local function stepLamp(r,dt)]====],[ [====[after]====] ]=[====[function M.PolariDelay(dt)
+ for _,r in pairs(records)do if r.lamp then r.lamp.Started+=dt end end
+end
+local function stepLamp(r,dt)]====]}},[ [====[requires]====] ]={[====[local records={};]====],[====[local l=r.lamp;l.Age=math.max(0,workspace:GetServerTimeNow()-l.Started)]====]}}}
 local modules={{[ [====[path]====] ]=[====[ReplicatedStorage.CraxPolariAppearance]====],[ [====[className]====] ]=[====[ModuleScript]====],[ [====[source]====] ]=[====[local M={};local saved=setmetatable({},{__mode='k'})
 local function part(model,name)local p=model:FindFirstChild(name,true);return p and(p:IsA('BasePart')and p or p:FindFirstChildWhichIsA('BasePart',true))end
 function M.Restore(model)
