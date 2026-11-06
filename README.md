@@ -1,5 +1,7 @@
 # Dernière version du jeu — Magneto / PolariCrax installé
 
+**[Lire les scripts sur GitHub](integration/polaricrax/version-actuelle/sources)** · **[Télécharger les sources seules (.zip)](dist/Magneto-PolariCrax-sources.zip)** · [Comment ouvrir le jeu et ses scripts](integration/polaricrax/version-actuelle/OUVRIR-LES-SOURCES.md)
+
 **[Télécharger le jeu Roblox modifié (.rbxl)](dist/copie-jeu-PolariCrax-installe.rbxl)** · **[Pack complet](dist/Magneto-PolariCrax-livraison.zip)** · [Guide et retour arrière](integration/polaricrax/version-actuelle/LIRE-MOI.txt)
 
 Cette copie reprend le fichier `copie jeu.rbxl` fourni : PolariCrax est déjà intégré avec le casque importé, les pouvoirs, le livre, le casino et le MAX. Ouvrir le fichier dans Roblox Studio puis lancer un nouveau Play ; ne pas réexécuter l’ancien installateur. Les intégrations actuelles SonGo, Bat, Hangover, BlackSpidey et Lucky/Tianlong sont conservées.
