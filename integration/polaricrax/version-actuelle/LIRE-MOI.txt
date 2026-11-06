@@ -1,0 +1,66 @@
+MAGNETO / POLARICRAX — INSTALLATION SUR LA COPIE FOURNIE
+
+Ouvrir « copie-jeu-PolariCrax-installe.rbxl » dans Roblox Studio.
+PolariCrax est déjà intégré : ne pas réexécuter un ancien installateur.
+Lancer un nouveau Play après ouverture. Pour la validation réelle, utiliser
+Test > Start Server avec deux joueurs sur cette copie avant de publier.
+Votre fichier original n'a pas été modifié. Aucune place n'a été publiée.
+
+CONTENU INSTALLÉ
+- Vrai template Crax_Monster conservé et décliné, casque importé à cinq pièces,
+  aperçu 3D, bibliothèque VFX avec les seize meshes déjà présents dans le jeu.
+- Rare, 110 PV, mêlée 7, quatre niveaux cumulatifs, casino et livre.
+- Impulsion (10 dégâts), attraction sans dégâts, inversion (12 dégâts),
+  temps suspendu (1,2 s), fenêtre d'esquive, cinq éclats (18 dégâts maximum
+  par cible/activation), exécution MAX et trophée L’ULTIME SECONDE.
+- 20 sources actuelles adaptées, 9 nouvelles sources. Les nouvelles intégrations
+  SonGo, Bat, Hangover, BlackSpidey et Lucky/Tianlong ont été conservées.
+  L'ancien adaptateur TRICHE retiré de votre jeu n'a pas été réactivé.
+- Sauvegarde exacte des sources dans ServerStorage.PolariCrax_Backup_V1.
+  La bibliothèque géante importée a été déplacée de Workspace vers
+  ServerStorage.PolariCrax_Import ; elle ne doit pas rester dans l'arène.
+
+SONS ET ILLUSTRATIONS À BRANCHER
+Aucun identifiant Roblox pour ces nouveaux assets n'était configuré dans la
+place. Ils ne sont pas inventés ni publiés automatiquement. Les pouvoirs
+fonctionnent sans audio et utilisent des textes d'icônes de secours.
+Importer audio/PolariCrax_AUDIO_ATLAS.wav (12,22 s) et les quatre PNG du dossier
+illustrations sous le propriétaire de votre expérience, avec ses permissions.
+Créer un Sound temporaire « PolariCrax_AUDIO_ATLAS » avec le vrai SoundId,
+et quatre ImageLabel nommés PolariAttractIcon, PolariInvertIcon,
+PolariStopIcon, PolariMaxIcon avec leurs vrais ImageId.
+Les sélectionner (ou sélectionner leur dossier), puis exécuter
+BRANCHER_ASSETS_POLARICRAX.lua en STOP. Relancer Play. Exécuter ensuite
+DIAGNOSTIC_AUDIO_CLIENT.lua côté client pour contrôler le chargement audio.
+
+VÉRIFICATION EFFECTUÉE HORS STUDIO
+- Compilation des 29 sources adaptées/nouvelles.
+- Suite locale Polari complète : runtime, pauses, catalogues, installation/retrait,
+  client/caméra/audio et régressions Super/Sym/Lucky ; contrôle des WAV.
+- 51 assertions supplémentaires sur le runtime Polari raccordé au vrai script
+  CombatHealth extrait de votre fichier, avec services/défenses simulés.
+- Relecture du .rbxl final avec rbx-dom/Lune : hiérarchie, sources, sauvegardes,
+  meshes, proportions du casque, catalogue, améliorations, trophée et casino.
+- Masses du casino conservées : Commun 6 400 000 ; Rare 2 000 000 ;
+  Épique 1 500 000 ; Légendaire 100 000.
+- Les 245 986 instances originales sont conservées ; 338 instances ajoutées.
+  Les données binaires des autres objets sont conservées sans réécriture globale.
+
+VÉRIFICATION À FAIRE DANS STUDIO
+Le moteur Roblox Studio n'a pas été exécuté dans cet environnement.
+Vérifier le rendu du casque et des VFX, les permissions des meshes et sons,
+la réplication à deux clients, les quatre achats et leur sauvegarde,
+les dégâts et l'esquive, les captures/pauses des autres personnages,
+et le nettoyage de la caméra/audio MAX à la fin ou à l'interruption.
+Aucune possession de personnage ni monnaie n'est donnée automatiquement.
+
+RETOUR ARRIÈRE
+En STOP, exécuter RETOUR_ARRIERE_POLARICRAX.lua. Il restaure les sources
+sauvegardées et refuse d'écraser des éditions faites depuis l'installation.
+Les possessions/données de profil ne sont pas effacées par cette commande.
+Conserver aussi votre .rbxl original.
+
+L'installateur VERSION_ACTUELLE est fourni pour reproduire l'intégration sur
+la même version originale de la place, avec l'import sous
+ServerStorage.PolariCrax_Import. Il refuse les sources incompatibles.
+Il n'est pas nécessaire pour ouvrir la copie déjà installée livrée ici.

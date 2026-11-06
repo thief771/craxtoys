@@ -1,0 +1,10 @@
+{
+  "original_instances": 245986,
+  "added_instances": 338,
+  "patched_sources": 20,
+  "new_sources": 9,
+  "original_sha256": "db2d047331ffe485e0d626b520f4d18fd0eca7288a4487d89ffc974ff00d5513",
+  "output_sha256": "d8d438eb2738ff74a514a8ed35d257849cc075343c7ac79881fd3529344a8487",
+  "preserved_raw_chunks": 2415,
+  "modified_original_chunks": 6
+}

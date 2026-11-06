@@ -1,3 +1,15 @@
+# Dernière version du jeu — Magneto / PolariCrax installé
+
+**[Télécharger le jeu Roblox modifié (.rbxl)](dist/copie-jeu-PolariCrax-installe.rbxl)** · **[Pack complet](dist/Magneto-PolariCrax-livraison.zip)** · [Guide et retour arrière](integration/polaricrax/version-actuelle/LIRE-MOI.txt)
+
+Cette copie reprend le fichier `copie jeu.rbxl` fourni : PolariCrax est déjà intégré avec le casque importé, les pouvoirs, le livre, le casino et le MAX. Ouvrir le fichier dans Roblox Studio puis lancer un nouveau Play ; ne pas réexécuter l’ancien installateur. Les intégrations actuelles SonGo, Bat, Hangover, BlackSpidey et Lucky/Tianlong sont conservées.
+
+Les sources adaptées à cette version et l’installateur correspondant sont disponibles dans [`integration/polaricrax/version-actuelle`](integration/polaricrax/version-actuelle). Le kit historique ci-dessous reste distinct. La copie livrée contient une sauvegarde des sources dans `ServerStorage.PolariCrax_Backup_V1`.
+
+**Vérifications hors Studio réussies** : compilation des 29 sources, suite locale Polari, 51 assertions avec le script CombatHealth de la place fournie et défenses simulées, relecture indépendante du fichier Roblox, exécution des catalogues et contrôle des masses du casino. Le rendu, la réplication à deux joueurs et les permissions des ressources doivent encore être vérifiés dans Studio. Les nouveaux sons et illustrations restent à importer et à brancher avec leurs vrais identifiants Roblox. Aucune place n’a été publiée.
+
+---
+
 # 7 Deadly Crax — PolariCrax
 
 **[Télécharger PolariCrax-TOTAL.zip](dist/PolariCrax-TOTAL.zip)** · [Installation Studio et commande complète](docs/polaricrax/INSTALLATION.md) · [Tests et état réel](docs/polaricrax/TESTS_ET_ETAT.md)
