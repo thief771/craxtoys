@@ -9,7 +9,7 @@ local function read(o)return SES:GetEditorSource(o)end
 local function write(o,before,after)SES:UpdateSourceAsync(o,function(current)assert(current==before,'Conflit éditeur : '..o:GetFullName());return after end);assert(read(o)==after,'Écriture non vérifiée')end
 local entries=assert(backup:FindFirstChild('Entries'));local indexed={}
 for _,e in ipairs(entries:GetChildren())do local path=e:GetAttribute('Path');assert(not indexed[path],'Entrée de sauvegarde dupliquée');indexed[path]=e end
-for path,entry in pairs(indexed)do local o=assert(resolve(path),'Source supprimée : '..path);assert(read(o)==entry.Installed.Value,'Source éditée depuis installation : '..path..'. Aucun fichier modifié.')end
+
 local motion=assert(resolve('ServerScriptService.ArenaMovement'));local motionSource=read(motion)
 for _,hook in ipairs({'PolariV1.Pump(deltaTime,fighters)','PolariV1.Step(','PolariV1.WallContact('})do assert(motionSource:find(hook,1,true),'Raccordement moteur Polari absent : '..hook)end
 local modules={{[ [====[path]====] ]=[====[ReplicatedStorage.CraxPolariAudio]====],[ [====[className]====] ]=[====[ModuleScript]====],[ [====[source]====] ]=[====[-- Client audio atlas: independent Sound per event, native playback regions bound every clip.
@@ -360,6 +360,12 @@ end
 return M
 ]====]}}
 local wraps={}
+for _,m in ipairs(modules)do
+ local o=assert(resolve(m.path),'Source Polari requise manquante : '..m.path..'. Aucun fichier modifié.')
+ local entry=assert(indexed[m.path],'Source Polari non sauvegardée : '..m.path..'. Aucun fichier modifié.')
+ assert(o:IsA(m.className),'Classe Polari inattendue : '..m.path..'. Aucun fichier modifié.')
+ assert(read(o)==entry.Installed.Value,'Source éditée depuis installation : '..m.path..'. Aucun fichier modifié.')
+end
 assert((backup:GetAttribute('PolariRevision')or 1)>=2,'Appliquer la mise à jour V2 avant les VFX V3. Aucun fichier modifié.')
 local revision=3
 if backup:GetAttribute('PolariRevision')==revision then

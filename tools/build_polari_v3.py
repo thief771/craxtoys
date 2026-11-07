@@ -27,6 +27,19 @@ template=(r/'integration/polaricrax/v2/METTRE_A_JOUR_POLARICRAX_V2.lua').read_te
 a=template.index('local modules=');b=template.index('local revision=2',a)
 s=template[:a]+'local modules='+lua(updates)+'\nlocal wraps={}\n'+template[b:]
 s=s.replace('POLARICRAX V2','POLARICRAX V3').replace('PolariCraxV2','PolariCraxV3').replace('PolariCrax V2','PolariCrax V3').replace('Version V2','Version V3').replace('PolariCrax_Update_V2_Safety','PolariCrax_Update_V3_Safety').replace('local revision=2','local revision=3')
+# V3 only writes presentation modules. Preserve unrelated gameplay edits and their
+# original backup records; never bless them as Polari-installed sources.
+global_check="for path,entry in pairs(indexed)do local o=assert(resolve(path),'Source supprimée : '..path);assert(read(o)==entry.Installed.Value,'Source éditée depuis installation : '..path..'. Aucun fichier modifié.')end"
+assert global_check in s
+s=s.replace(global_check, '')
+scoped_check="""for _,m in ipairs(modules)do
+ local o=assert(resolve(m.path),'Source Polari requise manquante : '..m.path..'. Aucun fichier modifié.')
+ local entry=assert(indexed[m.path],'Source Polari non sauvegardée : '..m.path..'. Aucun fichier modifié.')
+ assert(o:IsA(m.className),'Classe Polari inattendue : '..m.path..'. Aucun fichier modifié.')
+ assert(read(o)==entry.Installed.Value,'Source éditée depuis installation : '..m.path..'. Aucun fichier modifié.')
+end
+"""
+s=s.replace('local revision=3',scoped_check+'local revision=3')
 s=s.replace("local revision=3", "assert((backup:GetAttribute('PolariRevision')or 1)>=2,'Appliquer la mise à jour V2 avant les VFX V3. Aucun fichier modifié.')\nlocal revision=3")
 s=s.replace("projectile VFX, attraction 8, mur aléatoire 15, temps suspendu.","VFX plasma, murs énergétiques, horlogerie et mixage audio. Mécaniques V2 préservées.")
 (out/'METTRE_A_JOUR_POLARICRAX_V3.lua').write_text(s)
