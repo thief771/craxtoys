@@ -1,10 +1,12 @@
--- STOP. Sélectionner le Sound de l’atlas et/ou les ImageLabel d’illustration.
+-- STOP. Sélectionner le Sound de l’atlas et/ou les images et textures PolariFlux importées.
 do
 assert(not game:GetService('RunService'):IsRunning(),'Arrêter Play')
 local RS=game:GetService('ReplicatedStorage');local values={};local icons={PolariAttractIcon='Attract',PolariInvertIcon='Invert',PolariStopIcon='Stop',PolariMaxIcon='Max'}
 local function inspect(o)
  local key,id
  if o:IsA('Sound')and(o.Name=='PolariCrax_AUDIO_ATLAS'or o.Name=='PolariCrax_AUDIO_ATLAS.wav')then key='AudioAtlas';id=o.SoundId
+ elseif(o:IsA('ImageLabel')or o:IsA('Decal'))and o.Name:match('^PolariFlux_')then
+  local kind=o.Name:match('^PolariFlux_(%a+)');if kind=='Flare'or kind=='Spark'or kind=='Smoke'then key='Texture_'..kind;id=o:IsA('Decal')and o.Texture or o.Image end
  elseif o:IsA('ImageLabel')and icons[o.Name]then key='Icon_'..icons[o.Name];id=o.Image end
  if key then local n=id:match('^rbxassetid://(%d+)$');assert(n and tonumber(n)>0,'ID réel absent : '..o.Name);values[key]='rbxassetid://'..n end
 end

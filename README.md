@@ -1,3 +1,13 @@
+# PolariCrax V3 — VFX plasma et audio retravaillés
+
+**[Pack V3 : effets, textures, sons et installation](dist/PolariCrax-V3-VFX-AUDIO.zip)** · **[Guide V3](integration/polaricrax/v3/README.md)** · **[Commande de mise à jour V2 → V3 à copier dans Studio](integration/polaricrax/v3/METTRE_A_JOUR_POLARICRAX_V3.lua)**
+
+Couronnes magnétiques, filaments électriques, plasma texturé, doubles traînées, impacts multicouches, murs énergétiques et horlogerie du temps suspendu. Trois textures originales transparentes et 19 sons retravaillés, avec profils mobile/ordinateur. Les dégâts et délais V2 sont conservés. Le nouvel atlas audio doit être importé et autorisé dans Roblox ; les textures originales sont optionnelles avec repli vers les textures intégrées. Le rendu et le mixage finaux restent à vérifier dans Studio.
+
+Les anciens fichiers de place et la commande de téléchargement épinglée ci-dessous restent en V1/V2. Utiliser la commande V3 ci-dessus pour cette livraison, Play arrêté, puis enregistrer et lancer un nouveau Play.
+
+---
+
 # PolariCrax V2 — projectile VFX et pouvoirs corrigés
 
 **[Installer ou mettre à jour directement dans le jeu ouvert](integration/polaricrax/version-actuelle/COMMANDE_INSTALLATION.lua)** · [Détails des changements et tests](integration/polaricrax/v2/README.md)
