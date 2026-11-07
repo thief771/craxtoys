@@ -2,7 +2,11 @@
 do
  assert(not game:GetService("RunService"):IsRunning(), "Arrêtez Play avant l'installation")
  local H = game:GetService("HttpService")
- local url = "https://raw.githubusercontent.com/thief771/craxtoys/fff6c103df422a31e1edf1cc1719d1e75b50e570/integration/polaricrax/version-actuelle/INSTALLER_POLARICRAX_VERSION_ACTUELLE.lua"
+ local SS = game:GetService("ServerStorage")
+ local path = SS:FindFirstChild("PolariCrax_Backup_V1")
+  and "integration/polaricrax/v2/METTRE_A_JOUR_POLARICRAX_V2.lua"
+  or "integration/polaricrax/version-actuelle/INSTALLER_POLARICRAX_VERSION_ACTUELLE.lua"
+ local url = "https://raw.githubusercontent.com/thief771/craxtoys/36e4b5660f45f1143938fa1f37b754143b1e5653/" .. path
  local enabled = H.HttpEnabled
  if not enabled then H.HttpEnabled = true end
  local fetched, source = pcall(function() return H:GetAsync(url, true) end)
@@ -10,7 +14,6 @@ do
  assert(fetched, "Téléchargement impossible : " .. tostring(source))
  local install, problem = loadstring(source)
  assert(install, problem)
- local SS = game:GetService("ServerStorage")
  local imported = SS:FindFirstChild("PolariCrax_Import")
  local oldParent, oldName
  if not imported and not SS:FindFirstChild("PolariCrax_Backup_V1") then
@@ -26,5 +29,5 @@ do
   imported.Parent = oldParent
  end
  assert(ok, tostring(err))
- print("PolariCrax : installation vérifiée. Enregistrez votre jeu, puis lancez un nouveau Play.")
+ print("PolariCrax V2 : installation ou mise à jour vérifiée. Enregistrez votre jeu, puis lancez un nouveau Play.")
 end

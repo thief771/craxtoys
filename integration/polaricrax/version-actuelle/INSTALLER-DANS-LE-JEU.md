@@ -1,3 +1,7 @@
+# Commande actuelle : PolariCrax V2
+
+La [commande d’installation](COMMANDE_INSTALLATION.lua) détecte une installation existante et applique la [mise à jour V2](../v2/README.md) dans le jeu ouvert. Sans installation préalable, elle installe directement la V2 complète. Arrêter Play avant la commande, puis enregistrer et lancer un nouveau Play après réussite.
+
 # Installer directement dans le jeu ouvert
 
 Aucun autre fichier de jeu n'est nécessaire. Ouvrir votre jeu actuel dans Roblox Studio, arrêter Play et afficher la **Barre de commande** depuis Affichage ou Fenêtre selon la version de Studio.
