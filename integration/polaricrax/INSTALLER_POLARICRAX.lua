@@ -7,12 +7,12 @@ local function read(o)return SES:GetEditorSource(o)end
 local function write(o,before,after)SES:UpdateSourceAsync(o,function(current)assert(current==before,'Conflit éditeur : '..o:GetFullName());return after end);assert(read(o)==after,'Vérification éditeur échouée')end
 local ops={{[ [====[path]====] ]=[====[ReplicatedStorage.CraxCatalog]====],[ [====[kind]====] ]=[====[wrap]====],[ [====[addition]====] ]=[====[assert(not data.Crax_Polari);local C=require(game:GetService('ReplicatedStorage').CraxPolariConfig);local base=assert(data.Crax_Monster);local rare=assert(data.Crax_Spidey)
 data.Crax_Polari={DisplayName='PolariCrax',Rarity=rare.Rarity,RarityColor=rare.RarityColor,TemplateName=C.Id,MaxHealth=110,CollisionDamage=7,Speed=base.Speed,Description='Vinyle blanc, sourire ivoire, yeux fermés et casque rouge à protections violettes.',PowerDescription='IMPULSION MAGNÉTIQUE : toutes les 6–9 secondes actives, charge 0,4 s puis éclat vers la position actuelle de la cible. Impact 10 dégâts et légère déviation.',Effects={'PolariAttract','PolariFrozen'},Ability={Id=C.AbilityId,DisplayName='IMPULSION MAGNÉTIQUE',Damage=10,Cooldown=6}}]====]},{[ [====[path]====] ]=[====[ReplicatedStorage.CraxSkillCatalog]====],[ [====[kind]====] ]=[====[wrap]====],[ [====[addition]====] ]=[====[local C=require(game:GetService('ReplicatedStorage').CraxPolariConfig);local prices=assert(data.Crax_Spidey).Upgrades;local levels={
-{Id='PolariAttract',Name='PÔLE D’ATTRACTION',Description='Polarise pendant 2 s le mur le plus proche de la cible ; incurve progressivement sa trajectoire. Aucun dégât. Prototype : délai 10–14 s.'},
-{Id='PolariInvert',Name='INVERSION DES PÔLES',Description='Au contact du mur polarisé, avertissement rouge puis répulsion diagonale vers le centre et 12 dégâts. Un seul déclenchement par polarisation. Prototype : avertissement 0,25 s.'},
-{Id='PolariStop',Name='TEMPS SUSPENDU',Description='Tic-tac, arrêt du combat 1,2 s, cinq éclats et axes annoncés. Mouvement repris 0,35 s avant le tir simultané. 6 dégâts par éclat, trois impacts maximum par cible : 18. Prototype : délai 22–28 s.'},
+{Id='PolariAttract',Name='PÔLE D’ATTRACTION',Description='Polarise pendant 2 s le mur le plus proche de la cible ; incurve progressivement sa trajectoire. Premier contact avec ce mur : 8 dégâts, une seule fois par activation. Délai 10–14 s.'},
+{Id='PolariInvert',Name='INVERSION DES PÔLES',Description='Charge un des quatre murs au hasard pendant 1,5 s ; actif 3 s. Collision ennemie : 15 dégâts et projection vers le centre, une fois par cible et activation.'},
+{Id='PolariStop',Name='TEMPS SUSPENDU',Description='Tic-tac, arrêt du combat 1,2 s, cinq éclats et axes annoncés. Mouvement repris 0,35 s avant le tir simultané. 6 dégâts par éclat, trois impacts maximum par cible : 18. Première activation après 5–7 s actives, puis délai 22–28 s.'},
 {Id='PolariFinale',Name=C.MaxTitle,TrophyId=C.TrophyId,Description='Exécution MAX : cadran, cinq fragments, inversion des murs et trophée L’ULTIME SECONDE. Scène cosmétique après le résultat du combat.'}}
 for i,u in ipairs(levels)do u.Coins=assert(prices[i].Coins);u.Gems=assert(prices[i].Gems)end;local order=0;for _,v in pairs(data)do if type(v)=='table'then order=math.max(order,v.Order or 0)end end
-data.Crax_Polari={Order=order+1,AbilityId=C.AbilityId,DisplayName='PolariCrax',Enabled=true,Upgrades=levels,Finale=levels[4]}]====]},{[ [====[path]====] ]=[====[ReplicatedStorage.CraxEffectsCatalog]====],[ [====[kind]====] ]=[====[wrap]====],[ [====[addition]====] ]=[====[data.PolariAttract={DisplayName='POLARISATION',Description='Trajectoire attirée vers un mur pendant 2 s, sans dégât.',Duration=2,Image='',Color=Color3.fromRGB(163,75,230)};data.PolariFrozen={DisplayName='TEMPS SUSPENDU',Description='Pause imbriquée du combat pendant 1,2 s, puis fenêtre d’esquive.',Duration=1.2,Image='',Color=Color3.fromRGB(242,194,75)}]====]},{[ [====[path]====] ]=[====[ReplicatedStorage.CraxVictoryCatalog]====],[ [====[kind]====] ]=[====[wrap]====],[ [====[addition]====] ]=[====[local C=require(game:GetService('ReplicatedStorage').CraxPolariConfig);data.Crax_Polari={Id='PolariFinale',DisplayName=C.MaxTitle,TrophyId=C.TrophyId,TrophyColor=Color3.fromRGB(247,201,76),MinimumLevel=4,Duration=C.FinaleDuration,IntroDuration=0,ZoomDuration=0,HoldDuration=0}]====]},{[ [====[path]====] ]=[====[ReplicatedStorage.CraxRouletteConfig]====],[ [====[kind]====] ]=[====[wrap]====],[ [====[addition]====] ]=[====[local cat=require(game:GetService('ReplicatedStorage').CraxCatalog);local rare,total={},0;for _,e in ipairs(data.Pool)do assert(e.Id~='Crax_Polari');if cat[e.Id].Rarity==cat.Crax_Polari.Rarity then rare[#rare+1]=e;total+=e.Weight end end;assert(#rare>0);local w=total/(#rare+1);for _,e in ipairs(rare)do e.Weight=w end;data.Pool[#data.Pool+1]={Id='Crax_Polari',Weight=total-w*#rare} -- Explicit prototype: unchanged Rare mass, equal redistribution.]====]},{[ [====[path]====] ]=[====[ServerScriptService.CraxSkinServer]====],[ [====[kind]====] ]=[====[wrap]====],[ [====[addition]====] ]=[====[local A=require(game:GetService('ReplicatedStorage').CraxPolariAppearance);local apply=data.Apply;function data.Apply(m,id,c)A.Restore(m);apply(m,id,c);if id=='Crax_Polari'then A.Apply(m,game:GetService('ReplicatedStorage').CraxPolariImportedAssets)end end]====]},{[ [====[path]====] ]=[====[ServerScriptService.ArenaMovement]====],[ [====[kind]====] ]=[====[patch]====],[ [====[prepend]====] ]=[====[local PolariV1=require(game:GetService('ServerScriptService'):WaitForChild('CraxPolariRuntime'))
+data.Crax_Polari={Order=order+1,AbilityId=C.AbilityId,DisplayName='PolariCrax',Enabled=true,Upgrades=levels,Finale=levels[4]}]====]},{[ [====[path]====] ]=[====[ReplicatedStorage.CraxEffectsCatalog]====],[ [====[kind]====] ]=[====[wrap]====],[ [====[addition]====] ]=[====[data.PolariAttract={DisplayName='POLARISATION',Description='Trajectoire attirée vers un mur pendant 2 s ; premier contact : 8 dégâts.',Duration=2,Image='',Color=Color3.fromRGB(163,75,230)};data.PolariFrozen={DisplayName='TEMPS SUSPENDU',Description='Pause imbriquée du combat pendant 1,2 s, puis fenêtre d’esquive.',Duration=1.2,Image='',Color=Color3.fromRGB(242,194,75)}]====]},{[ [====[path]====] ]=[====[ReplicatedStorage.CraxVictoryCatalog]====],[ [====[kind]====] ]=[====[wrap]====],[ [====[addition]====] ]=[====[local C=require(game:GetService('ReplicatedStorage').CraxPolariConfig);data.Crax_Polari={Id='PolariFinale',DisplayName=C.MaxTitle,TrophyId=C.TrophyId,TrophyColor=Color3.fromRGB(247,201,76),MinimumLevel=4,Duration=C.FinaleDuration,IntroDuration=0,ZoomDuration=0,HoldDuration=0}]====]},{[ [====[path]====] ]=[====[ReplicatedStorage.CraxRouletteConfig]====],[ [====[kind]====] ]=[====[wrap]====],[ [====[addition]====] ]=[====[local cat=require(game:GetService('ReplicatedStorage').CraxCatalog);local rare,total={},0;for _,e in ipairs(data.Pool)do assert(e.Id~='Crax_Polari');if cat[e.Id].Rarity==cat.Crax_Polari.Rarity then rare[#rare+1]=e;total+=e.Weight end end;assert(#rare>0);local w=total/(#rare+1);for _,e in ipairs(rare)do e.Weight=w end;data.Pool[#data.Pool+1]={Id='Crax_Polari',Weight=total-w*#rare} -- Explicit prototype: unchanged Rare mass, equal redistribution.]====]},{[ [====[path]====] ]=[====[ServerScriptService.CraxSkinServer]====],[ [====[kind]====] ]=[====[wrap]====],[ [====[addition]====] ]=[====[local A=require(game:GetService('ReplicatedStorage').CraxPolariAppearance);local apply=data.Apply;function data.Apply(m,id,c)A.Restore(m);apply(m,id,c);if id=='Crax_Polari'then A.Apply(m,game:GetService('ReplicatedStorage').CraxPolariImportedAssets)end end]====]},{[ [====[path]====] ]=[====[ServerScriptService.ArenaMovement]====],[ [====[kind]====] ]=[====[patch]====],[ [====[prepend]====] ]=[====[local PolariV1=require(game:GetService('ServerScriptService'):WaitForChild('CraxPolariRuntime'))
 ]====],[ [====[replacements]====] ]={{[ [====[before]====] ]=[====[ LuckyV1.Begin(fighters)]====],[ [====[after]====] ]=[====[ LuckyV1.Begin(fighters)
  PolariV1.Begin(fighters)]====]},{[ [====[before]====] ]=[====[RunService.Heartbeat:Connect(function(deltaTime)]====],[ [====[after]====] ]=[====[RunService.Heartbeat:Connect(function(deltaTime)
  if PolariV1.Pump(deltaTime,fighters)then return end]====]},{[ [====[before]====] ]=[====[  SymV1.Step(step*Deadly.CinematicScale()]====],[ [====[after]====] ]=[====[  PolariV1.Step(step*Deadly.CinematicScale(),fighters,alive and not frozen and not state:GetAttribute('GhostNightActive')and workspace:GetServerTimeNow()>=(state:GetAttribute('GhostFreezeUntil')or 0))
@@ -186,7 +186,7 @@ return M
 }}
 ]====]},{[ [====[path]====] ]=[====[StarterPlayer.StarterPlayerScripts.CraxPolariClient]====],[ [====[className]====] ]=[====[LocalScript]====],[ [====[source]====] ]=[====[-- Presentation only: all targets, axes, damage, pause and repulsion decisions are server-owned.
 local RS=game:GetService('ReplicatedStorage');local Run=game:GetService('RunService');local Players=game:GetService('Players');local SoundService=game:GetService('SoundService')
-local C=require(RS:WaitForChild('CraxPolariConfig'));local Assets=require(RS:WaitForChild('CraxPolariAssets'));local Audio=require(RS:WaitForChild('CraxPolariAudio'));local Clock=require(RS:WaitForChild('CraxAbilityClock'));local FX=RS:WaitForChild('CraxPolariFX');local state=workspace:WaitForChild('CombatState');local player=Players.LocalPlayer
+local VFX=require(RS:WaitForChild('CraxPolariVFX'));local C=require(RS:WaitForChild('CraxPolariConfig'));local Assets=require(RS:WaitForChild('CraxPolariAssets'));local Audio=require(RS:WaitForChild('CraxPolariAudio'));local Clock=require(RS:WaitForChild('CraxAbilityClock'));local FX=RS:WaitForChild('CraxPolariFX');local state=workspace:WaitForChild('CombatState');local player=Players.LocalPlayer
 local low=C.Quality=='Low'or C.Quality=='Auto'and game:GetService('UserInputService').TouchEnabled
 local root=Instance.new('Folder');root.Name='PolariCrax_Local';root.Parent=workspace
 local PURPLE=Color3.fromRGB(161,69,233);local RED=Color3.fromRGB(241,38,70);local GOLD=Color3.fromRGB(246,200,76);local shots={};local casts={};local walls={};local sparks={};local connections={};local scene;local seen;local accumulated=0
@@ -206,7 +206,7 @@ local function burst(p,color,count)
  if not p then return end
  for i=1,(low and math.min(5,count)or count)do local a=i*2.399;local m=Assets.Model('Shard',root);m:ScaleTo(.13+(i%3)*.04);for _,part in ipairs(m:GetDescendants())do if part:IsA('BasePart')then part.Color=color end end;sparks[#sparks+1]={model=m,p=p,v=Vector3.new(math.cos(a),math.sin(a),math.sin(i))*(2+i%3),start=os.clock(),color=color}end
 end
-local function clearCast(m)local c=casts[m];if c then Audio.Stop(c.loop);c.folder:Destroy();casts[m]=nil end end
+local function clearCast(m)local c=casts[m];if c then Audio.Stop(c.loop);if c.freeze then c.freeze:Destroy()end;c.folder:Destroy();casts[m]=nil end end
 local function clearWall(id)local r=walls[id];if r then Audio.Stop(r.loop);r.folder:Destroy();walls[id]=nil end end
 local function clearCombat()
  for _,s in pairs(shots)do s.model:Destroy()end;shots={};for m in pairs(casts)do clearCast(m)end;for id in pairs(walls)do clearWall(id)end
@@ -276,41 +276,43 @@ local function beginScene()
 end
 connect(FX.OnClientEvent,function(k,d)
  if type(d)~='table'or d.Round~=state:GetAttribute('RoundId')or d.Match~=state:GetAttribute('CraxMatchToken')then return end;local m=d.Owner
- if(k=='Charge'or k=='Wall'or k=='Suspend'or k=='Shot')and(not m or not m.Parent)then return end
+ if(k=='Charge'or k=='Wall'or k=='WallCharge'or k=='Suspend'or k=='Shot')and(not m or not m.Parent)then return end
  if k=='Clear'then clearCombat();return elseif k=='OwnerClear'then clearCast(m);for id,w in pairs(walls)do if w.owner==m then clearWall(id)end end;return end
  if k=='Charge'then clearCast(m);local r={folder=make('Folder',{},root),kind=d.Kind,start=Clock.Time(m),tick=0};casts[m]=r
-  if d.Kind=='Stop'then r.dial=Assets.Model('Dial',r.folder);sound('Tick',m)else r.shard=Assets.Model('Shard',r.folder);r.shard:ScaleTo(.65);r.spark=make('Part',{Name='PolariChargeSpark',Shape=Enum.PartType.Ball,Size=Vector3.one*.15,Color=PURPLE,Material=Enum.Material.Neon,Anchored=true,CanCollide=false,CanTouch=false,CanQuery=false,CastShadow=false},r.folder);r.rays={};for i=1,3 do r.rays[i]=line(r.folder,PURPLE,.04)end;if not low then make('PointLight',{Color=PURPLE,Brightness=.6,Range=4,Shadows=false},r.spark)end;sound('Charge',m)end
+  if d.Kind=='Stop'then r.dial=Assets.Model('Dial',r.folder);r.dial:ScaleTo(3.5);VFX.Preview(r.folder,d.Target);r.hasPreview=true;sound('Tick',m)else r.shard=VFX.Projectile(r.folder,false);r.shard:ScaleTo(.65);r.spark=make('Part',{Name='PolariChargeSpark',Shape=Enum.PartType.Ball,Size=Vector3.one*.15,Color=PURPLE,Material=Enum.Material.Neon,Anchored=true,CanCollide=false,CanTouch=false,CanQuery=false,CastShadow=false},r.folder);r.rays={};for i=1,3 do r.rays[i]=line(r.folder,PURPLE,.04)end;if not low then make('PointLight',{Color=PURPLE,Brightness=.6,Range=4,Shadows=false},r.spark)end;sound('Charge',m)end
  elseif k=='CastEnd'then clearCast(m)
- elseif k=='Wall'then
-  local folder=make('Folder',{Name='PolariWall'},root);local w={folder=folder,owner=m,target=d.Target,side=d.Side,start=Clock.Time(m),parts={},lines={}};walls[d.Activation]=w
+ elseif k=='Wall'or k=='WallCharge'then
+  local folder=make('Folder',{Name='PolariWall'},root);local w={folder=folder,owner=m,target=d.Target,side=d.Side,start=Clock.Time(m),parts={},lines={},charged=k=='WallCharge',chargeDuration=d.Duration};walls[d.Activation]=w
   local names={Left='Arenaleft',Right='ArenaRight',Bottom='Arenabottom',Top='ArenaTop'};local wall=workspace:FindFirstChild(names[d.Side]);if wall then
    w.position=(frame()*wall.CFrame).Position;w.panel=make('Part',{Name='PolarizedWall',Size=wall.Size+Vector3.one*.035,CFrame=frame()*wall.CFrame,Color=PURPLE,Material=Enum.Material.Neon,Transparency=.72,Anchored=true,CanCollide=false,CanTouch=false,CanQuery=false,CastShadow=false},folder)
    for i=1,(low and 3 or 6)do w.lines[i]=line(folder,PURPLE,.035)end
-  end;w.loop=sound('AttractLoop',m,true);sound('Attract',m)
+  end;if w.charged then if w.panel then w.panel.Color=GOLD;w.panel.Transparency=.9 end;sound('Charge',m)else w.halo=VFX.Attraction(folder,d.Target);w.loop=sound('AttractLoop',m,true);sound('Attract',m)end
+ elseif k=='WallArmed'then local w=walls[d.Activation];if w then w.armed=true;w.start=Clock.Time(m);if w.panel then w.panel.Color=RED;w.panel.Transparency=.35 end;for _,p in ipairs(w.lines)do p.Color=RED end end;sound('InvertWarning',m)
+ elseif k=='AttractImpact'then burst((frame()*CFrame.new(d.Position)).Position,PURPLE,14);sound('Impact',d.Target)
  elseif k=='InvertWarning'then local w=walls[d.Activation];if w then w.warning=true;if w.panel then w.panel.Color=RED end;for _,p in ipairs(w.lines)do p.Color=RED end end;sound('InvertWarning',d.Target)
  elseif k=='Repel'then burst((frame()*CFrame.new(d.Position)).Position,RED,12);sound('Invert',m)
  elseif k=='WallEnd'then clearWall(d.Activation);sound('WallEnd',m)
  elseif k=='Suspend'then
-  local r=casts[m];if not r then r={folder=make('Folder',{},root),kind='Stop',start=Clock.Time(m)};casts[m]=r;r.dial=Assets.Model('Dial',r.folder)end;r.fan={};r.frozen=true
-  for i,p in ipairs(d.Fan)do local part=Assets.Model('Shard',r.folder);local start=(frame()*CFrame.new(p.Position)).Position;local direction=frame():VectorToWorldSpace(p.Direction);part:PivotTo(CFrame.lookAt(start,start+direction)*CFrame.Angles(-math.pi/2,0,0));local axis=line(r.folder,PURPLE,.045);segment(axis,(frame()*CFrame.new(p.Position)).Position,(frame()*CFrame.new(p.Position+p.Direction*(C.FanRadius+5))).Position,.045);r.fan[i]={model=part,axis=axis}end;sound('Stop',m)
- elseif k=='Resume'then local r=casts[m];if r then r.frozen=false;r.released=true end;sound('Resume',m)
+  local r=casts[m];if not r then r={folder=make('Folder',{},root),kind='Stop',start=Clock.Time(m)};casts[m]=r;r.dial=Assets.Model('Dial',r.folder)end;r.fan={};r.frozen=true;r.freeze=VFX.Freeze(d.Targets or{m,d.Target});if not r.hasPreview then VFX.Preview(r.folder,d.Target);r.hasPreview=true end
+  for i,p in ipairs(d.Fan)do local part=Assets.Model('Shard',r.folder);part:ScaleTo(1.6);for _,p in ipairs(part:GetDescendants())do if p:IsA('BasePart')then p.Material=Enum.Material.Neon;p.Color=GOLD end end;local start=(frame()*CFrame.new(p.Position)).Position;local direction=frame():VectorToWorldSpace(p.Direction);part:PivotTo(CFrame.lookAt(start,start+direction)*CFrame.Angles(-math.pi/2,0,0));local axis=line(r.folder,PURPLE,.045);segment(axis,(frame()*CFrame.new(p.Position)).Position,(frame()*CFrame.new(p.Position+p.Direction*(C.FanRadius+5))).Position,.045);r.fan[i]={model=part,axis=axis}end;sound('Stop',m)
+ elseif k=='Resume'then local r=casts[m];if r then r.frozen=false;r.released=true;if r.freeze then r.freeze:Destroy();r.freeze=nil end end;sound('Resume',m)
  elseif k=='FanFire'then clearCast(m);sound('FanFire',m)
- elseif k=='Shot'then local model=Assets.Model('Shard',root);shots[d.Id]={model=model,position=d.Position,from=d.Position,at=os.clock(),direction=d.Direction,owner=m};local p=model:FindFirstChild('PFX_Shard');if p then local a=make('Attachment',{Position=Vector3.new(-.08,0,0)},p);local b=make('Attachment',{Position=Vector3.new(.08,0,0)},p);make('Trail',{Attachment0=a,Attachment1=b,Color=ColorSequence.new(PURPLE),Lifetime=low and .08 or .14,FaceCamera=true,LightEmission=.5,MinLength=.06},p)end;if not d.Fan then sound('Shot',m)end
+ elseif k=='Shot'then local model=VFX.Projectile(root,d.Fan);shots[d.Id]={model=model,position=d.Position,from=d.Position,at=os.clock(),direction=d.Direction,owner=m};if not d.Fan then sound('Shot',m)end
  elseif k=='ShotState'then if shots[d.Id]then local s=shots[d.Id];s.from=s.display or s.position;s.position=d.Position;s.at=os.clock()end
  elseif k=='ShotEnd'then if shots[d.Id]then shots[d.Id].model:Destroy();shots[d.Id]=nil end
  elseif k=='Impact'then burst((frame()*CFrame.new(d.Position)).Position,d.Fan and GOLD or PURPLE,10);sound(d.Fan and'FanImpact'or'Impact',m)end
 end)
 connect(Run.Heartbeat,function(dt)
  accumulated+=dt;if accumulated<(low and 1/20 or 1/30)then return end;accumulated=0
- for id,s in pairs(shots)do if not s.owner.Parent then s.model:Destroy();shots[id]=nil else s.display=s.from:Lerp(s.position,math.clamp((os.clock()-s.at)/.05,0,1));local p=(frame()*CFrame.new(s.display)).Position;local v=frame():VectorToWorldSpace(s.direction);s.model:PivotTo(CFrame.lookAt(p,p+v)*CFrame.Angles(-math.pi/2,0,0))end end
+ for id,s in pairs(shots)do if not s.owner.Parent then s.model:Destroy();shots[id]=nil else s.display=s.from:Lerp(s.position,math.clamp((os.clock()-s.at)/.05,0,1));local p=(frame()*CFrame.new(s.display)).Position;local v=frame():VectorToWorldSpace(s.direction);s.model:PivotTo(CFrame.lookAt(p,p+v)*CFrame.Angles(0,0,os.clock()*10))end end
  for m,r in pairs(casts)do
   local h=head(m);if not m.Parent or not h or(m:GetAttribute('Health')or 0)<=0 or m:GetAttribute('LuckyTricked')then clearCast(m)
-  else local t=Clock.Time(m)-r.start;if r.dial then r.dial:PivotTo(frame()*h.CFrame*CFrame.new(0,2.7,-3.35)*CFrame.Angles(math.pi/2,0,math.floor(t*6)*math.pi/3))elseif r.shard then local p=(frame()*h.CFrame*CFrame.new(0,1,-4.5)).Position;r.shard:PivotTo(CFrame.new(p)*CFrame.Angles(math.pi/2,t*4,0));local u=math.clamp(t/C.Charge,0,1);r.spark.CFrame=CFrame.new(p);r.spark.Size=Vector3.one*(.12+.2*u*u);r.spark.Transparency=.15+.1*math.sin(t*35);for i,ray in ipairs(r.rays)do local angle=i*math.pi/3+t*2;local d=frame():VectorToWorldSpace(Vector3.new(math.cos(angle),math.sin(angle),0))*(.18+.35*u);segment(ray,p-d,p+d,.04)end end
+  else local t=Clock.Time(m)-r.start;if r.dial then r.dial:PivotTo(frame()*h.CFrame*CFrame.new(0,5,-3.35)*CFrame.Angles(math.pi/2,0,math.floor(t*6)*math.pi/3))elseif r.shard then local p=(frame()*h.CFrame*CFrame.new(0,1,-4.5)).Position;r.shard:PivotTo(CFrame.new(p)*CFrame.Angles(math.pi/2,t*4,0));local u=math.clamp(t/C.Charge,0,1);r.spark.CFrame=CFrame.new(p);r.spark.Size=Vector3.one*(.3+.45*u*u);r.spark.Transparency=.15+.1*math.sin(t*35);for i,ray in ipairs(r.rays)do local angle=i*math.pi/3+t*2;local d=frame():VectorToWorldSpace(Vector3.new(math.cos(angle),math.sin(angle),0))*(.18+.35*u);segment(ray,p-d,p+d,.04)end end
    if r.kind=='Stop'and not r.released and not r.frozen then local tick=math.floor(t/.2);if tick>(r.tick or 0)then r.tick=tick;sound('Tick',m)end end
   end
  end
  for id,w in pairs(walls)do
-  local p=position(w.target);if not p or not w.owner.Parent then clearWall(id)elseif w.position then local t=Clock.Time(w.owner)-w.start;for i,ray in ipairs(w.lines)do local u=(t*.8+i/#w.lines)%1;local endpoint=w.position+frame():VectorToWorldSpace(Vector3.new((w.side=='Top'or w.side=='Bottom')and(i-2)*2 or 0,(w.side=='Left'or w.side=='Right')and(i-2)*2 or 0,0));local a=p:Lerp(endpoint,math.max(0,u-.18));segment(ray,a,p:Lerp(endpoint,u),.035)end;Audio.Pause(w.loop,Clock.Paused(w.owner))end
+  local p=w.charged and position(w.owner)or position(w.target);if not p or not w.owner.Parent then clearWall(id)elseif w.position then local t=Clock.Time(w.owner)-w.start;if w.halo then w.halo:PivotTo(CFrame.new(p)*frame().Rotation*CFrame.Angles(0,0,t*2))end;if w.charged and w.panel then w.panel.Transparency=w.armed and(.3+.12*math.sin(t*18))or(.9-.45*math.clamp(t/math.max(.01,w.chargeDuration),0,1))end;for i,ray in ipairs(w.lines)do local u=(t*.8+i/#w.lines)%1;local endpoint=w.position+frame():VectorToWorldSpace(Vector3.new((w.side=='Top'or w.side=='Bottom')and(i-2)*2 or 0,(w.side=='Left'or w.side=='Right')and(i-2)*2 or 0,0));local a=p:Lerp(endpoint,math.max(0,u-.18));segment(ray,a,p:Lerp(endpoint,u),w.charged and .10 or .075)end;Audio.Pause(w.loop,Clock.Paused(w.owner))end
  end
  for i=#sparks,1,-1 do local p=sparks[i];local t=(os.clock()-p.start)/.5;if t>=1 then p.model:Destroy();table.remove(sparks,i)else p.model:PivotTo(CFrame.new(p.p+p.v*t)*CFrame.Angles(t*6,t*4,t*3))end end
 end)
@@ -323,10 +325,10 @@ connect(script.Destroying,function()clearAll();for _,c in ipairs(connections)do 
 task.defer(beginScene)
 ]====]},{[ [====[path]====] ]=[====[ReplicatedStorage.CraxPolariConfig]====],[ [====[className]====] ]=[====[ModuleScript]====],[ [====[source]====] ]=[====[-- Values explicitly requested by the creator. Remaining controls are documented prototypes.
 local C={Id='Crax_Polari',AbilityId='PolariImpulse',Health=110,Melee=7,
- ImpulseWait={6,9},Charge=.4,ImpulseDamage=10,AttractDuration=2,InvertDamage=12,StopDuration=1.2,ShardDamage=6,MaxHits=3,ShardCount=5,
+ ImpulseWait={6,9},Charge=.4,ImpulseDamage=10,AttractDuration=2,AttractDamage=8,InvertDamage=15,InvertCharge=1.5,InvertDuration=3,StopDuration=1.2,ShardDamage=6,MaxHits=3,ShardCount=5,
  -- Prototype balancing/visual timings, not implicit creator approval.
- AttractWait={10,14},StopWait={22,28},InvertWarning=.25,DodgeWindow=.35,TickWarning=.6,
- ProjectileSpeed=38,ProjectileLife=2.5,ProjectileRadius=.28,DeflectAngle=math.rad(13),AttractTurnRate=1.2,RepelAngle=math.rad(28),RepelSpeedScale=1,
+ AttractWait={10,14},InvertWait={12,16},StopFirstWait={5,7},StopWait={22,28},InvertWarning=.25,DodgeWindow=.35,TickWarning=.6,
+ ProjectileSpeed=38,ProjectileLife=2.5,ProjectileRadius=.38,DeflectAngle=math.rad(13),AttractTurnRate=1.2,RepelAngle=math.rad(28),RepelSpeedScale=1,
  FanRadius=10,Volume=.18,Quality='Auto',FinaleDuration=9,MaxTitle='L’ULTIME SECONDE',TrophyId='PolariFinalSecond',AtlasId='',Icons={Attract='',Invert='',Stop='',Max=''}}
 local user=game:GetService('ReplicatedStorage'):FindFirstChild('CraxPolariUserAssets')
 if user then
@@ -346,7 +348,7 @@ function M.Shift(dt,fighters)
   if f.pendingSting and f.pendingSting.deadline then f.pendingSting.deadline+=dt end
  end
  for _,key in ipairs({'GhostFreezeUntil','GhostNightEnd','GhostGrandFrissonEnd'})do local value=state:GetAttribute(key);if type(value)=='number'and value>0 then state:SetAttribute(key,value+dt)end end
- for _,name in ipairs({'CraxSpideyRuntime','CraxPlumberRuntime','FleauRuntime','FleauControl','FantasticRuntime','GhostyNight','CraxDeadlyRuntime'})do
+ for _,name in ipairs({'CraxSpideyRuntime','CraxPlumberRuntime','FleauRuntime','FleauControl','FantasticRuntime','GhostyNight','CraxDeadlyRuntime','CraxBatRuntime'})do
   local module=SS:FindFirstChild(name);if module then local runtime=require(module);assert(runtime.PolariDelay,'Adaptateur de pause manquant : '..name);runtime.PolariDelay(dt)end
  end
 end
@@ -355,6 +357,9 @@ return M
 function R.NearestWall(p,b)
  local sides={{id='Left',d=p.X-b.minX,n=Vector2.new(1,0)},{id='Right',d=b.maxX-p.X,n=Vector2.new(-1,0)},{id='Bottom',d=p.Y-b.minY,n=Vector2.new(0,1)},{id='Top',d=b.maxY-p.Y,n=Vector2.new(0,-1)}}
  local best=sides[1];for i=2,4 do if sides[i].d<best.d then best=sides[i]end end;return best.id,best.n
+end
+function R.WallNormal(side)
+ return ({Left=Vector2.new(1,0),Right=Vector2.new(-1,0),Bottom=Vector2.new(0,1),Top=Vector2.new(0,-1)})[side]
 end
 function R.Turn(v,to,rate,dt)
  if v.Magnitude<1e-8 then return v end;local d=v.Unit:Lerp(to.Unit,1-math.exp(-rate*dt));return(d.Magnitude>1e-8 and d.Unit or to.Unit)*v.Magnitude
@@ -376,7 +381,7 @@ return R
 ]====]},{[ [====[path]====] ]=[====[ServerScriptService.CraxPolariRuntime]====],[ [====[className]====] ]=[====[ModuleScript]====],[ [====[source]====] ]=[====[-- Authority only: uses existing motions, pause reasons, hit event and confirmed damage.
 local RS=game:GetService('ReplicatedStorage');local SS=game:GetService('ServerScriptService')
 local C=require(RS:WaitForChild('CraxPolariConfig'));local R=require(RS:WaitForChild('CraxPolariRules'));local Gate=require(SS:WaitForChild('CraxAbilityGate'));local Deadly=require(SS:WaitForChild('CraxDeadlyRuntime'));local Skills=require(SS:WaitForChild('CraxSkillResolver'));local Silence=require(RS:WaitForChild('CraxSilenceGate'))
-local FX=RS:WaitForChild('CraxPolariFX');local Hit=SS:WaitForChild('BiteHit');local state=workspace:WaitForChild('CombatState');local M={};local records={};local shots={};local freeze;local round;local match;local serial=0;local rng=Random.new();local motions={};local previous={};local list={};local pendingDeflect={};local running=false
+local FX=RS:WaitForChild('CraxPolariFX');local Hit=SS:WaitForChild('BiteHit');local state=workspace:WaitForChild('CombatState');local M={};local records={};local shots={};local freeze;local round;local match;local serial=0;local rng=Random.new();local motions={};local previous={};local list={};local pendingRepel={};local pendingDeflect={};local running=false
 local function rand(v)return rng:NextNumber(v[1],v[2])end
 local function alive(m)return m and m.Parent and(m:GetAttribute('Health')or 0)>0 end
 local function own(m)return m:GetAttribute('CraxId')==C.Id end
@@ -388,12 +393,18 @@ local function bounds()
 end
 local function enemy(a,b)return alive(b)and not Deadly.SameTeam(a,b)and not b:GetAttribute('FantasticInvisible')and not b:GetAttribute('DeadlyPhantom')and not b:GetAttribute('PlumberInTransit')and not b:GetAttribute('VicePortalTransit')end
 local function target(f)local best,dist;for m,g in pairs(motions)do if enemy(f.model,m)then local d=(g.position-f.position).Magnitude;if not dist or d<dist then best=g;dist=d end end end;return best end
+local function externallyHeld(m)
+ for _,spec in ipairs({{'CraxBatRuntime','Hold'},{'CraxHangoverRuntime','Hold'},{'CraxBlackSpideyRuntime','Hold'},{'CraxSonGoRuntime','Hold'},{'CraxLuckyRuntime','Hold'},{'CraxSymRuntime','Held'},{'CraxSuperRuntime','Held'}})do
+  local source=SS:FindFirstChild(spec[1]);if source then local runtime=require(source);if runtime[spec[2]]and runtime[spec[2]](m)then return true end end
+ end
+ return false
+end
 local function get(m)
- if not own(m)then return end;if not records[m]then records[m]={time=0,level=Skills.Resolve(m),due={Impulse=rand(C.ImpulseWait),Attract=rand(C.AttractWait),Stop=rand(C.StopWait)}}end;return records[m]
+ if not own(m)then return end;if not records[m]then records[m]={time=0,level=Skills.Resolve(m),due={Impulse=rand(C.ImpulseWait),Attract=rand(C.AttractWait),Invert=rand(C.InvertWait),Stop=rand(C.StopFirstWait)}}end;return records[m]
 end
 local function release()
  local s=freeze;if not s then return end;freeze=nil
- for m in pairs(s.models)do Gate.Resume(m,s.reason);m:SetAttribute('PolariFrozen',nil)end
+ for m,snapshot in pairs(s.models)do snapshot.motion.position=snapshot.position;snapshot.motion.velocity=snapshot.velocity;if m.Parent then m:PivotTo(snapshot.pivot)end;Gate.Resume(m,s.reason);m:SetAttribute('PolariFrozen',nil)end
  state:SetAttribute('PolariTimeFrozen',nil);state:SetAttribute('PolariTimeOwner',nil);state:SetAttribute('PolariTimeRemaining',nil)
  local r=records[s.owner];if r and r.cast and r.cast.id==s.id then r.cast.phase='Dodge';r.cast.age=0 end;emit('Resume',{Owner=s.owner,Activation=s.id,Window=C.DodgeWindow})
 end
@@ -403,7 +414,7 @@ function M.Cancel(m)
  for i=#shots,1,-1 do if shots[i].owner==m then emit('ShotEnd',{Id=shots[i].id});table.remove(shots,i)end end;emit('OwnerClear',{Owner=m})
 end
 function M.Reset()
- running=false;release();records={};shots={};motions={};previous={};pendingDeflect={};round=state:GetAttribute('RoundId');match=state:GetAttribute('CraxMatchToken');emit('Clear')
+ running=false;release();records={};shots={};motions={};previous={};pendingRepel={};pendingDeflect={};round=state:GetAttribute('RoundId');match=state:GetAttribute('CraxMatchToken');emit('Clear')
 end
 function M.Begin(fighters)M.Reset();running=true;list=fighters;for _,f in ipairs(Deadly.MotionTargets(fighters))do motions[f.model]=f;previous[f.model]=f.position end end
 -- Called before every other arena simulation. It never overwrites velocities, captures or lock snapshots.
@@ -414,6 +425,7 @@ function M.Pump(dt,fighters)
  if not freeze then return false end;local s=freeze
  for _,f in ipairs(fighters)do if not alive(f.model)then release();return false end end
  if not enabled(s.owner)or not alive(s.target)then M.Cancel(s.owner);return false end
+ for m,snapshot in pairs(s.models)do if m.Parent then snapshot.motion.position=snapshot.position;snapshot.motion.velocity=snapshot.velocity;m:PivotTo(snapshot.pivot)end end
  local used=math.min(math.max(0,dt),s.remaining);require(SS:WaitForChild('CraxPolariPause')).Shift(used,fighters)
  s.remaining-=used;state:SetAttribute('PolariTimeRemaining',math.max(0,s.remaining))
  if s.remaining<=1e-8 then release()end
@@ -424,10 +436,11 @@ local function stop(f,r,a)
  local t=motions[a.target];if not t then r.cast=nil;return end
  local dir=t.position-f.position;a.fan=R.Fan(t.position,dir,C.FanRadius,C.ShardCount);a.phase='Frozen';a.age=0
  freeze={owner=f.model,target=t.model,id=a.id,remaining=C.StopDuration,reason='PolariTime_'..a.id,models={}}
- for _,g in ipairs(Deadly.MotionTargets(list))do freeze.models[g.model]=true;Gate.Pause(g.model,freeze.reason);g.model:SetAttribute('PolariFrozen',true)end
+ for _,g in ipairs(Deadly.MotionTargets(list))do freeze.models[g.model]={motion=g,position=g.position,velocity=g.velocity,pivot=g.model:GetPivot()};Gate.Pause(g.model,freeze.reason);g.model:SetAttribute('PolariFrozen',true)end
  state:SetAttribute('PolariTimeFrozen',true);state:SetAttribute('PolariTimeOwner',f.model.Name);state:SetAttribute('PolariTimeRemaining',C.StopDuration)
  local fan={};local b=bounds();for i,p in ipairs(a.fan)do p.position=Vector2.new(math.clamp(p.position.X,b.minX+C.ProjectileRadius,b.maxX-C.ProjectileRadius),math.clamp(p.position.Y,b.minY+C.ProjectileRadius,b.maxY-C.ProjectileRadius));fan[i]={Position=xyz(f,p.position),Direction=Vector3.new(p.direction.X,p.direction.Y,0)}end
- emit('Suspend',{Owner=f.model,Target=t.model,Activation=a.id,Fan=fan,Duration=C.StopDuration})
+ local targets={};for m in pairs(freeze.models)do targets[#targets+1]=m end
+ emit('Suspend',{Owner=f.model,Target=t.model,Targets=targets,Activation=a.id,Fan=fan,Duration=C.StopDuration})
 end
 local function spawn(f,a,p,d,damage,volley)
  serial+=1;local shot={id=serial,activation=a.id,owner=f.model,position=p,velocity=d*C.ProjectileSpeed,damage=damage,life=0,fan=volley,hits=a.hits or{},net=0};shots[#shots+1]=shot;emit('Shot',{Owner=f.model,Id=shot.id,Activation=a.id,Position=xyz(f,p),Direction=Vector3.new(d.X,d.Y,0),Fan=volley})
@@ -438,7 +451,7 @@ end
 local function cast(f,r,dt)
  local a=r.cast
  if not enemy(f.model,a.target)then r.cast=nil;r.due[a.kind]=r.time+rand(a.kind=='Stop'and C.StopWait or C.ImpulseWait);emit('CastEnd',{Owner=f.model,Activation=a.id});return end
- if a.kind=='Stop'and a.phase=='Dodge'and(Gate.Paused(a.target)or Deadly.Hold(a.target)or(motions[a.target]and motions[a.target].capturedBy))then a.age=0;return end
+ if a.kind=='Stop'and a.phase=='Dodge'and(externallyHeld(a.target)or Gate.Paused(a.target)or Deadly.Hold(a.target)or(motions[a.target]and motions[a.target].capturedBy))then a.age=0;return end
  a.age+=dt
  if a.kind=='Impulse'and a.age+1e-8>=C.Charge then
   local t=motions[a.target];if t and enemy(f.model,t.model)then local d=t.position-f.position;d=d.Magnitude>1e-8 and d.Unit or Vector2.new(1,0);spawn(f,a,f.position+d*(f.radius+.2),d,C.ImpulseDamage,false)end;r.cast=nil;emit('CastEnd',{Owner=f.model,Activation=a.id})
@@ -452,19 +465,42 @@ end
 local function polarize(f,r)
  local t=target(f);if not t then r.due.Attract=r.time+1;return end;local side,normal=R.NearestWall(t.position,bounds());serial+=1;r.wall={target=t.model,side=side,normal=normal,age=0,id=serial};r.due.Attract=r.time+C.AttractDuration+rand(C.AttractWait);emit('Wall',{Owner=f.model,Target=t.model,Side=side,Activation=serial,Duration=C.AttractDuration})
 end
+local function attractHit(f,r,t)
+ local w=r.wall
+ if not w or w.hit or w.target~=t.model or w.age>=C.AttractDuration then return end
+ if Gate.Paused(t.model)or Deadly.Hold(t.model)or externallyHeld(t.model)or t.capturedBy then return end
+ w.hit=true
+ Hit:Fire(f.model,t.model,C.AttractDamage,false,'PolariAttract',nil,w.id)
+ emit('AttractImpact',{Owner=f.model,Target=t.model,Activation=w.id,Position=xyz(t,t.position)})
+end
 local function wall(f,r,dt)
- local w=r.wall;local t=motions[w.target];if not t or not enemy(f.model,w.target)then emit('WallEnd',{Owner=f.model,Activation=w.id});r.wall=nil;return end
+ local w=r.wall;local t=motions[w.target]
+ if not t or not enemy(f.model,w.target)then emit('WallEnd',{Owner=f.model,Activation=w.id});r.wall=nil;return end
  w.age+=dt
- if w.warning then
-  if w.age-w.warning>=C.InvertWarning then
-   if not Gate.Paused(t.model)and not Deadly.Hold(t.model)and not require(SS.CraxLuckyRuntime).Dodge(t.model,C.InvertDamage,f.model,'PolariInvert',w.id)then t.velocity=R.Repel(t.position,w.normal,bounds(),math.max(t.speed or 0,t.velocity.Magnitude)*C.RepelSpeedScale,C.RepelAngle);t.knockback=nil;Hit:Fire(f.model,t.model,C.InvertDamage,false,'PolariInvert',nil,w.id);emit('Repel',{Owner=f.model,Target=t.model,Activation=w.id,Position=xyz(t,t.position)})end
-   emit('WallEnd',{Owner=f.model,Activation=w.id});r.wall=nil
-  end
- elseif w.age>=C.AttractDuration then emit('WallEnd',{Owner=f.model,Activation=w.id});r.wall=nil
- elseif not Gate.Paused(t.model)and not Deadly.Hold(t.model)and not t.capturedBy then
+ if w.age>=C.AttractDuration then emit('WallEnd',{Owner=f.model,Activation=w.id});r.wall=nil
+ elseif not Gate.Paused(t.model)and not Deadly.Hold(t.model)and not externallyHeld(t.model)and not t.capturedBy then
   t.velocity=R.Turn(t.velocity,-w.normal,C.AttractTurnRate,dt)
-  if r.level>=2 and R.TouchWall(w.side,t.position,t.radius,bounds())then w.warning=w.age;emit('InvertWarning',{Owner=f.model,Target=t.model,Activation=w.id,Side=w.side,Duration=C.InvertWarning})end
+  if R.TouchWall(w.side,t.position,t.radius,bounds())then attractHit(f,r,t)end
  end
+end
+local function chargeWall(f,r)
+ serial+=1;local sides={'Left','Right','Bottom','Top'};local side=sides[rng:NextInteger(1,4)]
+ r.charged={side=side,normal=R.WallNormal(side),age=0,id=serial,hits={}}
+ r.due.Invert=r.time+C.InvertCharge+C.InvertDuration+rand(C.InvertWait)
+ emit('WallCharge',{Owner=f.model,Side=side,Activation=serial,Duration=C.InvertCharge})
+end
+local function invertHit(f,r,t)
+ local w=r.charged
+ if not w or not w.active or w.hits[t.model]or w.age>=C.InvertCharge+C.InvertDuration then return end
+ if not enemy(f.model,t.model)or Gate.Paused(t.model)or Deadly.Hold(t.model)or externallyHeld(t.model)or t.capturedBy then return end
+ w.hits[t.model]=true;pendingRepel[f.model]=pendingRepel[f.model]or{};pendingRepel[f.model][t.model]={target=t.model,normal=w.normal,id=w.id}
+ Hit:Fire(f.model,t.model,C.InvertDamage,false,'PolariInvert',nil,w.id)
+end
+local function chargedWall(f,r,dt)
+ local w=r.charged;w.age+=dt
+ if w.age>=C.InvertCharge+C.InvertDuration then emit('WallEnd',{Owner=f.model,Activation=w.id});r.charged=nil;return end
+ if not w.active and w.age+1e-8>=C.InvertCharge then w.active=true;emit('WallArmed',{Owner=f.model,Side=w.side,Activation=w.id,Duration=C.InvertDuration})end
+ if w.active then for _,t in pairs(motions)do if R.TouchWall(w.side,t.position,t.radius,bounds())then invertHit(f,r,t)end end end
 end
 local function advanceShot(s,dt)
  local f=motions[s.owner];if not f or not enabled(s.owner)then return false end;if Gate.Paused(s.owner)then return true end
@@ -481,28 +517,87 @@ local function advanceShot(s,dt)
 end
 function M.MaxFanPacket(amount)return math.min(amount,C.ShardDamage)end
 function M.PowerResult(owner,target,loss,kind)
+ if kind=='PolariInvert'then local queue=pendingRepel[owner];local p=queue and queue[target];if queue then queue[target]=nil;if not next(queue)then pendingRepel[owner]=nil end end;local f=motions[target];if p and p.target==target and f and loss>0 and not Gate.Paused(target)and not Deadly.Hold(target)and not f.capturedBy then f.velocity=R.Repel(f.position,p.normal,bounds(),math.max(f.speed or 0,f.velocity.Magnitude)*C.RepelSpeedScale,C.RepelAngle);f.knockback=nil;emit('Repel',{Owner=owner,Target=target,Activation=p.id,Position=xyz(f,f.position)})end;return end
  if kind~='PolariImpulse'then return end;local p=pendingDeflect[owner];pendingDeflect[owner]=nil
  local f=motions[target];if p and p.target==target and f and loss>0 and not Gate.Paused(target)and not Deadly.Hold(target)and not f.capturedBy then local v=f.velocity;local angle=C.DeflectAngle*(p.id%2==0 and 1 or-1);f.velocity=Vector2.new(v.X*math.cos(angle)-v.Y*math.sin(angle),v.X*math.sin(angle)+v.Y*math.cos(angle))end
 end
 function M.WallContact(model,side)
- for _,r in pairs(records)do local w=r.wall;if w and w.target==model and w.side==side and not w.warning and w.age<C.AttractDuration and r.level>=2 then w.warning=w.age;emit('InvertWarning',{Owner=nil,Target=model,Activation=w.id,Side=side,Duration=C.InvertWarning})end end
+ local t=motions[model];if not t then return end
+ for owner,r in pairs(records)do local f=motions[owner]
+  if f then
+   if r.wall and r.wall.side==side then attractHit(f,r,t)end
+   if r.charged and r.charged.side==side then invertHit(f,r,t)end
+  end
+ end
 end
 function M.Step(dt,fighters,active)
- if state:GetAttribute('Phase')~='Fighting'then if running then M.Reset()end;return end;if round~=state:GetAttribute('RoundId')or match~=state:GetAttribute('CraxMatchToken')then M.Begin(fighters)end
+ if state:GetAttribute('Phase')~='Fighting'then if running then M.Reset()end;return end;if not running or round~=state:GetAttribute('RoundId')or match~=state:GetAttribute('CraxMatchToken')then M.Begin(fighters)end
  motions={};for _,f in ipairs(Deadly.MotionTargets(fighters))do motions[f.model]=f end
  if not active or freeze then return end
- for _,f in ipairs(fighters)do local r=get(f.model)
+ for _,f in ipairs(fighters)do local r=get(f.model);if r then r.level=Skills.Resolve(f.model);f.model:SetAttribute('PolariLevel',r.level)end
   if r and not enabled(f.model)then M.Cancel(f.model)
-  elseif r and not Gate.Paused(f.model)and not Deadly.Hold(f.model)then
-   r.time+=dt;if r.wall then wall(f,r,dt)end
+  elseif r and not Gate.Paused(f.model)and not Deadly.Hold(f.model)and not externallyHeld(f.model)then
+   r.time+=dt;if r.wall then wall(f,r,dt)end;if r.charged then chargedWall(f,r,dt)end
    if r.cast then cast(f,r,dt)elseif Silence.CanStart(f.model)then
-    if r.level>=3 and r.time+1e-8>=r.due.Stop then start(f,r,'Stop')elseif r.time+1e-8>=r.due.Impulse then start(f,r,'Impulse')elseif r.level>=1 and not r.wall and r.time+1e-8>=r.due.Attract then polarize(f,r)end
+    if r.level>=3 and r.time+1e-8>=r.due.Stop then start(f,r,'Stop')elseif r.level>=2 and not r.charged and r.time+1e-8>=r.due.Invert then chargeWall(f,r)elseif r.time+1e-8>=r.due.Impulse then start(f,r,'Impulse')elseif r.level>=1 and not r.wall and r.time+1e-8>=r.due.Attract then polarize(f,r)end
    end
   end
   if freeze then break end
  end
  if not freeze then for i=#shots,1,-1 do if not advanceShot(shots[i],dt)then emit('ShotEnd',{Id=shots[i].id});table.remove(shots,i)end end end
  for m,g in pairs(motions)do previous[m]=g.position end
+end
+return M
+]====]},{[ [====[path]====] ]=[====[ReplicatedStorage.CraxPolariVFX]====],[ [====[className]====] ]=[====[ModuleScript]====],[ [====[source]====] ]=[====[-- Bounded procedural effects: no new uploaded texture or mesh required.
+local RS=game:GetService('ReplicatedStorage');local Run=game:GetService('RunService')
+local low=game:GetService('UserInputService').TouchEnabled
+local M={};local PURPLE=Color3.fromRGB(170,63,255);local CYAN=Color3.fromRGB(140,242,255);local GOLD=Color3.fromRGB(255,211,96)
+local function make(class,properties,parent)local o=Instance.new(class);for k,v in pairs(properties)do o[k]=v end;o.Parent=parent;return o end
+local function part(parent,name,color,size,cf,alpha)
+ return make('Part',{Name=name,Size=size,CFrame=cf,Color=color,Material=Enum.Material.Neon,Transparency=alpha or 0,Anchored=true,CanCollide=false,CanTouch=false,CanQuery=false,CastShadow=false},parent)
+end
+local function ring(parent,radius,color,z)
+ local n=low and 8 or 12
+ for i=1,n do local angle=i*2*math.pi/n;part(parent,'MagneticArc',color,Vector3.new(.07,2*radius*math.sin(math.pi/n)*1.04,.07),CFrame.new(math.cos(angle)*radius,math.sin(angle)*radius,z or 0)*CFrame.Angles(0,0,angle),.12)end
+end
+function M.Projectile(parent,fan)
+ local model=make('Model',{Name='PolariShard'},parent)
+ local core=part(model,'PolariProjectileCore',fan and GOLD or CYAN,Vector3.one*(fan and .55 or .85),CFrame.identity,0);core.Shape=Enum.PartType.Ball
+ local halo=part(model,'PolariProjectileHalo',PURPLE,Vector3.one*(fan and .95 or 1.4),CFrame.identity,.72);halo.Shape=Enum.PartType.Ball
+ ring(model,fan and .6 or .9,PURPLE,0);if not low then ring(model,.62,CYAN,.3)end
+ for i=1,3 do local angle=i*2*math.pi/3;part(model,'IonFin',CYAN,Vector3.new(.10,.12,fan and 1.1 or 1.8),CFrame.new(math.cos(angle)*.3,math.sin(angle)*.3,.6),.15)end
+ local a=make('Attachment',{Position=Vector3.new(-.3,0,0)},core);local b=make('Attachment',{Position=Vector3.new(.3,0,0)},core)
+ make('Trail',{Name='PolariIonTrail',Attachment0=a,Attachment1=b,Color=ColorSequence.new(CYAN,PURPLE),Transparency=NumberSequence.new(.15,1),Lifetime=low and .16 or .3,LightEmission=1,FaceCamera=true,MinLength=.02},core)
+ make('ParticleEmitter',{Name='PolariIonSparks',Texture='rbxasset://textures/particles/sparkles_main.dds',Color=ColorSequence.new(CYAN,PURPLE),LightEmission=1,Rate=low and 8 or 22,Lifetime=NumberRange.new(.12,.25),Speed=NumberRange.new(.2,1),Size=NumberSequence.new(.1),SpreadAngle=Vector2.new(20,20)},core)
+ if not low then make('PointLight',{Color=PURPLE,Brightness=1.7,Range=7,Shadows=false},core)end
+ model.PrimaryPart=core;return model
+end
+function M.Attraction(parent,target)
+ local halo=make('Model',{Name='PolariAttractionHalo'},parent);ring(halo,4.5,CYAN,0)
+ make('Highlight',{Name='PolarizedVictim',Adornee=target,FillColor=PURPLE,FillTransparency=.82,OutlineColor=CYAN,OutlineTransparency=.15},parent)
+ return halo
+end
+function M.Preview(parent,target)
+ local head=target and target:FindFirstChild('Head',true)
+ if head and head:IsA('BasePart')then
+  local gui=make('BillboardGui',{Name='PolariStopWarning',Adornee=head,Size=UDim2.fromOffset(270,65),StudsOffsetWorldSpace=Vector3.new(0,6,0),AlwaysOnTop=true},parent)
+  make('TextLabel',{Size=UDim2.fromScale(1,1),BackgroundTransparency=1,Text='TEMPS SUSPENDU',TextScaled=true,TextColor3=GOLD,TextStrokeTransparency=.15,Font=Enum.Font.FredokaOne},gui)
+ end
+ if target then make('Highlight',{Name='PolariTimeTarget',Adornee=target,FillColor=PURPLE,FillTransparency=.78,OutlineColor=GOLD,OutlineTransparency=0},parent)end
+end
+function M.Freeze(targets)
+ local snapshots={};local registryObject=RS:FindFirstChild('CraxRenderRegistryV82');local registry=registryObject and require(registryObject)
+ for _,model in ipairs(targets)do
+  if model and model.Parent then
+   if registry then for _,entry in ipairs(registry.Sources(model))do snapshots[entry.Part]=entry.Part.CFrame end
+   else for _,p in ipairs(model:GetDescendants())do if p:IsA('BasePart')then snapshots[p]=p.CFrame end end end
+  end
+ end
+ Run:BindToRenderStep('PolariTimeFreeze',Enum.RenderPriority.Last.Value+1600,function()
+  for p,cf in pairs(snapshots)do if p.Parent then p.CFrame=cf end end
+ end)
+ local released=false
+ return{Destroy=function()if released then return end;released=true;Run:UnbindFromRenderStep('PolariTimeFreeze');snapshots={}end}
 end
 return M
 ]====]}}

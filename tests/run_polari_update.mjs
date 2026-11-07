@@ -1,0 +1,21 @@
+import fs from 'node:fs';
+import {LuauState} from 'luau-web';
+const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
+const q=s=>JSON.stringify(s);
+const payload=JSON.parse(read('integration/polaricrax/v2/payload.json'));
+const script=read('integration/polaricrax/v2/METTRE_A_JOUR_POLARICRAX_V2.lua');
+let lua=read('tests/super_installer_fixture.lua').split('local V={}')[0].replace("  if key=='GetPivot'then","  if key=='GetFullName'then return function()return object.Name end end\n  if key=='GetPivot'then");
+lua+=`\nlocal ses=create('ScriptEditorService','ScriptEditorService');local concurrent\nfunction ses:GetEditorSource(o)return o.Source end\nfunction ses:UpdateSourceAsync(o,fn)if concurrent==o then concurrent=nil;o.Source=o.Source..'-- user concurrent edit' end;o.Source=fn(o.Source)end\nlocal b=create('ServerStorage.PolariCrax_Backup_V1','Folder');b:SetAttribute('PolariOwned',true);b:SetAttribute('Incomplete',false)\nlocal entries=create('ServerStorage.PolariCrax_Backup_V1.Entries','Folder');local originals={}\nlocal function record(path,source)local o=create(path,path:find('StarterPlayer',1,true)and'LocalScript'or'ModuleScript');o.Source=source;originals[path]=source;local e=new('Folder');e.Name=tostring(#entries:GetChildren()+1);e:SetAttribute('Path',path);local v=new('StringValue');v.Name='Original';v.Value='';v.Parent=e;local a=new('StringValue');a.Name='Installed';a.Value=source;a.Parent=e;e.Parent=entries;return o end\n`;
+for(const m of payload.modules){if(!m.path.endsWith('CraxPolariVFX'))lua+=`record(${q(m.path)},${q('-- installed v1 '+m.path)})\n`;}
+for(const w of payload.wraps)lua+=`record(${q(w.path)},'return {Crax_Polari={Upgrades={{},{},{},{}}},PolariAttract={}}')\n`;
+lua+=`local motion=create('ServerScriptService.ArenaMovement','Script');motion.Source='PolariV1.Pump(deltaTime,fighters) PolariV1.Step( PolariV1.WallContact('\nlocal function update()\n${script}\nend\n`;
+lua+=`local initialCount=#entries:GetChildren();local target=create('ServerScriptService.CraxPolariRuntime','ModuleScript')\nfailure=target;check(not pcall(update),'injected write failure rolls back');for path,source in pairs(originals)do check(create(path,'ModuleScript').Source==source,'original restored '..path)end;check(#entries:GetChildren()==initialCount,'backup entries preserved on failure');check(not game.ServerStorage:FindFirstChild('PolariCrax_Update_V2_Safety'),'clean rollback removes temporary safety folder')\nconcurrent=target;check(not pcall(update),'concurrent edit stops update');check(target.Source:find('user concurrent edit',1,true),'concurrent edit preserved');check(b:GetAttribute('Incomplete'),'conflict marks backup incomplete');check(game.ServerStorage:FindFirstChild('PolariCrax_Update_V2_Safety')~=nil,'conflict retains recovery folder')\n`;
+const state=await LuauState.createAsync({print:console.log,warn:console.log});
+try{await state.loadstring(lua,'polari-update-failure-and-concurrency',true)();}finally{state.destroy();}
+// Fresh fixture: successful application, repeatability, and original-uninstaller compatibility.
+let success=lua.slice(0,lua.indexOf('local initialCount='));
+success+=`update();check(b:GetAttribute('PolariRevision')==2,'V2 revision saved');check(not game.ServerStorage.PolariCrax_Update_V2_Safety:GetAttribute('Incomplete'),'complete safety backup');local count=#entries:GetChildren();update();check(#entries:GetChildren()==count,'repeat creates no duplicates');for _,e in ipairs(entries:GetChildren())do local o=game;for key in e:GetAttribute('Path'):gmatch('[^.]+')do o=o:FindFirstChild(key)end;check(o.Source==e.Installed.Value,'original uninstaller sees current installed source')end\n`;
+for(const m of payload.modules)success+=`check(create(${q(m.path)},${q(m.className)}).Source==${q(m.source)},'exact V2 module ${m.path}')\n`;
+success+=`local module=create('ServerScriptService.CraxPolariRuntime','ModuleScript');module.Source=module.Source..'-- later change';check(not pcall(update),'later edit refused');print('POLARI V2 UPDATE PASS',checks,'assertions')`;
+const state2=await LuauState.createAsync({print:console.log,warn:console.log});
+try{await state2.loadstring(success,'polari-update-success-and-repeat',true)();}finally{state2.destroy();}

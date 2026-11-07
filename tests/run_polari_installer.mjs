@@ -24,9 +24,9 @@ failure=target;check(not pcall(install),'editor write failure rolls back')
 for p,s in pairs(originals)do check(ses:GetEditorSource(create(p,'ModuleScript'))==s,'transaction restores visible editor '..p)end
 check(not game.ReplicatedStorage:FindFirstChild('CraxPolariRules'),'failed install removes new sources')
 install();check(not game.Workspace:FindFirstChild('CombatState'),'STOP install leaves CombatState creation to RoundManager');local backup=game.ServerStorage.PolariCrax_Backup_V1;check(backup and not backup:GetAttribute('Incomplete'),'complete backup')
-check(#backup.Entries:GetChildren()==29,'20 editor adaptations plus nine new sources')
+check(#backup.Entries:GetChildren()==30,'20 editor adaptations plus ten new sources')
 for p in pairs(originals)do local o=create(p,'ModuleScript');check(ses:GetEditorSource(o):find('independent editor Killa fix',1,true),'visible editor fix retained '..p);check(ses:GetEditorSource(o)==expectedSources[p],'exact compiled installed source '..p)end
-local installed=ses:GetEditorSource(target);install();check(#backup.Entries:GetChildren()==29,'repeat creates no duplicates')
+local installed=ses:GetEditorSource(target);install();check(#backup.Entries:GetChildren()==30,'repeat creates no duplicates')
 editors[target]=installed..'-- later edit';check(not pcall(install),'install refuses editor change');check(not pcall(undo),'undo refuses editor change');editors[target]=installed
 undo();for p,s in pairs(originals)do check(ses:GetEditorSource(create(p,'ModuleScript'))==s,'undo exact visible editor '..p)end
 check(imported.Parent~=nil,'original imported asset retained');check(not game.ServerStorage.CraxTemplates:FindFirstChild('Crax_Polari'),'own template removed');check(not game.ReplicatedStorage:FindFirstChild('CraxPolariFX'),'event removed')

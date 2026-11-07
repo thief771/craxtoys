@@ -10,7 +10,7 @@ function M.Shift(dt,fighters)
   if f.pendingSting and f.pendingSting.deadline then f.pendingSting.deadline+=dt end
  end
  for _,key in ipairs({'GhostFreezeUntil','GhostNightEnd','GhostGrandFrissonEnd'})do local value=state:GetAttribute(key);if type(value)=='number'and value>0 then state:SetAttribute(key,value+dt)end end
- for _,name in ipairs({'CraxSpideyRuntime','CraxPlumberRuntime','FleauRuntime','FleauControl','FantasticRuntime','GhostyNight','CraxDeadlyRuntime'})do
+ for _,name in ipairs({'CraxSpideyRuntime','CraxPlumberRuntime','FleauRuntime','FleauControl','FantasticRuntime','GhostyNight','CraxDeadlyRuntime','CraxBatRuntime'})do
   local module=SS:FindFirstChild(name);if module then local runtime=require(module);assert(runtime.PolariDelay,'Adaptateur de pause manquant : '..name);runtime.PolariDelay(dt)end
  end
 end

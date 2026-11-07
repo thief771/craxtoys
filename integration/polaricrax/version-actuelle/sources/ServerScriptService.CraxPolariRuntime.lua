@@ -20,11 +20,11 @@ local function externallyHeld(m)
  return false
 end
 local function get(m)
- if not own(m)then return end;if not records[m]then records[m]={time=0,level=Skills.Resolve(m),due={Impulse=rand(C.ImpulseWait),Attract=rand(C.AttractWait),Stop=rand(C.StopWait)}}end;return records[m]
+ if not own(m)then return end;if not records[m]then records[m]={time=0,level=Skills.Resolve(m),due={Impulse=rand(C.ImpulseWait),Attract=rand(C.AttractWait),Invert=rand(C.InvertWait),Stop=rand(C.StopFirstWait)}}end;return records[m]
 end
 local function release()
  local s=freeze;if not s then return end;freeze=nil
- for m in pairs(s.models)do Gate.Resume(m,s.reason);m:SetAttribute('PolariFrozen',nil)end
+ for m,snapshot in pairs(s.models)do snapshot.motion.position=snapshot.position;snapshot.motion.velocity=snapshot.velocity;if m.Parent then m:PivotTo(snapshot.pivot)end;Gate.Resume(m,s.reason);m:SetAttribute('PolariFrozen',nil)end
  state:SetAttribute('PolariTimeFrozen',nil);state:SetAttribute('PolariTimeOwner',nil);state:SetAttribute('PolariTimeRemaining',nil)
  local r=records[s.owner];if r and r.cast and r.cast.id==s.id then r.cast.phase='Dodge';r.cast.age=0 end;emit('Resume',{Owner=s.owner,Activation=s.id,Window=C.DodgeWindow})
 end
@@ -45,6 +45,7 @@ function M.Pump(dt,fighters)
  if not freeze then return false end;local s=freeze
  for _,f in ipairs(fighters)do if not alive(f.model)then release();return false end end
  if not enabled(s.owner)or not alive(s.target)then M.Cancel(s.owner);return false end
+ for m,snapshot in pairs(s.models)do if m.Parent then snapshot.motion.position=snapshot.position;snapshot.motion.velocity=snapshot.velocity;m:PivotTo(snapshot.pivot)end end
  local used=math.min(math.max(0,dt),s.remaining);require(SS:WaitForChild('CraxPolariPause')).Shift(used,fighters)
  s.remaining-=used;state:SetAttribute('PolariTimeRemaining',math.max(0,s.remaining))
  if s.remaining<=1e-8 then release()end
@@ -55,10 +56,11 @@ local function stop(f,r,a)
  local t=motions[a.target];if not t then r.cast=nil;return end
  local dir=t.position-f.position;a.fan=R.Fan(t.position,dir,C.FanRadius,C.ShardCount);a.phase='Frozen';a.age=0
  freeze={owner=f.model,target=t.model,id=a.id,remaining=C.StopDuration,reason='PolariTime_'..a.id,models={}}
- for _,g in ipairs(Deadly.MotionTargets(list))do freeze.models[g.model]=true;Gate.Pause(g.model,freeze.reason);g.model:SetAttribute('PolariFrozen',true)end
+ for _,g in ipairs(Deadly.MotionTargets(list))do freeze.models[g.model]={motion=g,position=g.position,velocity=g.velocity,pivot=g.model:GetPivot()};Gate.Pause(g.model,freeze.reason);g.model:SetAttribute('PolariFrozen',true)end
  state:SetAttribute('PolariTimeFrozen',true);state:SetAttribute('PolariTimeOwner',f.model.Name);state:SetAttribute('PolariTimeRemaining',C.StopDuration)
  local fan={};local b=bounds();for i,p in ipairs(a.fan)do p.position=Vector2.new(math.clamp(p.position.X,b.minX+C.ProjectileRadius,b.maxX-C.ProjectileRadius),math.clamp(p.position.Y,b.minY+C.ProjectileRadius,b.maxY-C.ProjectileRadius));fan[i]={Position=xyz(f,p.position),Direction=Vector3.new(p.direction.X,p.direction.Y,0)}end
- emit('Suspend',{Owner=f.model,Target=t.model,Activation=a.id,Fan=fan,Duration=C.StopDuration})
+ local targets={};for m in pairs(freeze.models)do targets[#targets+1]=m end
+ emit('Suspend',{Owner=f.model,Target=t.model,Targets=targets,Activation=a.id,Fan=fan,Duration=C.StopDuration})
 end
 local function spawn(f,a,p,d,damage,volley)
  serial+=1;local shot={id=serial,activation=a.id,owner=f.model,position=p,velocity=d*C.ProjectileSpeed,damage=damage,life=0,fan=volley,hits=a.hits or{},net=0};shots[#shots+1]=shot;emit('Shot',{Owner=f.model,Id=shot.id,Activation=a.id,Position=xyz(f,p),Direction=Vector3.new(d.X,d.Y,0),Fan=volley})
@@ -83,19 +85,42 @@ end
 local function polarize(f,r)
  local t=target(f);if not t then r.due.Attract=r.time+1;return end;local side,normal=R.NearestWall(t.position,bounds());serial+=1;r.wall={target=t.model,side=side,normal=normal,age=0,id=serial};r.due.Attract=r.time+C.AttractDuration+rand(C.AttractWait);emit('Wall',{Owner=f.model,Target=t.model,Side=side,Activation=serial,Duration=C.AttractDuration})
 end
+local function attractHit(f,r,t)
+ local w=r.wall
+ if not w or w.hit or w.target~=t.model or w.age>=C.AttractDuration then return end
+ if Gate.Paused(t.model)or Deadly.Hold(t.model)or externallyHeld(t.model)or t.capturedBy then return end
+ w.hit=true
+ Hit:Fire(f.model,t.model,C.AttractDamage,false,'PolariAttract',nil,w.id)
+ emit('AttractImpact',{Owner=f.model,Target=t.model,Activation=w.id,Position=xyz(t,t.position)})
+end
 local function wall(f,r,dt)
- local w=r.wall;local t=motions[w.target];if not t or not enemy(f.model,w.target)then emit('WallEnd',{Owner=f.model,Activation=w.id});r.wall=nil;return end
+ local w=r.wall;local t=motions[w.target]
+ if not t or not enemy(f.model,w.target)then emit('WallEnd',{Owner=f.model,Activation=w.id});r.wall=nil;return end
  w.age+=dt
- if w.warning then
-  if w.age-w.warning>=C.InvertWarning then
-   if not Gate.Paused(t.model)and not Deadly.Hold(t.model)then pendingRepel[f.model]={target=t.model,normal=w.normal,id=w.id};Hit:Fire(f.model,t.model,C.InvertDamage,false,'PolariInvert',nil,w.id)end
-   emit('WallEnd',{Owner=f.model,Activation=w.id});r.wall=nil
-  end
- elseif w.age>=C.AttractDuration then emit('WallEnd',{Owner=f.model,Activation=w.id});r.wall=nil
- elseif not Gate.Paused(t.model)and not Deadly.Hold(t.model)and not t.capturedBy then
+ if w.age>=C.AttractDuration then emit('WallEnd',{Owner=f.model,Activation=w.id});r.wall=nil
+ elseif not Gate.Paused(t.model)and not Deadly.Hold(t.model)and not externallyHeld(t.model)and not t.capturedBy then
   t.velocity=R.Turn(t.velocity,-w.normal,C.AttractTurnRate,dt)
-  if r.level>=2 and R.TouchWall(w.side,t.position,t.radius,bounds())then w.warning=w.age;emit('InvertWarning',{Owner=f.model,Target=t.model,Activation=w.id,Side=w.side,Duration=C.InvertWarning})end
+  if R.TouchWall(w.side,t.position,t.radius,bounds())then attractHit(f,r,t)end
  end
+end
+local function chargeWall(f,r)
+ serial+=1;local sides={'Left','Right','Bottom','Top'};local side=sides[rng:NextInteger(1,4)]
+ r.charged={side=side,normal=R.WallNormal(side),age=0,id=serial,hits={}}
+ r.due.Invert=r.time+C.InvertCharge+C.InvertDuration+rand(C.InvertWait)
+ emit('WallCharge',{Owner=f.model,Side=side,Activation=serial,Duration=C.InvertCharge})
+end
+local function invertHit(f,r,t)
+ local w=r.charged
+ if not w or not w.active or w.hits[t.model]or w.age>=C.InvertCharge+C.InvertDuration then return end
+ if not enemy(f.model,t.model)or Gate.Paused(t.model)or Deadly.Hold(t.model)or externallyHeld(t.model)or t.capturedBy then return end
+ w.hits[t.model]=true;pendingRepel[f.model]=pendingRepel[f.model]or{};pendingRepel[f.model][t.model]={target=t.model,normal=w.normal,id=w.id}
+ Hit:Fire(f.model,t.model,C.InvertDamage,false,'PolariInvert',nil,w.id)
+end
+local function chargedWall(f,r,dt)
+ local w=r.charged;w.age+=dt
+ if w.age>=C.InvertCharge+C.InvertDuration then emit('WallEnd',{Owner=f.model,Activation=w.id});r.charged=nil;return end
+ if not w.active and w.age+1e-8>=C.InvertCharge then w.active=true;emit('WallArmed',{Owner=f.model,Side=w.side,Activation=w.id,Duration=C.InvertDuration})end
+ if w.active then for _,t in pairs(motions)do if R.TouchWall(w.side,t.position,t.radius,bounds())then invertHit(f,r,t)end end end
 end
 local function advanceShot(s,dt)
  local f=motions[s.owner];if not f or not enabled(s.owner)then return false end;if Gate.Paused(s.owner)then return true end
@@ -112,23 +137,29 @@ local function advanceShot(s,dt)
 end
 function M.MaxFanPacket(amount)return math.min(amount,C.ShardDamage)end
 function M.PowerResult(owner,target,loss,kind)
- if kind=='PolariInvert'then local p=pendingRepel[owner];pendingRepel[owner]=nil;local f=motions[target];if p and p.target==target and f and loss>0 and not Gate.Paused(target)and not Deadly.Hold(target)and not f.capturedBy then f.velocity=R.Repel(f.position,p.normal,bounds(),math.max(f.speed or 0,f.velocity.Magnitude)*C.RepelSpeedScale,C.RepelAngle);f.knockback=nil;emit('Repel',{Owner=owner,Target=target,Activation=p.id,Position=xyz(f,f.position)})end;return end
+ if kind=='PolariInvert'then local queue=pendingRepel[owner];local p=queue and queue[target];if queue then queue[target]=nil;if not next(queue)then pendingRepel[owner]=nil end end;local f=motions[target];if p and p.target==target and f and loss>0 and not Gate.Paused(target)and not Deadly.Hold(target)and not f.capturedBy then f.velocity=R.Repel(f.position,p.normal,bounds(),math.max(f.speed or 0,f.velocity.Magnitude)*C.RepelSpeedScale,C.RepelAngle);f.knockback=nil;emit('Repel',{Owner=owner,Target=target,Activation=p.id,Position=xyz(f,f.position)})end;return end
  if kind~='PolariImpulse'then return end;local p=pendingDeflect[owner];pendingDeflect[owner]=nil
  local f=motions[target];if p and p.target==target and f and loss>0 and not Gate.Paused(target)and not Deadly.Hold(target)and not f.capturedBy then local v=f.velocity;local angle=C.DeflectAngle*(p.id%2==0 and 1 or-1);f.velocity=Vector2.new(v.X*math.cos(angle)-v.Y*math.sin(angle),v.X*math.sin(angle)+v.Y*math.cos(angle))end
 end
 function M.WallContact(model,side)
- for _,r in pairs(records)do local w=r.wall;if w and w.target==model and w.side==side and not w.warning and w.age<C.AttractDuration and r.level>=2 then w.warning=w.age;emit('InvertWarning',{Owner=nil,Target=model,Activation=w.id,Side=side,Duration=C.InvertWarning})end end
+ local t=motions[model];if not t then return end
+ for owner,r in pairs(records)do local f=motions[owner]
+  if f then
+   if r.wall and r.wall.side==side then attractHit(f,r,t)end
+   if r.charged and r.charged.side==side then invertHit(f,r,t)end
+  end
+ end
 end
 function M.Step(dt,fighters,active)
- if state:GetAttribute('Phase')~='Fighting'then if running then M.Reset()end;return end;if round~=state:GetAttribute('RoundId')or match~=state:GetAttribute('CraxMatchToken')then M.Begin(fighters)end
+ if state:GetAttribute('Phase')~='Fighting'then if running then M.Reset()end;return end;if not running or round~=state:GetAttribute('RoundId')or match~=state:GetAttribute('CraxMatchToken')then M.Begin(fighters)end
  motions={};for _,f in ipairs(Deadly.MotionTargets(fighters))do motions[f.model]=f end
  if not active or freeze then return end
- for _,f in ipairs(fighters)do local r=get(f.model)
+ for _,f in ipairs(fighters)do local r=get(f.model);if r then r.level=Skills.Resolve(f.model);f.model:SetAttribute('PolariLevel',r.level)end
   if r and not enabled(f.model)then M.Cancel(f.model)
   elseif r and not Gate.Paused(f.model)and not Deadly.Hold(f.model)and not externallyHeld(f.model)then
-   r.time+=dt;if r.wall then wall(f,r,dt)end
+   r.time+=dt;if r.wall then wall(f,r,dt)end;if r.charged then chargedWall(f,r,dt)end
    if r.cast then cast(f,r,dt)elseif Silence.CanStart(f.model)then
-    if r.level>=3 and r.time+1e-8>=r.due.Stop then start(f,r,'Stop')elseif r.time+1e-8>=r.due.Impulse then start(f,r,'Impulse')elseif r.level>=1 and not r.wall and r.time+1e-8>=r.due.Attract then polarize(f,r)end
+    if r.level>=3 and r.time+1e-8>=r.due.Stop then start(f,r,'Stop')elseif r.level>=2 and not r.charged and r.time+1e-8>=r.due.Invert then chargeWall(f,r)elseif r.time+1e-8>=r.due.Impulse then start(f,r,'Impulse')elseif r.level>=1 and not r.wall and r.time+1e-8>=r.due.Attract then polarize(f,r)end
    end
   end
   if freeze then break end

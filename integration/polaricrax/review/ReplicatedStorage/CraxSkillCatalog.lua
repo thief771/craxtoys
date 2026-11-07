@@ -396,9 +396,9 @@ return data
 
 end)()
 local C=require(game:GetService('ReplicatedStorage').CraxPolariConfig);local prices=assert(data.Crax_Spidey).Upgrades;local levels={
-{Id='PolariAttract',Name='PÔLE D’ATTRACTION',Description='Polarise pendant 2 s le mur le plus proche de la cible ; incurve progressivement sa trajectoire. Aucun dégât. Prototype : délai 10–14 s.'},
-{Id='PolariInvert',Name='INVERSION DES PÔLES',Description='Au contact du mur polarisé, avertissement rouge puis répulsion diagonale vers le centre et 12 dégâts. Un seul déclenchement par polarisation. Prototype : avertissement 0,25 s.'},
-{Id='PolariStop',Name='TEMPS SUSPENDU',Description='Tic-tac, arrêt du combat 1,2 s, cinq éclats et axes annoncés. Mouvement repris 0,35 s avant le tir simultané. 6 dégâts par éclat, trois impacts maximum par cible : 18. Prototype : délai 22–28 s.'},
+{Id='PolariAttract',Name='PÔLE D’ATTRACTION',Description='Polarise pendant 2 s le mur le plus proche de la cible ; incurve progressivement sa trajectoire. Premier contact avec ce mur : 8 dégâts, une seule fois par activation. Délai 10–14 s.'},
+{Id='PolariInvert',Name='INVERSION DES PÔLES',Description='Charge un des quatre murs au hasard pendant 1,5 s ; actif 3 s. Collision ennemie : 15 dégâts et projection vers le centre, une fois par cible et activation.'},
+{Id='PolariStop',Name='TEMPS SUSPENDU',Description='Tic-tac, arrêt du combat 1,2 s, cinq éclats et axes annoncés. Mouvement repris 0,35 s avant le tir simultané. 6 dégâts par éclat, trois impacts maximum par cible : 18. Première activation après 5–7 s actives, puis délai 22–28 s.'},
 {Id='PolariFinale',Name=C.MaxTitle,TrophyId=C.TrophyId,Description='Exécution MAX : cadran, cinq fragments, inversion des murs et trophée L’ULTIME SECONDE. Scène cosmétique après le résultat du combat.'}}
 for i,u in ipairs(levels)do u.Coins=assert(prices[i].Coins);u.Gems=assert(prices[i].Gems)end;local order=0;for _,v in pairs(data)do if type(v)=='table'then order=math.max(order,v.Order or 0)end end
 data.Crax_Polari={Order=order+1,AbilityId=C.AbilityId,DisplayName='PolariCrax',Enabled=true,Upgrades=levels,Finale=levels[4]}

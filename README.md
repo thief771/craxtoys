@@ -1,3 +1,11 @@
+# PolariCrax V2 — projectile VFX et pouvoirs corrigés
+
+**[Installer ou mettre à jour directement dans le jeu ouvert](integration/polaricrax/version-actuelle/COMMANDE_INSTALLATION.lua)** · [Détails des changements et tests](integration/polaricrax/v2/README.md)
+
+La V2 ajoute les 8 dégâts au contact du mur d’attraction, un mur aléatoire chargé 1,5 s puis actif 3 s (15 dégâts et projection), un projectile énergétique plus visible et une anticipation/immobilisation renforcée du temps suspendu. Arrêter Play, utiliser la commande mise à jour, enregistrer puis lancer un nouveau Play. Les anciens ZIP et `.rbxl` ci-dessous sont des livraisons V1 ; la commande actuelle applique la V2.
+
+---
+
 # Dernière version du jeu — Magneto / PolariCrax installé
 
 **[Installer directement dans votre jeu avec une commande Studio](integration/polaricrax/version-actuelle/INSTALLER-DANS-LE-JEU.md)** — sans télécharger une copie du jeu.

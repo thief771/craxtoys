@@ -86,5 +86,5 @@ data.LuckyCheat={DisplayName='TRICHE',Description='Compétences interrompues et 
 return data
 
 end)()
-data.PolariAttract={DisplayName='POLARISATION',Description='Trajectoire attirée vers un mur pendant 2 s, sans dégât.',Duration=2,Image='',Color=Color3.fromRGB(163,75,230)};data.PolariFrozen={DisplayName='TEMPS SUSPENDU',Description='Pause imbriquée du combat pendant 1,2 s, puis fenêtre d’esquive.',Duration=1.2,Image='',Color=Color3.fromRGB(242,194,75)}
+data.PolariAttract={DisplayName='POLARISATION',Description='Trajectoire attirée vers un mur pendant 2 s ; premier contact : 8 dégâts.',Duration=2,Image='',Color=Color3.fromRGB(163,75,230)};data.PolariFrozen={DisplayName='TEMPS SUSPENDU',Description='Pause imbriquée du combat pendant 1,2 s, puis fenêtre d’esquive.',Duration=1.2,Image='',Color=Color3.fromRGB(242,194,75)}
 return data

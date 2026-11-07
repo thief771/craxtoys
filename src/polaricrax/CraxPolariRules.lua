@@ -3,6 +3,9 @@ function R.NearestWall(p,b)
  local sides={{id='Left',d=p.X-b.minX,n=Vector2.new(1,0)},{id='Right',d=b.maxX-p.X,n=Vector2.new(-1,0)},{id='Bottom',d=p.Y-b.minY,n=Vector2.new(0,1)},{id='Top',d=b.maxY-p.Y,n=Vector2.new(0,-1)}}
  local best=sides[1];for i=2,4 do if sides[i].d<best.d then best=sides[i]end end;return best.id,best.n
 end
+function R.WallNormal(side)
+ return ({Left=Vector2.new(1,0),Right=Vector2.new(-1,0),Bottom=Vector2.new(0,1),Top=Vector2.new(0,-1)})[side]
+end
 function R.Turn(v,to,rate,dt)
  if v.Magnitude<1e-8 then return v end;local d=v.Unit:Lerp(to.Unit,1-math.exp(-rate*dt));return(d.Magnitude>1e-8 and d.Unit or to.Unit)*v.Magnitude
 end
