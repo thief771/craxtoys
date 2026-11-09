@@ -3,17 +3,25 @@ local RS=game:GetService('ReplicatedStorage');local Run=game:GetService('RunServ
 local C=require(RS:WaitForChild('CraxPolariConfig'));local Map=require(RS:WaitForChild('CraxPolariAudioMap'))
 local M={};local entries={};local root;local connection;local preloaded=false;local missingReported=false
 local mix={Tick=.48,MaxLastTick=.75,AttractLoop=.65,Charge=.85,Impact=1,Invert=1,MaxClap=1,MaxTrophy=.85}
+local function atlasId()
+ local user=RS:FindFirstChild('CraxPolariUserAssets');local id=user and user:GetAttribute('AudioAtlas')
+ if type(id)=='string'and id:match('^rbxassetid://%d+$')then return id end
+ return C.AtlasId
+end
 local function remove(i)local e=entries[i];e.sound:Stop();e.anchor:Destroy();table.remove(entries,i)end
-function M.Play(name,position,loop,finale)
+function M.Play(name,position,loop,finale,localMix)
  local clip=Map.Segments[name];if not clip then return end
- if C.AtlasId==''then if not missingReported then missingReported=true;warn('PolariCrax : importer le nouvel atlas WAV et configurer CraxPolariUserAssets.AudioAtlas pour activer les sons.')end;return end
+ local id=atlasId()
+ if id==''then if not missingReported then missingReported=true;warn('PolariCrax : importer le nouvel atlas WAV et configurer CraxPolariUserAssets.AudioAtlas pour activer les sons.')end;return end
  if #entries>=28 then remove(1)end
- if not preloaded then preloaded=true;task.spawn(function()pcall(function()game:GetService('ContentProvider'):PreloadAsync({C.AtlasId})end)end)end
  if not root or not root.Parent then root=Instance.new('Folder');root.Name='PolariAudio';root.Parent=workspace end
  local p=Instance.new('Part');p.Size=Vector3.one*.05;p.Position=position;p.Transparency=1;p.Anchored=true;p.CanCollide=false;p.CanTouch=false;p.CanQuery=false;p.Parent=root
- local s=Instance.new('Sound');s.Name='Polari_'..name;s.SoundId=C.AtlasId;s.Volume=C.Volume*(mix[name]or 1)*(finale and .95 or 1);s.RollOffMinDistance=8;s.RollOffMaxDistance=135;s.PlaybackRegionsEnabled=true;s.PlaybackRegion=NumberRange.new(clip.Start,clip.End);s.LoopRegion=NumberRange.new(clip.Start,clip.End);s.TimePosition=clip.Start;s.Looped=loop==true and clip.Loop
+ local s=Instance.new('Sound');s.Name='Polari_'..name;s.SoundId=id;s.Volume=C.Volume*(mix[name]or 1)*(finale and .95 or 1);s.RollOffMinDistance=8;s.RollOffMaxDistance=135;s.PlaybackRegionsEnabled=true;s.PlaybackRegion=NumberRange.new(clip.Start,clip.End);s.LoopRegion=NumberRange.new(clip.Start,clip.End);s.TimePosition=clip.Start;s.Looped=loop==true and clip.Loop
 
- s.Parent=p;local entry={sound=s,anchor=p,clip=clip,born=os.clock()};entries[#entries+1]=entry
+ -- Seated arena presentation uses a camera mix; spectators keep spatial attenuation.
+ s.Parent=localMix and root or p
+ if preloaded~=id then preloaded=id;task.spawn(function()pcall(function()game:GetService('ContentProvider'):PreloadAsync({s})end)end)end
+ local entry={sound=s,anchor=p,clip=clip,born=os.clock()};entries[#entries+1]=entry
  if not connection then connection=Run.Heartbeat:Connect(function()
   for i=#entries,1,-1 do local e=entries[i]
    if not e.started and e.sound.IsLoaded and not e.paused then

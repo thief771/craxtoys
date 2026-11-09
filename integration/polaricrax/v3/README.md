@@ -1,3 +1,13 @@
+## Correctif : aucun son en combat après redémarrage
+
+**Play arrêté**, copier tout `CORRIGER_AUDIO_POLARICRAX.lua` dans la barre de commande en mode édition. Il met à jour uniquement le module audio et le client Polari, et enregistre l'ID audio fourni `126174551693820` dans `ReplicatedStorage.CraxPolariUserAssets`. Enregistrer ensuite la place, puis lancer un nouveau Play et un combat. Le correctif exige une V3 installée, préserve les éditions des autres personnages et refuse d'écraser des modifications des deux modules remplacés.
+
+Le chargement reçoit maintenant un objet Sound pour éviter l'ambiguïté de type d'asset. L'ID est relu lors des événements audio pour supporter une configuration répliquée après le chargement du module. Pour les joueurs assis dans l'arène, le mixage est local et n'est plus atténué par la distance entre la caméra et l'arène logique ; les spectateurs conservent le son spatial. Ces corrections sont testées localement, mais l'audibilité pendant votre combat reste à vérifier dans Studio.
+
+Après ce correctif (révision 4), ne pas réappliquer l'ancienne commande V3 (révision 3). Réexécuter le correctif audio est sans doublons. Régénération de l'ensemble : `python3 tools/build_polari_audio_fix.py`, puis `npm run package:polari:v3`.
+
+---
+
 # PolariCrax V3 — plasma magnétique et sons
 
 Cette mise à jour enrichit la présentation de PolariCrax V2. Elle ne modifie pas les pouvoirs, dégâts ou délais. Elle est fournie sous forme de sources et de commande Studio à copier ; les anciennes copies `.rbxl` et la commande de téléchargement GitHub épinglée à la V2 n'intègrent pas cette livraison.

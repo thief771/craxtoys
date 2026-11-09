@@ -9,7 +9,7 @@ local function make(c,p,parent)local o=Instance.new(c);for k,v in pairs(p)do o[k
 local function head(m)return m and m:FindFirstChild('Head',true)end
 local function frame()if player:GetAttribute('ArenaSeat')~=nil then return CFrame.identity end;local f=RS:FindFirstChild('CraxArenaConfigV37');local id=state:GetAttribute('CraxActiveArenaV37');local cf=f and id and f:FindFirstChild('Frame_'..id);return cf and cf.Value or CFrame.identity end
 local function position(m)local h=head(m);return h and(frame()*h.CFrame).Position end
-local function sound(name,m,loop,finale)return Audio.Play(name,position(m)or Vector3.zero,loop,finale)end
+local function sound(name,m,loop,finale)return Audio.Play(name,position(m)or Vector3.zero,loop,finale,player:GetAttribute('ArenaSeat')~=nil)end
 local function line(parent,color,width)
  return make('Part',{Name='PolariAxis',Size=Vector3.one*.05,Color=color,Material=Enum.Material.Neon,Anchored=true,CanCollide=false,CanQuery=false,CanTouch=false,CastShadow=false,Transparency=.25},parent)
 end
