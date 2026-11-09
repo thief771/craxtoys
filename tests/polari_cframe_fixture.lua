@@ -35,5 +35,7 @@ CFrame.lookAt=function(from,to,up)
  return cf(from,{right.X,above.X,back.X,right.Y,above.Y,back.Y,right.Z,above.Z,back.Z})
 end
 for _,m in ipairs({a,b})do m.Head.CFrame=CFrame.new(m.Head.Position)end
+-- Deliberately author Polari's face on +Z, opposite the default look vector.
+for _,pair in ipairs({{'EyeLeft',-.6},{'EyeRight',.6}})do local eye=a:FindFirstChild(pair[1]);eye.CFrame=a.Head.CFrame*CFrame.new(pair[2],.2,2);eye.Position=eye.CFrame.Position end
 cam.CFrame=CFrame.new(0,25,-40);cam.Focus=CFrame.new(0,25,0)
 local numericalFrames=true

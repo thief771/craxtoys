@@ -136,6 +136,15 @@ local function beginScene()
  local heroHead=s.hero:FindFirstChild('Head',true);local victimHead=s.victim:FindFirstChild('Head',true)
  local heroOffset=heroHead and s.hero:GetPivot():ToObjectSpace(heroHead.CFrame)or CFrame.identity
  local victimOffset=victimHead and s.victim:GetPivot():ToObjectSpace(victimHead.CFrame)or CFrame.identity
+ -- Authored eyes define the face: some head meshes face +Z instead of Roblox's -Z.
+ local faceOffset=heroOffset
+ local eyeLeft=s.hero:FindFirstChild('EyeLeft',true);local eyeRight=s.hero:FindFirstChild('EyeRight',true)
+ if eyeLeft and not eyeLeft:IsA('BasePart')then eyeLeft=eyeLeft:FindFirstChildWhichIsA('BasePart',true)end
+ if eyeRight and not eyeRight:IsA('BasePart')then eyeRight=eyeRight:FindFirstChildWhichIsA('BasePart',true)end
+ if heroHead and eyeLeft and eyeRight then
+  local eyes=(eyeLeft.Position+eyeRight.Position)*.5
+  if(eyes-heroHead.Position).Magnitude>.01 then faceOffset=s.hero:GetPivot():ToObjectSpace(aim(heroHead.Position,eyes,heroHead.CFrame.UpVector))end
+ end
  s.field=VFX.Field(s.folder,'Finale');s.field.model:ScaleTo(radius*.55);s.field.scale=radius*.55
  s.dial=Assets.Model('Dial',s.folder);s.dial:ScaleTo(radius*.48)
  s.shards={};s.rays={}
@@ -214,6 +223,9 @@ local function beginScene()
   local orbit=.22*(1-opening);local offset=basis:VectorToWorldSpace(Vector3.new(math.sin(orbit)*distance,radius*.2,-math.cos(orbit)*distance))
   local impactShake=t>=5.2 and math.max(0,1-(t-5.2)/.22)*radius*.035 or 0
   local wanted=aim(focus+offset,focus,basis.UpVector)*CFrame.new(math.sin(t*83)*impactShake,math.cos(t*71)*impactShake,0)
+  local heroPose=heroCenter*wr*heroOffset:Inverse()
+  local faceCamera=aim(heroCenter.Position,wanted.Position,basis.UpVector)*faceOffset:Inverse()
+  s.hero:PivotTo(heroPose:Lerp(faceCamera,closing))
   local back=ease(t,C.FinaleDuration-.8,C.FinaleDuration)
   s.backdrop.Transparency=back
   cam.CameraType=Enum.CameraType.Scriptable;cam.FieldOfView=fov+(s.saved.FieldOfView-fov)*back;cam.CFrame=wanted:Lerp(s.saved.CFrame,back);cam.Focus=CFrame.new(focus)

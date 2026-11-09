@@ -1,3 +1,5 @@
+**Dernier ajustement PolariCrax : [plan final de face et sons des compétences ×3](integration/polaricrax/v3/AJUSTER_FACE_ET_SONS_POLARICRAX.lua)**. À appliquer après la nouvelle fin MAX, Play arrêté ; enregistrer puis relancer Play. Le volume de la cinématique reste inchangé.
+
 # Nouvelle fin MAX PolariCrax — l’adversaire part en éclats
 
 **[Commande Studio : refaire la fin MAX](integration/polaricrax/v3/REFAIRE_FIN_POLARICRAX.lua)** · **[ZIP à jour](dist/PolariCrax-V3-VFX-AUDIO.zip)** · [Installation et déroulé de la scène](integration/polaricrax/v3/README.md)

@@ -1,3 +1,17 @@
+# Ajustement : PolariCrax de face et compétences plus audibles
+
+Après la nouvelle fin MAX (révision 5), **Play arrêté**, exécuter tout `AJUSTER_FACE_ET_SONS_POLARICRAX.lua`, enregistrer puis relancer Play. Cette révision 6 ne remplace que le client et le module audio Polari. Elle conserve les réglages de volume de la place et l'identifiant de l'atlas.
+
+- Dans le dernier plan, PolariCrax se tourne progressivement vers la caméra. La direction du visage est déterminée par ses yeux ; elle ne dépend pas d'une convention supposée de rotation du maillage.
+- Les sons des **compétences** sont multipliés par **3** par rapport au volume de base configuré, avec un plafond de 1 par voix. Les sons appelés par la cinématique gardent leur niveau précédent.
+- Les Sound locaux sont détruits à la fin de chaque voix, y compris dans le mixage sans atténuation par distance.
+
+Les tests numériques incluent un visage orienté à l'inverse de l'axe standard et vérifient qu'il regarde la caméra au dernier plan. Les tests audio vérifient le gain des compétences et le maintien du niveau de la cinématique. Le rendu et le mixage restent à apprécier dans Studio.
+
+Ne pas réappliquer les anciennes commandes après la révision 6. Génération : `python3 tools/build_polari_finish.py`, puis `npm run package:polari:v3`.
+
+---
+
 # Nouvelle fin MAX — exécution magnétique, puis éclatement de l’adversaire
 
 **Play arrêté**, copier tout `REFAIRE_FIN_POLARICRAX.lua` dans la barre de commande de Studio. Enregistrer, puis lancer un nouveau Play et gagner avec PolariCrax au niveau MAX. Ce correctif (révision 5) met à jour uniquement le client Polari et ses VFX ; il conserve le volume réglé dans votre jeu, l'ID audio et les scripts des autres personnages. Il s'applique à une V3 ou à la révision audio 4 et se réexécute sans doublons. Après installation, ne pas réappliquer les anciennes commandes de révision 3/4.

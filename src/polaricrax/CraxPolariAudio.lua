@@ -8,7 +8,7 @@ local function atlasId()
  if type(id)=='string'and id:match('^rbxassetid://%d+$')then return id end
  return C.AtlasId
 end
-local function remove(i)local e=entries[i];e.sound:Stop();e.anchor:Destroy();table.remove(entries,i)end
+local function remove(i)local e=entries[i];e.sound:Stop();e.sound:Destroy();e.anchor:Destroy();table.remove(entries,i)end
 function M.Play(name,position,loop,finale,localMix)
  local clip=Map.Segments[name];if not clip then return end
  local id=atlasId()
@@ -16,7 +16,7 @@ function M.Play(name,position,loop,finale,localMix)
  if #entries>=28 then remove(1)end
  if not root or not root.Parent then root=Instance.new('Folder');root.Name='PolariAudio';root.Parent=workspace end
  local p=Instance.new('Part');p.Size=Vector3.one*.05;p.Position=position;p.Transparency=1;p.Anchored=true;p.CanCollide=false;p.CanTouch=false;p.CanQuery=false;p.Parent=root
- local s=Instance.new('Sound');s.Name='Polari_'..name;s.SoundId=id;s.Volume=C.Volume*(mix[name]or 1)*(finale and .95 or 1);s.RollOffMinDistance=8;s.RollOffMaxDistance=135;s.PlaybackRegionsEnabled=true;s.PlaybackRegion=NumberRange.new(clip.Start,clip.End);s.LoopRegion=NumberRange.new(clip.Start,clip.End);s.TimePosition=clip.Start;s.Looped=loop==true and clip.Loop
+ local s=Instance.new('Sound');s.Name='Polari_'..name;s.SoundId=id;local gain=C.Volume*(mix[name]or 1);s.Volume=finale and gain*.95 or math.min(1,gain*3);s.RollOffMinDistance=8;s.RollOffMaxDistance=135;s.PlaybackRegionsEnabled=true;s.PlaybackRegion=NumberRange.new(clip.Start,clip.End);s.LoopRegion=NumberRange.new(clip.Start,clip.End);s.TimePosition=clip.Start;s.Looped=loop==true and clip.Loop
 
  -- Seated arena presentation uses a camera mix; spectators keep spatial attenuation.
  s.Parent=localMix and root or p
