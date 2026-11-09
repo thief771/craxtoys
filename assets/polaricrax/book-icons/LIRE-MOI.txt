@@ -1,0 +1,7 @@
+1. Importer les 4 PNG dans Roblox avec les permissions de votre expérience.
+2. Play arrêté, créer un Decal par image et renseigner Texture avec son vrai ID importé ; on peut aussi utiliser des ImageLabel avec Image renseigné.
+3. Nommer les objets PolariAttractIcon, PolariInvertIcon, PolariStopIcon et PolariMaxIcon (les noms des fichiers PNG).
+4. Sélectionner ces 4 objets dans Explorateur, puis exécuter toute la commande INSERER_ICONES_POLARICRAX.lua.
+5. Enregistrer puis lancer un nouveau Play. Le cahier Polari existant lit les attributs Icon_Attract, Icon_Invert, Icon_Stop et Icon_Max. Aucun ID audio n’est modifié.
+
+Correspondances : Attract = Pôle d’attraction, Invert = Inversion des pôles, Stop = Temps suspendu, Max = L’ultime seconde.
