@@ -1,3 +1,9 @@
+## Taille des icônes de compétences
+
+Après branchement des images, exécuter `AGRANDIR_ICONES_POLARICRAX.lua`, Play arrêté, puis enregistrer et lancer un nouveau Play. Les PNG transparents ont des marges internes : leur contenu est agrandi de 25 % et centré dans le même emplacement, aussi bien dans les sceaux que dans les fiches de compétences. L'image reste bornée à sa case ; le trophée MAX, les autres personnages, les titres, les IDs et les sons ne sont pas remplacés. Vérifier l'équilibre visuel dans Studio avec le zoom habituel du cahier.
+
+---
+
 ## Correctif du grand titre et des IDs Decal
 
 La commande `INSTALLER_IMAGES_ET_NOM_MAX_POLARICRAX.lua` met aussi à jour le grand statut sous le personnage en **MAX · ÉCLAT DU TEMPS**, son relief et sa légende de trophée. Elle fonctionne sur la première version déjà appliquée et élargit la légende pour afficher le nom entier.
