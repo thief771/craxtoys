@@ -1,3 +1,5 @@
+**Duel PolariCrax contre PolariCrax : [perdant de face et gagnant de profil](integration/polaricrax/v3/AJUSTER_DUEL_POLARICRAX.lua)**. Ajustement ciblé de la cinématique, Play arrêté, puis enregistrer et relancer Play ; titres, images et sons conservés.
+
 **Cahier PolariCrax : [installer les trois images et le MAX « ÉCLAT DU TEMPS » avec le trophée standard](integration/polaricrax/v3/INSTALLER_IMAGES_ET_NOM_MAX_POLARICRAX.lua)**. Commande complète, Play arrêté, avec les IDs fournis. Enregistrer puis nouveau Play ; sons et cinématique préservés.
 
 **Dernier ajustement PolariCrax : [plan final de face et sons des compétences ×3](integration/polaricrax/v3/AJUSTER_FACE_ET_SONS_POLARICRAX.lua)**. À appliquer après la nouvelle fin MAX, Play arrêté ; enregistrer puis relancer Play. Le volume de la cinématique reste inchangé.

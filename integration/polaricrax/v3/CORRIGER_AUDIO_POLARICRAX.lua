@@ -184,15 +184,21 @@ local function beginScene()
  local heroHead=s.hero:FindFirstChild('Head',true);local victimHead=s.victim:FindFirstChild('Head',true)
  local heroOffset=heroHead and s.hero:GetPivot():ToObjectSpace(heroHead.CFrame)or CFrame.identity
  local victimOffset=victimHead and s.victim:GetPivot():ToObjectSpace(victimHead.CFrame)or CFrame.identity
- -- Authored eyes define the face: some head meshes face +Z instead of Roblox's -Z.
- local faceOffset=heroOffset
- local eyeLeft=s.hero:FindFirstChild('EyeLeft',true);local eyeRight=s.hero:FindFirstChild('EyeRight',true)
- if eyeLeft and not eyeLeft:IsA('BasePart')then eyeLeft=eyeLeft:FindFirstChildWhichIsA('BasePart',true)end
- if eyeRight and not eyeRight:IsA('BasePart')then eyeRight=eyeRight:FindFirstChildWhichIsA('BasePart',true)end
- if heroHead and eyeLeft and eyeRight then
-  local eyes=(eyeLeft.Position+eyeRight.Position)*.5
-  if(eyes-heroHead.Position).Magnitude>.01 then faceOffset=s.hero:GetPivot():ToObjectSpace(aim(heroHead.Position,eyes,heroHead.CFrame.UpVector))end
+ -- Authored eyes define each face, including meshes authored on the opposite axis.
+ local function actorFaceOffset(model,fallback)
+  local actorHead=model:FindFirstChild('Head',true)
+  local leftEye=model:FindFirstChild('EyeLeft',true);local rightEye=model:FindFirstChild('EyeRight',true)
+  if leftEye and not leftEye:IsA('BasePart')then leftEye=leftEye:FindFirstChildWhichIsA('BasePart',true)end
+  if rightEye and not rightEye:IsA('BasePart')then rightEye=rightEye:FindFirstChildWhichIsA('BasePart',true)end
+  if actorHead and leftEye and rightEye then
+   local eyes=(leftEye.Position+rightEye.Position)*.5
+   if(eyes-actorHead.Position).Magnitude>.01 then return model:GetPivot():ToObjectSpace(aim(actorHead.Position,eyes,actorHead.CFrame.UpVector))end
+  end
+  return fallback
  end
+ local faceOffset=actorFaceOffset(s.hero,heroOffset)
+ local victimFaceOffset=actorFaceOffset(s.victim,victimOffset)
+ local mirrorMatch=loser:GetAttribute('CraxId')==C.Id
  s.field=VFX.Field(s.folder,'Finale');s.field.model:ScaleTo(radius*.55);s.field.scale=radius*.55
  s.dial=Assets.Model('Dial',s.folder);s.dial:ScaleTo(radius*.48)
  s.shards={};s.rays={}
@@ -273,8 +279,15 @@ local function beginScene()
   local wanted=aim(focus+offset,focus,basis.UpVector)*CFrame.new(math.sin(t*83)*impactShake,math.cos(t*71)*impactShake,0)
   local heroPose=heroCenter*wr*heroOffset:Inverse()
   local faceCamera=aim(heroCenter.Position,wanted.Position,basis.UpVector)*faceOffset:Inverse()
-  s.hero:PivotTo(heroPose:Lerp(faceCamera,closing))
   local back=ease(t,C.FinaleDuration-.8,C.FinaleDuration)
+  if mirrorMatch then
+   local view=wanted:Lerp(s.saved.CFrame,back)
+   s.victim:PivotTo(aim(victimCenter.Position,view.Position,basis.UpVector)*victimFaceOffset:Inverse())
+   -- A quarter-turn relative to the actual camera: the winner is always in profile.
+   local side=(view.Position-heroCenter.Position):Cross(basis.UpVector)
+   if side.Magnitude<1e-6 then side=basis:VectorToWorldSpace(Vector3.new(1,0,0))end
+   s.hero:PivotTo(aim(heroCenter.Position,heroCenter.Position+side,basis.UpVector)*faceOffset:Inverse())
+  else s.hero:PivotTo(heroPose:Lerp(faceCamera,closing))end
   s.backdrop.Transparency=back
   cam.CameraType=Enum.CameraType.Scriptable;cam.FieldOfView=fov+(s.saved.FieldOfView-fov)*back;cam.CFrame=wanted:Lerp(s.saved.CFrame,back);cam.Focus=CFrame.new(focus)
 

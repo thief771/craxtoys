@@ -1,3 +1,13 @@
+## Duel PolariCrax contre PolariCrax : perdant de face, gagnant de profil
+
+Exécuter `AJUSTER_DUEL_POLARICRAX.lua` Play arrêté, puis enregistrer et lancer un nouveau Play. Dans ce duel uniquement, la copie du perdant oriente son visage vers la caméra pendant l'exécution et la copie du gagnant reste de profil. La direction du visage de chacun est déterminée par ses yeux, même lorsque le maillage est orienté sur un axe différent.
+
+Les autres adversaires gardent leur comportement actuel, notamment le dernier plan de face sur le gagnant. La commande applique deux modifications ciblées au client existant : elle ne remplace pas tout le script et conserve la légende « ÉCLAT DU TEMPS », les compétences, les sons et le cahier. Sauvegarde : `ServerStorage.PolariCrax_MirrorPose_Safety_V1`. Réexécution sans doublons ; modifications concurrentes protégées.
+
+Les tests numériques couvrent les gagnants Fighter1 et Fighter2, le profil du vainqueur, le visage du perdant à plusieurs instants, les autres duels et le nettoyage de la scène. L'appréciation du cadrage final reste à vérifier dans Studio. Génération : `python3 tools/build_polari_mirror.py`.
+
+---
+
 ## Taille des icônes de compétences
 
 Après branchement des images, exécuter `AGRANDIR_ICONES_POLARICRAX.lua`, Play arrêté, puis enregistrer et lancer un nouveau Play. Les PNG transparents ont des marges internes : leur contenu est agrandi de 25 % et centré dans le même emplacement, aussi bien dans les sceaux que dans les fiches de compétences. L'image reste bornée à sa case ; le trophée MAX, les autres personnages, les titres, les IDs et les sons ne sont pas remplacés. Vérifier l'équilibre visuel dans Studio avec le zoom habituel du cahier.
