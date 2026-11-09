@@ -1,3 +1,13 @@
+## Correctif du grand titre et des IDs Decal
+
+La commande `INSTALLER_IMAGES_ET_NOM_MAX_POLARICRAX.lua` met aussi à jour le grand statut sous le personnage en **MAX · ÉCLAT DU TEMPS**, son relief et sa légende de trophée. Elle fonctionne sur la première version déjà appliquée et élargit la légende pour afficher le nom entier.
+
+Pour chaque ID fourni, elle vérifie le type d'asset. Pour un Decal, elle tente de lire son contenu image avec InsertService, sans insérer l'asset dans la place. Elle affiche les IDs résolus dans Sortie, puis branche les résultats. Si la lecture échoue, elle conserve l'ID fourni et signale le blocage ; cela ne prouve pas un problème de permissions.
+
+**Cette commande ne partage pas les permissions Roblox.** Si l'image est restreinte ou si Roblox refuse son chargement, le propriétaire doit vérifier son accès pour cette expérience dans Creator Dashboard. Un script de la place ne peut pas accorder des droits sur les assets du compte. Les chargements réels des images restent à vérifier dans Studio.
+
+---
+
 # Cahier PolariCrax : trois images et MAX « ÉCLAT DU TEMPS »
 
 **Play arrêté**, exécuter tout `INSTALLER_IMAGES_ET_NOM_MAX_POLARICRAX.lua`, enregistrer la place puis lancer un nouveau Play.
@@ -11,7 +21,7 @@
 
 La commande retire le visuel MAX personnalisé du cahier, renomme le MAX dans la configuration, le catalogue et la légende de la cinématique. Elle conserve l'identifiant interne du trophée et les progressions existantes. La cinématique de combat reste celle où l'adversaire éclate ; elle ne révèle pas de trophée. Aucun réglage audio, volume ni texture VFX n'est remplacé.
 
-Les sources du jeu sont modifiées par remplacements ciblés et sauvegardées dans `ServerStorage.PolariCrax_BookImages_Title_Safety_V1`. Une structure inconnue bloque avant toute écriture. Les modifications préexistantes sont conservées ; leur éventuel conflit avec le désinstallateur complet reste protégé. Les échecs d'écriture sont restaurés et les éditions concurrentes conservent la sauvegarde de récupération. La commande est réexécutable.
+Les sources du jeu sont modifiées par remplacements ciblés et sauvegardées dans `ServerStorage.PolariCrax_BookImages_Title_Safety_V2`. Une structure inconnue bloque avant toute écriture. Les modifications préexistantes sont conservées ; leur éventuel conflit avec le désinstallateur complet reste protégé. Les échecs d'écriture sont restaurés et les éditions concurrentes conservent la sauvegarde de récupération. La commande est réexécutable.
 
 Les trois images ont été fournies par le propriétaire ; leur permission pour l'expérience et leur rendu doivent être vérifiés dans Studio. Si Roblox refuse l'une d'elles, vérifier l'ID de contenu image et les permissions de l'expérience.
 

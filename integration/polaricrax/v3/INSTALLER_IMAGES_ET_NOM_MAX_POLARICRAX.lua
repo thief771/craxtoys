@@ -5,6 +5,7 @@ local RS=game:GetService('ReplicatedStorage');local SS=game:GetService('ServerSt
 local title='ÉCLAT DU TEMPS'
 local iconIds={Attract='rbxassetid://115141704173618',Invert='rbxassetid://100547976430138',Stop='rbxassetid://121811098319527',Max=''}
 local marker='-- PolariBookImagesAndTitleV1'
+local labelMarker='-- PolariBookLabelsV2'
 local function resolve(path)local o=game;for key in path:gmatch('[^.]+')do o=o and o:FindFirstChild(key)end;return o end
 local function once(source,before,after)
  local a,b=source:find(before,1,true);assert(a and not source:find(before,b+1,true),'Structure du cahier différente : '..before:sub(1,100)..'. Aucun fichier modifié.')
@@ -22,12 +23,44 @@ local backup=assert(SS:FindFirstChild('PolariCrax_Backup_V1'),'Installer PolariC
 assert(backup:GetAttribute('PolariOwned')and not backup:GetAttribute('Incomplete'),'Sauvegarde Polari incomplète ou étrangère')
 local entries=assert(backup:FindFirstChild('Entries'));local indexed={}
 for _,entry in ipairs(entries:GetChildren())do local path=entry:GetAttribute('Path');assert(not indexed[path],'Entrée dupliquée dans la sauvegarde');indexed[path]=entry end
+local function imageContent(key,id)
+ local number=tonumber(id:match('(%d+)$'))
+ local infoOk,info=pcall(function()return game:GetService('MarketplaceService'):GetProductInfo(number)end)
+ if infoOk and info.AssetTypeId==1 then print('Polari '..key..' : ID de contenu image direct '..id);return id end
+ local ok,asset=pcall(function()return game:GetService('InsertService'):LoadAsset(number)end)
+ if ok and asset then
+  local resolved
+  for _,o in ipairs(asset:GetDescendants())do
+   local content=o:IsA('Decal')and o.Texture or(o:IsA('ImageLabel')and o.Image)
+   if type(content)=='string'then
+    local digits=content:match('^rbxassetid://(%d+)$')or content:match('[?&]id=(%d+)')
+    if digits then resolved='rbxassetid://'..digits;break end
+   end
+  end
+  asset:Destroy()
+  if resolved then print('Polari '..key..' : contenu image résolu '..id..' -> '..resolved);return resolved end
+ end
+ warn('Polari '..key..' : contenu non résolu pour '..id..'. Vérifier le type et les permissions dans Creator Dashboard ; cette commande ne peut pas accorder des droits Roblox.')
+ return id
+end
+for key,id in pairs(iconIds)do if id~=''then iconIds[key]=imageContent(key,id)end end
+local function bookLabels(source)
+ source=once(source,'local levelColor=lv<=0',[[if currentCrax=='Crax_Polari'and owned and lv>=4 then status='MAX · ÉCLAT DU TEMPS'end
+  local levelColor=lv<=0]])
+ source=once(source,'local track=make("Frame",{Position=UDim2.fromOffset(42,380)',[[if currentCrax=='Crax_Polari'then
+   local caption=left:FindFirstChild('CraxTrophyCaption')
+   if caption then caption.Text='ÉCLAT DU TEMPS';caption.Size=UDim2.fromOffset(148,38);caption.TextScaled=true;caption.TextWrapped=true;local limit=caption:FindFirstChildWhichIsA('UITextSizeConstraint');if limit then limit.MinTextSize=6;limit.MaxTextSize=16 end end
+  end
+  local track=make("Frame",{Position=UDim2.fromOffset(42,380)]])
+ return source
+end
 local plan={}
-local function patch(path,transform)
+local function patch(path,transform,patchMarker)
+ patchMarker=patchMarker or marker
  local object=assert(resolve(path),'Source absente : '..path);assert(object:IsA('LuaSourceContainer'),'Source invalide : '..path)
  local before=SES:GetEditorSource(object)
- if before:find(marker,1,true)then return end
- local after=marker..'\n'..transform(before)
+ if before:find(patchMarker,1,true)then return end
+ local after=patchMarker..'\n'..transform(before)
  local entry=indexed[path];local installed=entry and entry:FindFirstChild('Installed')
  plan[#plan+1]={path=path,object=object,before=before,after=after,installed=installed,oldInstalled=installed and installed.Value,tracked=installed and installed.Value==before}
 end
@@ -46,8 +79,11 @@ patch('StarterPlayer.StarterPlayerScripts.CopEmClient',function(source)
  source=once(source,[[if i==4 and currentCrax=="Crax_Polari"then
      if revealed then polariIconV1(node,upgrade.Id,3,3,56)else local mark=text(node,"?",0,0,62,62,35,C.muted);mark.TextXAlignment=Enum.TextXAlignment.Center end
     elseif i==4 and currentCrax=="Crax_Symbioti"then]],[[if i==4 and currentCrax=="Crax_Symbioti"then]])
- return source
+ return labelMarker..'\n'..bookLabels(source)
 end)
+-- Existing V1 installations already have their icons/trophy edits: only patch the remaining labels.
+local book=assert(resolve('StarterPlayer.StarterPlayerScripts.CopEmClient'))
+if SES:GetEditorSource(book):find(marker,1,true)then patch('StarterPlayer.StarterPlayerScripts.CopEmClient',bookLabels,labelMarker)end
 patch('ReplicatedStorage.CraxBookCinema',function(source)
  return line(source,"if id=='Crax_Polari'then",[[if id=='Crax_Polari'then local C=require(game:GetService('ReplicatedStorage').CraxPolariConfig);local image=require(game:GetService('ReplicatedStorage'):WaitForChild('CraxTrophyIcons')).Build(self.trophyArt,true);if image then image.ZIndex=113 end;self.trophyIcon.TrophyTitle.Text=C.MaxTitle;return end]])
 end)
@@ -66,7 +102,7 @@ patch('StarterPlayer.StarterPlayerScripts.CraxPolariClient',function(source)
  if source:find("Text='L’ULTIME SECONDE'",1,true)then return once(source,"Text='L’ULTIME SECONDE'","Text='ÉCLAT DU TEMPS'")end
  assert(source:find("Text='ÉCLAT DU TEMPS'",1,true),'Titre de cinématique introuvable : aucun fichier modifié');return source
 end)
-local safetyName='PolariCrax_BookImages_Title_Safety_V1'
+local safetyName='PolariCrax_BookImages_Title_Safety_V2'
 local safety=SS:FindFirstChild(safetyName)
 if #plan>0 then
  assert(not safety,'Une sauvegarde de cette commande existe déjà : inspecter '..safetyName..' avant de modifier de nouveau les sources')
