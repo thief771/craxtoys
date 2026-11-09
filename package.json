@@ -16,7 +16,7 @@
     "build:lucky": "python3 tools/build_lucky_package.py",
     "package:lucky": "python3 tools/build_lucky_zip.py",
     "test:polari": "node tests/run_polari.mjs && node tests/run_polari_pause.mjs && node tests/run_polari_current_health.mjs && node tests/run_polari_update.mjs && node tests/run_polari_catalog.mjs && node tests/run_polari_installer.mjs && node tests/run_polari_current_preflight.mjs && node tests/run_polari_client.mjs && node tests/run_polari_audio.mjs && node tests/run_polari_regressions.mjs && python3 tools/validate_polari_audio.py && npm run test:polari:v3",
-    "test:polari:v3": "node tests/run_polari_v3_update.mjs && node tests/run_polari_audio_fix.mjs && node tests/run_polari_finale_update.mjs && node tests/run_polari_finish_update.mjs && python3 tools/validate_polari_v3_assets.py",
+    "test:polari:v3": "node tests/run_polari_v3_update.mjs && node tests/run_polari_audio_fix.mjs && node tests/run_polari_finale_update.mjs && node tests/run_polari_finish_update.mjs && node tests/run_polari_book_setup.mjs && python3 tools/validate_polari_v3_assets.py",
     "build:polari:v3": "python3 tools/build_polari_v3.py",
     "package:polari:v3": "python3 tools/package_polari_v3.py",
     "build:polari": "python3 tools/build_polari_package.py",

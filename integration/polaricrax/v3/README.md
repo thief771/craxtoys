@@ -1,3 +1,22 @@
+# Cahier PolariCrax : trois images et MAX « ÉCLAT DU TEMPS »
+
+**Play arrêté**, exécuter tout `INSTALLER_IMAGES_ET_NOM_MAX_POLARICRAX.lua`, enregistrer la place puis lancer un nouveau Play.
+
+| Case | Image Roblox |
+| --- | --- |
+| Pôle d’attraction | `115141704173618` |
+| Inversion des pôles | `100547976430138` |
+| Temps suspendu | `121811098319527` |
+| MAX — ÉCLAT DU TEMPS | Trophée commun construit par `CraxTrophyIcons`, avec les états acquis/non acquis habituels |
+
+La commande retire le visuel MAX personnalisé du cahier, renomme le MAX dans la configuration, le catalogue et la légende de la cinématique. Elle conserve l'identifiant interne du trophée et les progressions existantes. La cinématique de combat reste celle où l'adversaire éclate ; elle ne révèle pas de trophée. Aucun réglage audio, volume ni texture VFX n'est remplacé.
+
+Les sources du jeu sont modifiées par remplacements ciblés et sauvegardées dans `ServerStorage.PolariCrax_BookImages_Title_Safety_V1`. Une structure inconnue bloque avant toute écriture. Les modifications préexistantes sont conservées ; leur éventuel conflit avec le désinstallateur complet reste protégé. Les échecs d'écriture sont restaurés et les éditions concurrentes conservent la sauvegarde de récupération. La commande est réexécutable.
+
+Les trois images ont été fournies par le propriétaire ; leur permission pour l'expérience et leur rendu doivent être vérifiés dans Studio. Si Roblox refuse l'une d'elles, vérifier l'ID de contenu image et les permissions de l'expérience.
+
+---
+
 # Ajustement : PolariCrax de face et compétences plus audibles
 
 Après la nouvelle fin MAX (révision 5), **Play arrêté**, exécuter tout `AJUSTER_FACE_ET_SONS_POLARICRAX.lua`, enregistrer puis relancer Play. Cette révision 6 ne remplace que le client et le module audio Polari. Elle conserve les réglages de volume de la place et l'identifiant de l'atlas.
