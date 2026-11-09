@@ -2,7 +2,7 @@
 from pathlib import Path
 import hashlib,zipfile
 r=Path(__file__).resolve().parents[1]
-paths=[r/p for p in ['integration/polaricrax/BRANCHER_ASSETS_POLARICRAX.lua','integration/polaricrax/DIAGNOSTIC_AUDIO_CLIENT.lua','integration/polaricrax/v2/METTRE_A_JOUR_POLARICRAX_V2.lua','integration/polaricrax/version-actuelle/INSTALLER_POLARICRAX_VERSION_ACTUELLE.lua','integration/polaricrax/version-actuelle/INSTALLER-DANS-LE-JEU.md','tools/build_polari_v3.py','tools/build_polari_audio_fix.py','tools/package_polari_v3.py']]
+paths=[r/p for p in ['integration/polaricrax/BRANCHER_ASSETS_POLARICRAX.lua','integration/polaricrax/DIAGNOSTIC_AUDIO_CLIENT.lua','integration/polaricrax/v2/METTRE_A_JOUR_POLARICRAX_V2.lua','integration/polaricrax/version-actuelle/INSTALLER_POLARICRAX_VERSION_ACTUELLE.lua','integration/polaricrax/version-actuelle/INSTALLER-DANS-LE-JEU.md','tools/build_polari_v3.py','tools/build_polari_audio_fix.py','tools/build_polari_finale.py','tools/package_polari_v3.py']]
 for folder in ['integration/polaricrax/v3','assets/polaricrax/audio','assets/polaricrax/vfx','src/polaricrax']:
  paths.extend(p for p in(r/folder).rglob('*')if p.is_file()and '__pycache__'not in p.parts)
 paths=sorted(set(paths));target=r/'dist/PolariCrax-V3-VFX-AUDIO.zip';sums={}

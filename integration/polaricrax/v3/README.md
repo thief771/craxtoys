@@ -1,3 +1,29 @@
+# Nouvelle fin MAX — exécution magnétique, puis éclatement de l’adversaire
+
+**Play arrêté**, copier tout `REFAIRE_FIN_POLARICRAX.lua` dans la barre de commande de Studio. Enregistrer, puis lancer un nouveau Play et gagner avec PolariCrax au niveau MAX. Ce correctif (révision 5) met à jour uniquement le client Polari et ses VFX ; il conserve le volume réglé dans votre jeu, l'ID audio et les scripts des autres personnages. Il s'applique à une V3 ou à la révision audio 4 et se réexécute sans doublons. Après installation, ne pas réappliquer les anciennes commandes de révision 3/4.
+
+**Aucun trophée n'apparaît et aucun son de révélation de trophée n'est joué.** L'adversaire se brise visuellement en fragments. Les récompenses et le résultat du combat restent ceux du serveur existant.
+
+| Temps | Action visible |
+| --- | --- |
+| 0–1,2 s | Plan sur PolariCrax, ouverture progressive du cadre vers l'adversaire. |
+| 0,65–2,4 s | L'adversaire est soulevé dans le champ magnétique. |
+| 1,1–3,2 s | Exactement cinq éclats de plasma se placent en spirale autour de lui. |
+| 3,2–4,2 s | Les axes se verrouillent ; lumière dorée et dernier tic. |
+| 4,2–4,85 s | Arrêt net de l'orbite, des particules et de la lévitation. |
+| 4,85–5,2 s | Les cinq éclats convergent simultanément. |
+| 5,2 s | Impact, ondes de choc et remplacement de la silhouette par des fragments colorés. |
+| 5,2–7,4 s | Dispersion des fragments, chute et disparition progressive. |
+| 6,7–9 s | Retour sur le vainqueur, puis restitution douce de la caméra du jeu. |
+
+Les personnages montrés sont des copies locales. Le registre des corps visuels détachés est utilisé lorsqu'il existe ; les originaux sont masqués temporairement puis restaurés. Le décor sombre est placé devant l'arène pour garder l'action lisible. Le cadrage tient compte de la taille des têtes et du format de l'écran. Les éclats de l'adversaire sont des fragments procéduraux reprenant ses couleurs, et non une découpe dynamique exacte du maillage Roblox. Les volumes des sons ne sont pas augmentés par cette mise à jour.
+
+Tests locaux : séquence avant/après impact, absence de trophée, cinq projectiles, fragments mobiles/ordinateur, positions numériques, orientations verticales, caméra, snapshots détachés, restauration après interruption, conflits d'installation et conservation des réglages audio. **Le rendu final et le timing perçu doivent encore être vérifiés dans Roblox Studio**, idéalement à deux clients et sur mobile. Aucun test local ne garantit une animation sans défaut dans une place personnalisée.
+
+Génération : `python3 tools/build_polari_finale.py`, tests : `npm run test:polari`, livraison : `npm run package:polari:v3`.
+
+---
+
 ## Correctif : aucun son en combat après redémarrage
 
 **Play arrêté**, copier tout `CORRIGER_AUDIO_POLARICRAX.lua` dans la barre de commande en mode édition. Il met à jour uniquement le module audio et le client Polari, et enregistre l'ID audio fourni `126174551693820` dans `ReplicatedStorage.CraxPolariUserAssets`. Enregistrer ensuite la place, puis lancer un nouveau Play et un combat. Le correctif exige une V3 installée, préserve les éditions des autres personnages et refuse d'écraser des modifications des deux modules remplacés.
@@ -21,7 +47,7 @@ Cette mise à jour enrichit la présentation de PolariCrax V2. Elle ne modifie p
 | Impact | Flash local, doubles fronts d'onde qui s'élargissent et disparaissent, gerbe de plasma et éclats ; attaque métallique et résonance grave. |
 | Attraction / inversion | Rubans texturés qui parcourent le mur, flux ondulant et vapeur ; passage au rouge lors de l'armement, souffle magnétique en boucle. |
 | Temps suspendu | Champ d'horlogerie doré, filaments figés pendant la suspension, cinq projectiles de plasma annoncés et onde de reprise ; tic sec, chute de fréquence et relance. |
-| MAX | Champ magnétique orbital autour de la victime et grande onde de convergence ; impacts, fragments et accord de trophée distincts. |
+| MAX | Exécution magnétique suivie d'une fragmentation de l'adversaire ; aucun trophée affiché. Voir la nouvelle commande en tête de ce guide. |
 
 Les trois textures originales `PolariFlux_Flare.png`, `PolariFlux_Spark.png`, `PolariFlux_Smoke.png` sont livrées en PNG RGBA 256 × 256. Sans import, les effets emploient les textures intégrées de Roblox. Les textures personnalisées prennent le relais après branchement de leurs vrais IDs.
 

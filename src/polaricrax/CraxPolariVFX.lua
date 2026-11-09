@@ -47,8 +47,8 @@ function M.AnimateField(r,cf,t,strength,paused)
  strength=strength or 1
  for _,e in ipairs(r.emitters)do e.Enabled=not paused;e.TimeScale=paused and 0 or 1 end
  for i,b in ipairs(r.bolts)do local a=t*(i%2==0 and -2 or 2)+i*2.1
-  b.a.Position=Vector3.new(math.cos(a)*2.8,math.sin(a)*2.8,.3)
-  b.b.Position=Vector3.new(math.cos(a+.9)*3.4,math.sin(a+.9)*3.4,-.3)
+  b.a.Position=Vector3.new(math.cos(a)*2.8,math.sin(a)*2.8,.3)*(r.scale or 1)
+  b.b.Position=Vector3.new(math.cos(a+.9)*3.4,math.sin(a+.9)*3.4,-.3)*(r.scale or 1)
   b.beam.CurveSize0=.6*math.sin(t*13+i);b.beam.CurveSize1=-b.beam.CurveSize0;b.beam.TextureSpeed=paused and 0 or 3
  end
  r.model:PivotTo(cf)

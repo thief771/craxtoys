@@ -1,3 +1,11 @@
+# Nouvelle fin MAX PolariCrax — l’adversaire part en éclats
+
+**[Commande Studio : refaire la fin MAX](integration/polaricrax/v3/REFAIRE_FIN_POLARICRAX.lua)** · **[ZIP à jour](dist/PolariCrax-V3-VFX-AUDIO.zip)** · [Installation et déroulé de la scène](integration/polaricrax/v3/README.md)
+
+Lévitation, cinq éclats magnétiques, arrêt du temps, convergence puis fragmentation de l'adversaire. **Aucun trophée n'est révélé.** La commande s'exécute Play arrêté ; elle conserve les réglages audio et les autres personnages. Enregistrer puis lancer un nouveau Play. Validation visuelle dans Studio encore nécessaire.
+
+---
+
 # PolariCrax V3 — VFX plasma et audio retravaillés
 
 **[Pack V3 : effets, textures, sons et installation](dist/PolariCrax-V3-VFX-AUDIO.zip)** · **[Guide V3](integration/polaricrax/v3/README.md)** · **[Commande de mise à jour V2 → V3 à copier dans Studio](integration/polaricrax/v3/METTRE_A_JOUR_POLARICRAX_V3.lua)**
