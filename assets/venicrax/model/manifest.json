@@ -8,6 +8,7 @@
     "V_HelmetBrow",
     "V_VenomVeins",
     "V_Fangs",
+    "V_FangsCore",
     "V_VenomDrops"
   ],
   "markers": [
@@ -20,8 +21,9 @@
     "V_HelmetCrest": 3180,
     "V_HelmetBrow": 1764,
     "V_VenomVeins": 2400,
-    "V_Fangs": 2576,
-    "V_VenomDrops": 672
+    "V_Fangs": 7104,
+    "V_FangsCore": 7104,
+    "V_VenomDrops": 1488
   },
   "sourceSHA256": "f731f741feb90a6857d9d2014bb1d23c43a06c47d99ae0e648915238b3718158"
 }

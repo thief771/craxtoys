@@ -62,7 +62,8 @@ M = dict(
     light=mat('Scales_Light', (.30, .78, .32), .25, coat=.6),
     helmet=bpy.data.materials.new('Helmet_CobraScales'),
     veins=mat('Venom_Neon', (.55, 1.0, .05), .3, emit=2.2),
-    fangs=mat('Fangs_VenomGlass', (.42, .92, .02), .1, coat=1., emit=.35, trans=.12),
+    fangs=mat('Fangs_VenomGlass', (.30, .80, .0), .1, coat=.5, emit=1.1, trans=.12),
+    drops=mat('Venom_Drops', (.62, 1.0, .08), .03, coat=1., emit=1.4, trans=.5),
 )
 for o in base.objects:
     n = o.name.lower()
@@ -330,54 +331,78 @@ for mirror in (False, True):
 finish('V_VenomVeins', vb, M['veins'])
 
 # =================================================================== crocs + gouttes de venin
-fb = bmesh.new()
+# Chaque croc : coque translucide (verre vert) + cœur néon à l'intérieur, racine enfoncée dans la gencive,
+# courbure de croc de serpent (vers l'avant puis la pointe revient vers la bouche), section aplatie.
+fb, core, drops = bmesh.new(), bmesh.new(), bmesh.new()
 
 
-def fang(bm, x0, length, radius, sign):
-    N, S = 22, 14
+def fang_centre(x0, length, sign, t):
+    x = sign * (x0 - .1 * t - .22 * t * t)
+    z = .32 - (length + .17) * t
+    y = -math.sqrt(max(.5, 4.12 ** 2 - x * x - (z * .55) ** 2)) - .06 - .42 * math.sin(math.pi * t * .78) + .38 * t * t
+    return Vector((x, y, z))
 
-    def centre(t):
-        x = sign * (x0 - .12 * t)
-        z = .15 - length * t
-        y = -math.sqrt(max(.5, 4.12 ** 2 - x * x - (z * .55) ** 2)) - .08 - .35 * math.sin(math.pi * t * .8) + .2 * t * t
-        return Vector((x, y, z))
+
+def fang(bm, x0, length, radius, sign, scale=1., tip_len=.05):
+    N, S = 36, 24
     rings = []
     for j in range(N + 1):
         t = j / N
-        c = centre(t)
-        tan = (centre(min(1, t + .01)) - centre(max(0, t - .01))).normalized()
-        u = tan.cross(Vector((1, 0, 0))).normalized()
-        v = tan.cross(u).normalized()
-        r = radius * (1 - t) ** .8 + .012
-        rings.append([bm.verts.new(c + (u * math.cos(a) + v * math.sin(a) * 1.15) * r) for a in [math.tau * i / S for i in range(S)]])
+        c = fang_centre(x0, length, sign, t)
+        tan = (fang_centre(x0, length, sign, min(1, t + .01)) - fang_centre(x0, length, sign, max(0, t - .01))).normalized()
+        u = tan.cross(Vector((0, -1, 0))).normalized()      # travers (largeur)
+        v = tan.cross(u).normalized()                       # profondeur
+        r = radius * scale * ((1 - t) ** .85) * (1 + .12 * math.sin(math.pi * min(1, t * 2.2))) + .006
+        ring = []
+        for i in range(S):
+            a = math.tau * i / S
+            ring.append(bm.verts.new(c + u * math.cos(a) * r + v * math.sin(a) * r * .72))
+        rings.append(ring)
     for A, B in zip(rings, rings[1:]):
         for i in range(S):
             bm.faces.new((A[i], B[i], B[(i + 1) % S], A[(i + 1) % S]))
-    tip = bm.verts.new(centre(1) + (centre(1) - centre(.97)).normalized() * .03)
+    end = fang_centre(x0, length, sign, 1)
+    tip = bm.verts.new(end + (end - fang_centre(x0, length, sign, .97)).normalized() * tip_len)
     for i in range(S):
         bm.faces.new((rings[-1][i], tip, rings[-1][(i + 1) % S]))
-    top = bm.verts.new(centre(0))
+    top = bm.verts.new(fang_centre(x0, length, sign, 0))
     for i in range(S):
         bm.faces.new((rings[0][(i + 1) % S], top, rings[0][i]))
-    return centre(1)
+    return tip.co.copy()
 
 
-drops = bmesh.new()
+def drip(bm, tip, size):
+    """Filet de venin effilé depuis la pointe, puis goutte en forme de larme."""
+    L = size * 1.6
+    S = 10
+    rings = []
+    for j in range(7):
+        t = j / 6
+        c = tip + Vector((0, 0, -L * t))
+        r = .012 + (size * .45) * t ** 2.2
+        rings.append([bm.verts.new(c + Vector((math.cos(a) * r, math.sin(a) * r, 0))) for a in [math.tau * i / S for i in range(S)]])
+    for A, B in zip(rings, rings[1:]):
+        for i in range(S):
+            bm.faces.new((A[i], A[(i + 1) % S], B[(i + 1) % S], B[i]))
+    ret = bmesh.ops.create_uvsphere(bm, u_segments=14, v_segments=10, radius=1)
+    for v in ret['verts']:
+        k = max(0, v.co.z)
+        v.co.x *= 1 - .55 * k ** 1.4
+        v.co.y *= 1 - .55 * k ** 1.4
+        v.co.z *= 1.35 if v.co.z > 0 else 1.05
+    bmesh.ops.transform(bm, matrix=Matrix.Translation(tip + Vector((0, 0, -L - size * .9))) @ Matrix.Scale(size, 4), verts=ret['verts'])
+
+
 for sign in (-1, 1):
-    for x0, length, rad in [(3.0, 1.25, .21), (2.4, .85, .15)]:
+    for x0, length, rad, d in [(3.0, 1.35, .3, .1), (2.36, .95, .22, .075)]:
         tip = fang(fb, x0, length, rad, sign)
-        # Goutte de venin suspendue sous la pointe.
-        ret = bmesh.ops.create_uvsphere(drops, u_segments=12, v_segments=8, radius=1)
-        for v in ret['verts']:
-            k = max(0, v.co.z)
-            v.co.x *= 1 - .75 * k ** 1.5
-            v.co.y *= 1 - .75 * k ** 1.5
-            v.co.z *= 1.6 if v.co.z > 0 else 1
-        r = .085 if length > 1 else .065
-        bmesh.ops.transform(drops, matrix=Matrix.Translation(tip + Vector((0, 0, -.12 - r * 1.1))) @ Matrix.Scale(r, 4), verts=ret['verts'])
-bmesh.ops.recalc_face_normals(fb, faces=list(fb.faces))
+        fang(core, x0, length * .93, rad, sign, scale=.42, tip_len=.0)
+        drip(drops, tip, d)
+for b in (fb, core, drops):
+    bmesh.ops.recalc_face_normals(b, faces=list(b.faces))
 finish('V_Fangs', fb, M['fangs'])
-finish('V_VenomDrops', drops, M['veins'])
+finish('V_FangsCore', core, M['veins'])
+finish('V_VenomDrops', drops, M['drops'])
 
 # Repères d'alignement pour caler les accessoires sur la tête dans Studio.
 for n, loc in [('V_FitOrigin', (0, 0, 0)), ('V_FitUp', (0, 0, 4)), ('V_FitFront', (0, -4, 0))]:
@@ -408,6 +433,10 @@ s.render.resolution_x = s.render.resolution_y = 900; s.render.resolution_percent
 s.render.image_settings.file_format = 'PNG'
 bpy.ops.object.camera_add(); cam = bpy.context.object; s.camera = cam
 cam.data.type = 'ORTHO'; cam.data.ortho_scale = 14.5
+cam.data.ortho_scale = 4.2
+cam.location = (2.2, -25, -.9); cam.rotation_euler = (math.radians(90), 0, 0)
+s.render.filepath = str(OUT / 'crocs.png'); bpy.ops.render.render(write_still=True)
+cam.data.ortho_scale = 14.5
 for name, pos in [('face', (0, -25, .6)), ('trois-quarts', (13, -22, 5)), ('profil', (25, -1, 2.5)), ('dos', (0, 25, 2.5))]:
     if QUICK and name in ('profil', 'dos'):
         continue
