@@ -1,8 +1,8 @@
-"""VeniCrax V2 (d'après le visuel de référence du créateur).
+"""VeniCrax V3 : casque capuche de cobra (choix du créateur).
 
-Vraie géométrie CraxSourire inchangée + collerette de cobra serrée (écailles foncées, plaques ventrales crème
-tachées de noir), écailles du crâne en dégradé foncé → clair, pastilles, veines de venin néon,
-quatre crocs translucides avec gouttes.
+Vraie géométrie CraxSourire inchangée + casque original façon capuche de cobra : écailles vert foncé,
+crête de plaques ventrales crème tachées de noir, intérieur crème, veines de venin néon,
+quatre petits crocs verts translucides avec gouttes. Visage (yeux fermés + sourire) découvert.
 
 Chaque couleur est un objet séparé (une MeshPart par couleur dans Roblox), chacun sous 20 000 triangles.
 Usage : python3 assets/venicrax/model/build_venicrax.py [--quick]
@@ -60,7 +60,8 @@ M = dict(
     dark=mat('Scales_Dark', (.004, .14, .04), .18, coat=.8),
     mid=mat('Scales_Mid', (.04, .40, .09), .2, coat=.7),
     light=mat('Scales_Light', (.30, .78, .32), .25, coat=.6),
-    veins=mat('Venom_Neon', (.55, 1.0, .05), .3, emit=4.),
+    helmet=bpy.data.materials.new('Helmet_CobraScales'),
+    veins=mat('Venom_Neon', (.55, 1.0, .05), .3, emit=2.2),
     fangs=mat('Fangs_VenomGlass', (.42, .92, .02), .1, coat=1., emit=.35, trans=.12),
 )
 for o in base.objects:
@@ -93,188 +94,206 @@ def scale_piece(bm, centre, normal, along, size, width=.8, thick=.06, lift=-.2, 
     bmesh.ops.transform(bm, matrix=m, verts=ret['verts'])
 
 
-# =================================================================== collerette
-R = 4.28
+# =================================================================== texture d'écailles de cobra (générée)
+import numpy as np
+TW, TH, NU, NVS = 2048, 1024, 64, 30
+yy, xx = np.mgrid[0:TH, 0:TW].astype(np.float32)
+u = xx / TW; v = 1 - yy / TH                       # v = 0 en bas de l'image (convention Blender)
+cv = (1 - v) * NVS                                  # rangées depuis le sommet du casque
+row = np.floor(cv)
+cnt = np.maximum(10, np.round(NU * np.sin(np.radians(np.clip((row + .5) / NVS, 0, 1) * 150 + 8))))   # taille d'écaille constante
+cu = u * cnt + .5 * (row % 2)
+lu = cu - np.floor(cu) - .5                         # -0.5..0.5 en travers
+lv = cv - row                                       # 0 haut .. 1 bas de la rangée
+# Écaille en losange arrondi, pointe vers le bas, légèrement imbriquée sur la rangée suivante.
+d = np.abs(lu) / .52 + np.abs(lv - .45) / .62
+d = np.minimum(d, np.abs(lu) ** 2 * 3.2 + np.abs(lv - .45) / .62 + .06)
+h = np.clip(1 - d, 0, 1) ** .6                      # bombé
+cell = (np.floor(cu) * 7.13 + row * 3.71) % 1
+cell = cell * .6 + .2      # variation par écaille
+gap = np.clip((d - .9) / .1, 0, 1)
+dark = np.array([.010, .085, .032]); rim = np.array([.04, .24, .085]); groove = np.array([.003, .015, .006])
+t = np.clip(d, 0, 1)[..., None]
+col = dark * (1 - t) + rim * t
+col = col * (.85 + .3 * cell[..., None])
+band = ((row % 6) == 3)[..., None]                  # bandes plus claires, façon dos de cobra
+col = np.where(band, col * 1.6 + np.array([.02, .03, .0]), col)
+col = col * (1 - gap[..., None]) + groove * gap[..., None]
+img = bpy.data.images.new('VeniCrax_Helmet_Color', TW, TH, alpha=False)
+img.pixels.foreach_set(np.concatenate([col, np.ones((TH, TW, 1))], axis=2).astype(np.float32).ravel())
+img.filepath_raw = str(OUT / 'VeniCrax_Helmet_Color.png'); img.file_format = 'PNG'; img.save()
+# Normal map tangente (format OpenGL, Y+) dérivée de la hauteur.
+gy, gx = np.gradient(h)
+k = 9.0
+nx, ny, nz = -gx * k, gy * k, np.ones_like(h)
+ln = np.sqrt(nx * nx + ny * ny + nz * nz)
+nrm = np.stack([nx / ln * .5 + .5, ny / ln * .5 + .5, nz / ln * .5 + .5, np.ones_like(h)], axis=2)
+nimg = bpy.data.images.new('VeniCrax_Helmet_Normal', TW, TH, alpha=False)
+nimg.colorspace_settings.name = 'Non-Color'
+nimg.pixels.foreach_set(nrm.astype(np.float32).ravel())
+nimg.filepath_raw = str(OUT / 'VeniCrax_Helmet_Normal.png'); nimg.file_format = 'PNG'; nimg.save()
+hm = M['helmet']; hm.use_nodes = True; nt = hm.node_tree; bsdf = nt.nodes['Principled BSDF']
+bsdf.inputs['Roughness'].default_value = .28; bsdf.inputs['Coat Weight'].default_value = .6
+tc = nt.nodes.new('ShaderNodeTexImage'); tc.image = img
+tn = nt.nodes.new('ShaderNodeTexImage'); tn.image = nimg
+nm = nt.nodes.new('ShaderNodeNormalMap'); nm.inputs['Strength'].default_value = 1.0
+nt.links.new(tc.outputs['Color'], bsdf.inputs['Base Color']); nt.links.new(tn.outputs['Color'], nm.inputs['Color']); nt.links.new(nm.outputs['Normal'], bsdf.inputs['Normal'])
+hm.diffuse_color = (.02, .15, .05, 1)
+
+# =================================================================== casque capuche de cobra
+# Casque original : coque au-dessus de la tête, arcade pointue au-dessus des yeux, joues qui encadrent le sourire,
+# jupe arrière évasée en capuche de cobra. Le visage (yeux + sourire) reste découvert.
+HR = 4.3          # rayon de la coque
+SKIRT = 158.      # angle polaire du bas de la jupe (depuis le sommet)
 
 
-def flare(a):
-    s = math.sin(a)
-    return 1.65 - .5 * s * s if s >= 0 else 1.65 - .2 * s * s
+def front_angle(az):
+    """0 = face, 180 = dos."""
+    f = (math.degrees(az) + 90) % 360
+    return min(f, 360 - f)
 
 
-def curl(a):
-    return 1.2 + .6 * abs(math.cos(a))
+def lerp_table(x, pts):
+    for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+        if x <= x1:
+            u = (x - x0) / (x1 - x0)
+            u = u * u * (3 - 2 * u)
+            return y0 + (y1 - y0) * u
+    return pts[-1][1]
 
 
-def hood_point(a, s):
-    """a : angle autour de Y (0 = +X, pi/2 = haut). s : 0 = pôle arrière, .62 = bord de la tête, 1 = bord extérieur."""
-    if s <= .62:
-        phi = s / .62 * math.pi / 2
-        rho, y = R * math.sin(phi), R * math.cos(phi)
-    else:
-        t = (s - .62) / .38
-        rho, y = R + t * flare(a), -t * t * curl(a)
-    return Vector((rho * math.cos(a), y, rho * math.sin(a)))
+def edge_polar(az):
+    """Bord bas du casque (degrés depuis le sommet) : pointe d'arcade au centre, au-dessus des yeux, puis les joues
+    descendent derrière les coins du sourire et rejoignent la jupe arrière."""
+    return lerp_table(front_angle(az), [(0, 58), (6, 52), (12, 49), (44, 49), (52, 58), (60, 84), (68, 116), (82, 146), (100, SKIRT), (180, SKIRT)])
 
 
-def hood_frame(a, s):
-    p = hood_point(a, s)
-    ds = (hood_point(a, min(1, s + .003)) - hood_point(a, max(0, s - .003))).normalized()
-    da = (hood_point(a + .003, s) - hood_point(a - .003, s)).normalized()
-    n = ds.cross(da).normalized()
-    return p, ds, n
+def flare(p, az):
+    """Évasement de la jupe : nul sur le dessus, large sur les côtés et l'arrière vers le bas."""
+    f = front_angle(az)
+    side = lerp_table(f, [(0, 0), (50, .55), (80, 1.35), (180, 1.0)])
+    u = max(0., (p - 70) / (SKIRT - 70))
+    return (1.0 + .6 * abs(math.cos(az))) * side * u ** 1.5
 
 
-NA, NS = 112, 30
+def helmet_point(az, v, lift=0.):
+    """v : 0 = sommet, 1 = bord bas pour cet azimut."""
+    p = math.radians(v * edge_polar(az))
+    r = HR + flare(math.degrees(p), az) + lift
+    return Vector((r * math.sin(p) * math.cos(az), r * math.sin(p) * math.sin(az), HR * math.cos(p) - .25 * flare(math.degrees(p), az)))
+
+
+def helmet_frame(az, v, lift=0.):
+    p = helmet_point(az, v, lift)
+    dv = (helmet_point(az, min(1, v + .004), lift) - helmet_point(az, max(0, v - .004), lift)).normalized()
+    da = (helmet_point(az + .004, v, lift) - helmet_point(az - .004, v, lift)).normalized()
+    n = dv.cross(da).normalized()
+    if n.dot(p) < 0:
+        n = -n
+    return p, dv, n
+
+
+NA, NV = 112, 36
+SEAM = math.pi / 2          # couture UV à l'arrière, sous la crête
+
+
+def az_of(i):
+    return SEAM + math.tau * i / NA
+
+
 bm = bmesh.new()
-grid = [[bm.verts.new(hood_point(math.tau * i / NA, j / NS)) for i in range(NA)] for j in range(NS + 1)]
-for j in range(NS):
+uv = bm.loops.layers.uv.new('UVMap')
+grid = [[bm.verts.new(helmet_point(az_of(i), max(j / NV, .004))) for i in range(NA)] for j in range(NV + 1)]   # petit anneau au sommet (caché sous la crête) : pas de face dégénérée
+for j in range(NV):
     for i in range(NA):
-        bm.faces.new((grid[j][i], grid[j][(i + 1) % NA], grid[j + 1][(i + 1) % NA], grid[j + 1][i]))
-bmesh.ops.remove_doubles(bm, verts=list(bm.verts), dist=1e-5)
-bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
-shell = finish('V_HoodShell', bm, M['shell'])
+        f = bm.faces.new((grid[j][i], grid[j][(i + 1) % NA], grid[j + 1][(i + 1) % NA], grid[j + 1][i]))
+        for loop, (uu, vv) in zip(f.loops, [(i, j), (i + 1, j), (i + 1, j + 1), (i, j + 1)]):
+            loop[uv].uv = (uu / NA, 1 - vv / NV)
+bm.normal_update()
+for f in bm.faces:
+    if f.normal.dot(f.calc_center_median()) < 0:
+        f.normal_flip()
+shell = finish('V_HelmetShell', bm, M['helmet'])
+shell.data.materials.append(M['bands'])          # intérieur crème (visible sous la jupe)
 bpy.context.view_layer.objects.active = shell
-mod = shell.modifiers.new('T', 'SOLIDIFY'); mod.thickness = .12; mod.offset = 0
+mod = shell.modifiers.new('T', 'SOLIDIFY'); mod.thickness = .14; mod.offset = -1; mod.material_offset = 1
 bpy.ops.object.modifier_apply(modifier=mod.name)
 
-
-# --- plaques ventrales crème (côtés) + taches noires, posées sur la face avant de la collerette
-def front_y(x, z):
-    rho = math.hypot(x, z)
-    a = math.atan2(z, x)
-    t = (rho - R) / flare(a)
-    return -t * t * curl(a), t, a
+# --- crête centrale : plaques ventrales crème segmentées, de l'arcade jusqu'au bas de la nuque
+CREST_W = .78   # demi-largeur
+crest, blot = bmesh.new(), bmesh.new()
 
 
-band_bm, blot_bm = bmesh.new(), bmesh.new()
-PITCH, CELL = .56, .1
-z = -R - 1.6
-while z < R + 1.2:
-    z0, z1 = z + .05, z + PITCH
-    nz = 6
-    xs = [x * CELL for x in range(-62, 63)]
-    for xi in range(len(xs) - 1):
-        for k in range(nz):
-            za, zb = z0 + (z1 - z0) * k / nz, z0 + (z1 - z0) * (k + 1) / nz
-            corners = [(xs[xi], za), (xs[xi + 1], za), (xs[xi + 1], zb), (xs[xi], zb)]
-            ok = True; pts = []
-            for (x, zz) in corners:
-                y, t, a = front_y(x, zz)
-                if not (.02 < t < .66) or abs(x) < 2.1:
-                    ok = False; break
-                u = (zz - z0) / (z1 - z0)
-                bulge = .09 * math.sin(math.pi * u) + .07 * (1 - u)   # bord bas en avant : plaques imbriquées
-                pts.append(Vector((x, y - .1 - bulge, zz)))
-            if not ok:
-                continue
-            cx = sum(p.x for p in pts) / 4; cz = sum(p.z for p in pts) / 4
-            _, tc, _ = front_y(cx, cz)
-            spot = tc > .38 and (math.sin(cz * 4.1 + abs(cx) * 2.3) + .8 * math.sin(cz * 9.7 - abs(cx) * 5.1)) > .55
-            target = blot_bm if spot else band_bm
-            target.faces.new([target.verts.new(p + Vector((0, -.004 if spot else 0, 0))) for p in pts])
-    z += PITCH
-for name, b, m in [('V_HoodBellyBands', band_bm, M['bands']), ('V_HoodBlotches', blot_bm, M['blotch'])]:
-    bmesh.ops.remove_doubles(b, verts=list(b.verts), dist=1e-5)
-    o = finish(name, b, m)
-    for p in o.data.polygons:
-        if p.normal.y > 0:
-            p.flip()
-    bpy.context.view_layer.objects.active = o
-    mod = o.modifiers.new('T', 'SOLIDIFY'); mod.thickness = .05
-    bpy.ops.object.modifier_apply(modifier=mod.name)
-
-# --- grosses écailles foncées : bordure avant + tout le dos de la collerette
-front_bm, back_bm = bmesh.new(), bmesh.new()
-# Bordure avant : rangées pointes vers l'extérieur ; au-dessus et au-dessous de la tête, toute la largeur.
-for row, s in enumerate([.985, .93, .875, .82, .765, .71, .655]):
-    count = 46 if row < 3 else 40
-    for k in range(count):
-        a = math.tau * (k + .5 * (row % 2)) / count
-        if row >= 3 and abs(math.cos(a) * (R + 1)) > 2.3:
-            continue
-        p, ds, n = hood_frame(a, s)
-        if n.y > 0:
-            n = -n
-        scale_piece(front_bm, p + n * .09, n, ds, .52, width=.85, thick=.07, lift=-.25)
-# Dos : rangées du bord vers le pôle arrière, pointes vers le bord.
-s, row = .995, 0
-while s > .03:
-    q = hood_point(0, s)
-    rho = math.hypot(q.x, q.z)
-    count = max(6, round(2 * math.pi * max(rho, .4) / .84))
-    for k in range(count):
-        a = math.tau * (k + .5 * (row % 2)) / count
-        p, ds, n = hood_frame(a, s)
-        if n.y < 0:
-            n = -n
-        scale_piece(back_bm, p + n * .09, n, ds, .88, width=.85, thick=.07, lift=-.22)
-    s -= .075 if s > .62 else .095
-    row += 1
-finish('V_HoodScalesFront', front_bm, M['hscale'])
-finish('V_HoodScalesBack', back_bm, M['hscale'])
-
-# =================================================================== écailles du crâne
+def crest_point(t, w, h):
+    """t : 0 = pointe de l'arcade, 1 = bas de la nuque ; w : -1..1 en travers ; h : hauteur au-dessus de la coque."""
+    ang = math.radians(-58 + t * (58 + 150))        # angle dans le plan Y-Z, depuis le sommet, négatif = vers l'avant
+    az = -math.pi / 2 if ang < 0 else math.pi / 2
+    v = abs(math.degrees(ang)) / edge_polar(az)
+    base = helmet_point(az, min(v, 1))
+    out = base.normalized() if base.length else Vector((0, 0, 1))
+    side = Vector((1, 0, 0))
+    return base + side * (w * CREST_W) + out * (.06 + h)
 
 
-def theta_max(az):
-    """Limite basse (degrés depuis le sommet) des écailles selon l'azimut : pointe au centre du front,
-    dégagement au-dessus des yeux, longues bandes sur les côtés jusqu'aux coins de la bouche."""
-    f = (math.degrees(az) + 90) % 360
-    f = min(f, 360 - f)
-    pts = [(0, 64), (8, 54), (15, 49), (38, 48), (48, 66), (56, 92), (90, 100), (180, 100)]
-    for (f0, t0), (f1, t1) in zip(pts, pts[1:]):
-        if f <= f1:
-            return t0 + (t1 - t0) * (f - f0) / (f1 - f0)
-    return 100
+PLATES = 15
+for k in range(PLATES):
+    t0, t1 = k / PLATES + .006, (k + 1) / PLATES - .006
+    rows = []
+    NU, NW = 5, 8
+    for i in range(NU + 1):
+        t = t0 + (t1 - t0) * i / NU
+        u = i / NU
+        row = []
+        for j in range(NW + 1):
+            w = -1 + 2 * j / NW
+            taper = 1 - .35 * max(0, (k - 9) / 6)          # se resserre vers la nuque
+            h = .13 * math.sin(math.pi * u) * (1 - w * w * .6) + .09 * u
+            row.append(crest.verts.new(crest_point(t, w * taper, h)))
+        rows.append(row)
+    for i in range(NU):
+        for j in range(NW):
+            crest.faces.new((rows[i][j], rows[i][j + 1], rows[i + 1][j + 1], rows[i + 1][j]))
+bmesh.ops.recalc_face_normals(crest, faces=list(crest.faces))
+o = finish('V_HelmetCrest', crest, M['bands'])
+bpy.context.view_layer.objects.active = o
+mod = o.modifiers.new('T', 'SOLIDIFY'); mod.thickness = .08; mod.offset = -1
+bpy.ops.object.modifier_apply(modifier=mod.name)
+blot.free()
+
+# --- arcade en relief le long du bord avant, pointe centrale descendante entre les yeux
+brow = bmesh.new()
 
 
-tiers = {'dark': bmesh.new(), 'mid': bmesh.new(), 'light': bmesh.new()}
-theta = 2.0
-while theta < 100:
-    th = math.radians(theta)
-    count = max(5, round(2 * math.pi * 4 * math.sin(th) / (.58 - .2 * theta / 100)))
-    for k in range(count):
-        az = math.tau * (k + rnd.random() * .3) / count
-        tm = theta_max(az)
-        d = theta / tm
-        if d > 1:
-            continue
-        dirv = Vector((math.sin(th) * math.cos(az), math.sin(th) * math.sin(az), math.cos(th)))
-        if dirv.y > .25:
-            continue
-        tier = 'dark' if d < .5 else ('mid' if d < .78 else 'light')
-        size = .6 - .32 * d ** 1.3
-        down = Vector((0, 0, -1)) - dirv * (-dirv.z)
-        scale_piece(tiers[tier], dirv * 3.985, dirv, down if down.length > 1e-3 else Vector((0, -1, 0)), size, width=.82, thick=.06, lift=-.22)
-    theta += 3.6
-for tier, b in tiers.items():
-    finish('V_SkullScales_' + {'dark': 'Fonce', 'mid': 'Moyen', 'light': 'Clair'}[tier], b, M[tier])
-# Pastilles éparpillées sous la ligne d'écailles.
-dots = bmesh.new()
-for _ in range(900):
-    az = rnd.uniform(-math.pi, 0)
-    tm = theta_max(az)
-    theta = tm + rnd.uniform(1, 14) ** 1.1
-    th = math.radians(theta)
-    dirv = Vector((math.sin(th) * math.cos(az), math.sin(th) * math.sin(az), math.cos(th)))
-    # Jamais sur les yeux ni dans la bouche.
-    p = dirv * 4
-    if (abs(p.x) < 2.6 and 1.45 < p.z < 2.5) or p.z < -.2 or (abs(p.x) < 3.4 and p.z < .9 and p.y < -1.5) or dirv.y > .1:
-        continue
-    if rnd.random() > .25:
-        continue
-    scale_piece(dots, dirv * 3.99, dirv, Vector((0, 0, -1)), rnd.uniform(.07, .13), width=.75, thick=.09, lift=0)
-finish('V_SkullDots', dots, M['light'])
-
-# =================================================================== veines de venin néon
+def brow_tube(pts, radius, sides=10):
+    rings = []
+    for i, p in enumerate(pts):
+        tan = (pts[min(i + 1, len(pts) - 1)] - pts[max(i - 1, 0)]).normalized()
+        n = p.normalized()
+        b = tan.cross(n).normalized()
+        r = radius(i / (len(pts) - 1))
+        rings.append([brow.verts.new(p + (n * math.cos(k * math.tau / sides) * .8 + b * math.sin(k * math.tau / sides)) * r) for k in range(sides)])
+    for A, B in zip(rings, rings[1:]):
+        for k in range(sides):
+            brow.faces.new((A[k], A[(k + 1) % sides], B[(k + 1) % sides], B[k]))
+    for ring in (rings[0], rings[-1][::-1]):
+        brow.faces.new(ring)
 
 
-def sph(theta_deg, az_deg, r=4.07):
-    t, a = math.radians(theta_deg), math.radians(az_deg)
-    return Vector((math.sin(t) * math.cos(a), math.sin(t) * math.sin(a), math.cos(t))) * r
+for sgn in (-1, 1):
+    pts = [helmet_point(math.radians(-90 + sgn * f), .975, .06) for f in [i * 1.6 for i in range(0, 44)]]
+    brow_tube(pts, lambda t: .2 - .08 * t)
+# Pointe centrale (comme un croc) qui descend vers le nez, et deux petites pointes au-dessus des yeux.
+for xoff, length, w in [(0, .75, .3), (-1.85, .38, .16), (1.85, .38, .16)]:
+    az = math.atan2(-4, xoff)
+    top = helmet_point(az, .97, .1)
+    tip = top + Vector((0, -.18, -length))
+    side = Vector((1, 0, 0)) * w
+    a, b, c, d = brow.verts.new(top - side), brow.verts.new(top + side), brow.verts.new(tip), brow.verts.new(top + Vector((0, -.14, -.05)))
+    brow.faces.new((a, d, c)); brow.faces.new((d, b, c)); brow.faces.new((a, c, b)); brow.faces.new((a, b, d))
+bmesh.ops.recalc_face_normals(brow, faces=list(brow.faces))
+finish('V_HelmetBrow', brow, M['shell'])
 
-
+# =================================================================== veines de venin néon (sur le casque)
 def tube(bm, pts, r0, r1, sides=6):
     rings = []
     for i, p in enumerate(pts):
@@ -290,24 +309,24 @@ def tube(bm, pts, r0, r1, sides=6):
 
 
 def vein(bm, ctrl, r0=.06, r1=.025):
+    """ctrl : liste (azimut en degrés, v 0..1) sur le casque."""
     pts = []
-    for (t0, a0), (t1, a1) in zip(ctrl, ctrl[1:]):
-        for i in range(8):
-            u = i / 8
-            j = 2.2 * math.sin(u * math.pi) * (rnd.random() - .5)
-            pts.append(sph(t0 + (t1 - t0) * u + j, a0 + (a1 - a0) * u + j * 1.5))
-    pts.append(sph(*ctrl[-1]))
+    for (a0, v0), (a1, v1) in zip(ctrl, ctrl[1:]):
+        for i in range(10):
+            u = i / 10
+            j = math.sin(u * math.pi) * (rnd.random() - .5)
+            pts.append(helmet_point(math.radians(a0 + (a1 - a0) * u + 4 * j), min(.995, v0 + (v1 - v0) * u + .015 * j), .05))
+    pts.append(helmet_point(math.radians(ctrl[-1][0]), ctrl[-1][1], .05))
     tube(bm, pts, r0, r1)
 
 
 vb = bmesh.new()
 for mirror in (False, True):
     m = (lambda a: -180 - a) if mirror else (lambda a: a)
-    vein(vb, [(6, m(-80)), (18, m(-55)), (30, m(-42)), (45, m(-33)), (62, m(-28)), (80, m(-26)), (96, m(-30))])
-    vein(vb, [(18, m(-55)), (28, m(-70)), (40, m(-74)), (47, m(-80))], .045, .02)
-    vein(vb, [(30, m(-42)), (40, m(-50)), (47, m(-58))], .04, .02)
-    vein(vb, [(45, m(-33)), (55, m(-20)), (70, m(-10))], .04, .02)
-vein(vb, [(4, -95), (16, -88), (28, -96), (42, -88), (56, -90)], .05, .022)
+    vein(vb, [(m(-80), .25), (m(-50), .4), (m(-15), .55), (m(5), .75), (m(-5), .97)], .04, .016)
+    vein(vb, [(m(-15), .55), (m(25), .6), (m(45), .85)], .03, .014)
+    vein(vb, [(m(-65), .15), (m(-10), .3), (m(40), .4), (m(70), .62)], .035, .015)
+    vein(vb, [(m(5), .75), (m(20), .95)], .03, .014)
 finish('V_VenomVeins', vb, M['veins'])
 
 # =================================================================== crocs + gouttes de venin
@@ -345,7 +364,7 @@ def fang(bm, x0, length, radius, sign):
 
 drops = bmesh.new()
 for sign in (-1, 1):
-    for x0, length, rad in [(3.0, 2.15, .33), (2.38, 1.45, .24)]:
+    for x0, length, rad in [(3.0, 1.25, .21), (2.4, .85, .15)]:
         tip = fang(fb, x0, length, rad, sign)
         # Goutte de venin suspendue sous la pointe.
         ret = bmesh.ops.create_uvsphere(drops, u_segments=12, v_segments=8, radius=1)
@@ -354,7 +373,7 @@ for sign in (-1, 1):
             v.co.x *= 1 - .75 * k ** 1.5
             v.co.y *= 1 - .75 * k ** 1.5
             v.co.z *= 1.6 if v.co.z > 0 else 1
-        r = .12 if length > 2 else .085
+        r = .085 if length > 1 else .065
         bmesh.ops.transform(drops, matrix=Matrix.Translation(tip + Vector((0, 0, -.12 - r * 1.1))) @ Matrix.Scale(r, 4), verts=ret['verts'])
 bmesh.ops.recalc_face_normals(fb, faces=list(fb.faces))
 finish('V_Fangs', fb, M['fangs'])
@@ -376,10 +395,10 @@ assert not over, f'Pièces au-dessus de la limite Roblox de 20 000 triangles : {
 bpy.ops.object.select_all(action='DESELECT')
 for o in acc.objects:
     o.select_set(True)
-bpy.ops.export_scene.fbx(filepath=str(OUT / 'VeniCrax_ACCESSOIRES_IMPORT.fbx'), use_selection=True, object_types={'MESH'}, axis_forward='-Z', axis_up='Y', bake_anim=False)
+bpy.ops.export_scene.fbx(filepath=str(OUT / 'VeniCrax_ACCESSOIRES_IMPORT.fbx'), use_selection=True, object_types={'MESH'}, axis_forward='-Z', axis_up='Y', bake_anim=False, path_mode='COPY', embed_textures=True)
 for o in base.objects:
     o.select_set(True)
-bpy.ops.export_scene.fbx(filepath=str(OUT / 'VeniCrax_TeteSeule.fbx'), use_selection=True, object_types={'MESH'}, axis_forward='-Z', axis_up='Y', bake_anim=False)
+bpy.ops.export_scene.fbx(filepath=str(OUT / 'VeniCrax_TeteSeule.fbx'), use_selection=True, object_types={'MESH'}, axis_forward='-Z', axis_up='Y', bake_anim=False, path_mode='COPY', embed_textures=True)
 bpy.ops.wm.obj_export(filepath=str(OUT / 'VeniCrax_TeteSeule.obj'), export_selected_objects=True, forward_axis='NEGATIVE_Z', up_axis='Y')
 
 # =================================================================== rendus
