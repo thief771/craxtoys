@@ -219,6 +219,22 @@ shell.data.materials.append(M['bands'])          # intérieur crème (visible so
 bpy.context.view_layer.objects.active = shell
 mod = shell.modifiers.new('T', 'SOLIDIFY'); mod.thickness = .14; mod.offset = -1; mod.material_offset = 1
 bpy.ops.object.modifier_apply(modifier=mod.name)
+# Intérieur crème en pièce séparée (une MeshPart par couleur dans Roblox).
+bm = bmesh.new(); bm.from_mesh(shell.data)
+inner = bmesh.new(); uvl = inner.loops.layers.uv.new('UVMap'); suv = bm.loops.layers.uv.active
+vmap = {}
+for f in [f for f in bm.faces if f.material_index == 1]:
+    vs = []
+    for v in f.verts:
+        if v not in vmap:
+            vmap[v] = inner.verts.new(v.co)
+        vs.append(vmap[v])
+    nf = inner.faces.new(vs)
+    for l, ol in zip(nf.loops, f.loops):
+        l[uvl].uv = ol[suv].uv
+bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.material_index == 1], context='FACES')
+bm.to_mesh(shell.data); bm.free(); shell.data.materials.pop(index=1)
+finish('V_HelmetInner', inner, M['bands'])
 
 # --- crête centrale : plaques ventrales crème segmentées, de l'arcade jusqu'au bas de la nuque
 CREST_W = .78   # demi-largeur

@@ -4,6 +4,7 @@
   "originalGroups": 48,
   "accessories": [
     "V_HelmetShell",
+    "V_HelmetInner",
     "V_HelmetCrest",
     "V_HelmetBrow",
     "V_VenomVeins",
@@ -17,7 +18,8 @@
     "V_FitFront"
   ],
   "triangles": {
-    "V_HelmetShell": 16576,
+    "V_HelmetShell": 8512,
+    "V_HelmetInner": 8064,
     "V_HelmetCrest": 3180,
     "V_HelmetBrow": 1764,
     "V_VenomVeins": 2400,

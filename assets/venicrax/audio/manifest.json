@@ -1,0 +1,133 @@
+{
+  "duration": 21.9599,
+  "sampleRate": 44100,
+  "segments": {
+    "Bite": {
+      "Start": 0.0,
+      "End": 0.42,
+      "Loop": false,
+      "file": "Bite.wav"
+    },
+    "BiteStack": {
+      "Start": 0.54,
+      "End": 0.7,
+      "Loop": false,
+      "file": "BiteStack.wav"
+    },
+    "PoisonTick": {
+      "Start": 0.82,
+      "End": 0.94,
+      "Loop": false,
+      "file": "PoisonTick.wav"
+    },
+    "Spit": {
+      "Start": 1.06,
+      "End": 1.56,
+      "Loop": false,
+      "file": "Spit.wav"
+    },
+    "CobraLoop": {
+      "Start": 1.68,
+      "End": 2.7,
+      "Loop": true,
+      "file": "CobraLoop.wav"
+    },
+    "Bounce": {
+      "Start": 2.82,
+      "End": 3.27,
+      "Loop": false,
+      "file": "Bounce.wav"
+    },
+    "CobraImpact": {
+      "Start": 3.39,
+      "End": 4.09,
+      "Loop": false,
+      "file": "CobraImpact.wav"
+    },
+    "DistillReady": {
+      "Start": 4.21,
+      "End": 4.91,
+      "Loop": false,
+      "file": "DistillReady.wav"
+    },
+    "Distill": {
+      "Start": 5.03,
+      "End": 6.13,
+      "Loop": false,
+      "file": "Distill.wav"
+    },
+    "MoltShed": {
+      "Start": 6.25,
+      "End": 7.05,
+      "Loop": false,
+      "file": "MoltShed.wav"
+    },
+    "MoltIdle": {
+      "Start": 7.17,
+      "End": 8.29,
+      "Loop": true,
+      "file": "MoltIdle.wav"
+    },
+    "MoltWarn": {
+      "Start": 8.41,
+      "End": 9.16,
+      "Loop": false,
+      "file": "MoltWarn.wav"
+    },
+    "Cloud": {
+      "Start": 9.28,
+      "End": 10.6799,
+      "Loop": false,
+      "file": "Cloud.wav"
+    },
+    "MaxHiss": {
+      "Start": 10.7999,
+      "End": 12.0999,
+      "Loop": false,
+      "file": "MaxHiss.wav"
+    },
+    "MaxSpit": {
+      "Start": 12.2199,
+      "End": 13.2199,
+      "Loop": false,
+      "file": "MaxSpit.wav"
+    },
+    "MaxBounce": {
+      "Start": 13.3399,
+      "End": 14.1399,
+      "Loop": false,
+      "file": "MaxBounce.wav"
+    },
+    "MaxCoil": {
+      "Start": 14.2599,
+      "End": 16.2599,
+      "Loop": false,
+      "file": "MaxCoil.wav"
+    },
+    "MaxSqueeze": {
+      "Start": 16.3799,
+      "End": 17.1799,
+      "Loop": false,
+      "file": "MaxSqueeze.wav"
+    },
+    "MaxCrack": {
+      "Start": 17.2999,
+      "End": 18.2999,
+      "Loop": false,
+      "file": "MaxCrack.wav"
+    },
+    "MaxShatter": {
+      "Start": 18.4199,
+      "End": 19.9199,
+      "Loop": false,
+      "file": "MaxShatter.wav"
+    },
+    "MaxSting": {
+      "Start": 20.0399,
+      "End": 21.8399,
+      "Loop": false,
+      "file": "MaxSting.wav"
+    }
+  },
+  "atlasRobloxId": ""
+}
