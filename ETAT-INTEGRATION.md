@@ -1,3 +1,5 @@
+Le lot actuel est **VeniCrax** : [installation et vérifications en jeu](docs/venicrax/INSTALLATION.md). Le statut PolariCrax et les lots précédents suivent.
+
 Le lot actuel est **PolariCrax** : [état et tests](docs/polaricrax/TESTS_ET_ETAT.md), [installation](docs/polaricrax/INSTALLATION.md), [analyse et réglages](docs/polaricrax/ANALYSE_ET_CHOIX.md). Les statuts historiques des lots précédents suivent.
 
 Le dernier lot est **LuckyCrax** : [état réel, limites et imports restants](docs/luckycrax/ETAT.md), [installation](docs/luckycrax/INSTALLATION.md), [tests locaux](docs/luckycrax/TESTS.md). Le statut ci-dessous concerne le lot historique InvertedCrax.

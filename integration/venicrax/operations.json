@@ -1,0 +1,118 @@
+[
+  {
+    "kind": "wrap",
+    "path": "ReplicatedStorage.CraxCatalog",
+    "addition": "assert(not data.Crax_Veni,'VeniCrax déjà défini')\nlocal C=require(game:GetService('ReplicatedStorage').CraxVeniConfig);local base=assert(data.Crax_Monster);local epic=assert(data.Crax_Ghosty)\ndata.Crax_Veni={DisplayName='VeniCrax',Rarity=epic.Rarity,RarityColor=epic.RarityColor,TemplateName=C.Id,MaxHealth=C.Health,CollisionDamage=C.Melee,Speed=base.Speed,\n Description='Le vrai Smillin\\'Crax sous un casque capuche de cobra : écailles vert foncé, crête crème, veines de venin néon et quatre crocs verts.',\n PowerDescription='MORSURE LENTE : après 3 collisions de mêlée avec la même cible, l’empoisonne : 2 PV par seconde pendant 5 secondes (10 dégâts).',\n Effects={'VeniPoison'},Ability={Id=C.AbilityId,DisplayName='MORSURE LENTE',Damage=C.BiteTick*C.BiteDuration,Cooldown=0}}"
+  },
+  {
+    "kind": "wrap",
+    "path": "ReplicatedStorage.CraxSkillCatalog",
+    "addition": "assert(not data.Crax_Veni)\nlocal C=require(game:GetService('ReplicatedStorage').CraxVeniConfig);local prices=assert(data.Crax_Ghosty).Upgrades\nlocal list={\n {Id='VeniRicochet',Name='COBRA RICOCHET',Description='Crache un cobra qui ricoche sur un mur avant de mordre : 5 dégâts à l’impact, puis 3 PV/s pendant 3 s (14 au total). Délai proposé : 7–10 s.'},\n {Id='VeniDistill',Name='DISTILLATION',Description='Après 5 pertes de PV causées par le poison, le prochain rebond contre un mur soigne VeniCrax de 8 PV. Recharge : 15 s.'},\n {Id='VeniMolt',Name='MUE TOXIQUE',Description='Laisse une mue translucide. Au contact d’un ennemi, un cercle apparaît puis, 0,7 s après, un nuage toxique applique Morsure lente. Délai proposé : 14–18 s.'},\n {Id='VeniFinale',Name=C.MaxTitle,Status=C.MaxTitle,TrophyId=C.TrophyId,Description='Exécution MAX sur une élimination par poison : un cobra vert ricoche sur un mur, s’enroule deux fois autour de la tête du vaincu, se resserre, des fissures vertes apparaissent et la figurine éclate en morceaux de vinyle.'}}\nfor i,u in ipairs(list)do u.Coins=assert(prices[i].Coins);u.Gems=assert(prices[i].Gems)end\nlocal order=0;for _,v in pairs(data)do if type(v)=='table'then order=math.max(order,v.Order or 0)end end\ndata.Crax_Veni={Order=order+1,AbilityId=C.AbilityId,DisplayName='VeniCrax',Enabled=true,Upgrades=list,Finale=list[4]}"
+  },
+  {
+    "kind": "wrap",
+    "path": "ReplicatedStorage.CraxEffectsCatalog",
+    "addition": "data.VeniPoison={DisplayName='VENIN',Description='Perd des PV à chaque seconde (Morsure lente : 2 PV/s pendant 5 s ; Cobra : 3 PV/s pendant 3 s).',Duration=5,Image='',Color=Color3.fromRGB(150,255,40)}"
+  },
+  {
+    "kind": "wrap",
+    "path": "ReplicatedStorage.CraxVictoryCatalog",
+    "addition": "local C=require(game:GetService('ReplicatedStorage').CraxVeniConfig);data.Crax_Veni={Id='VeniFinale',DisplayName=C.MaxTitle,TrophyId=C.TrophyId,TrophyColor=Color3.fromRGB(150,255,40),MinimumLevel=4,Duration=C.FinaleDuration,IntroDuration=0,ZoomDuration=0,HoldDuration=0}"
+  },
+  {
+    "kind": "wrap",
+    "path": "ReplicatedStorage.CraxRouletteConfig",
+    "addition": "local cat=require(game:GetService('ReplicatedStorage').CraxCatalog);local same,total={},0;for _,e in ipairs(data.Pool)do assert(e.Id~='Crax_Veni');if cat[e.Id]and cat[e.Id].Rarity==cat.Crax_Veni.Rarity then same[#same+1]=e;total+=e.Weight end end;assert(#same>0,'Aucun Crax épique dans le casino');local w=total/(#same+1);for _,e in ipairs(same)do e.Weight=w end;data.Pool[#data.Pool+1]={Id='Crax_Veni',Weight=total-w*#same} -- Masse Épique inchangée, répartition égale."
+  },
+  {
+    "kind": "wrap",
+    "path": "ServerScriptService.CraxSkinServer",
+    "addition": "local A=require(game:GetService('ReplicatedStorage').CraxVeniAppearance);local apply=data.Apply;function data.Apply(m,id,c)A.Restore(m);apply(m,id,c);if id=='Crax_Veni'then A.Apply(m,game:GetService('ReplicatedStorage').CraxVeniImportedAssets)end end"
+  },
+  {
+    "kind": "patch",
+    "path": "ServerScriptService.ArenaMovement",
+    "prepend": "local VeniV1=require(game:GetService('ServerScriptService'):WaitForChild('CraxVeniRuntime'))\n",
+    "replacements": [
+      {
+        "before": " PolariV1.Begin(fighters)",
+        "after": " PolariV1.Begin(fighters)\n VeniV1.Begin(fighters)"
+      },
+      {
+        "before": "  if PolariV1.Frozen()then break end",
+        "after": "  if PolariV1.Frozen()then break end\n  VeniV1.Step(step*Deadly.CinematicScale(),fighters,alive and not frozen and not Killa.Fog()and not state:GetAttribute('GhostNightActive')and workspace:GetServerTimeNow()>=(state:GetAttribute('GhostFreezeUntil')or 0))"
+      },
+      {
+        "before": "PolariV1.WallContact(f.model,side);",
+        "after": "PolariV1.WallContact(f.model,side);VeniV1.WallContact(f.model,side);"
+      }
+    ]
+  },
+  {
+    "kind": "patch",
+    "path": "ServerScriptService.CombatHealth",
+    "prepend": "local VeniV1=require(game:GetService('ServerScriptService'):WaitForChild('CraxVeniRuntime'))\n",
+    "replacements": [
+      {
+        "before": "Inverted.Confirm(attacker,defender,lost,attackerLost,collision);report(attacker,defender,lost,kind)",
+        "after": "Inverted.Confirm(attacker,defender,lost,attackerLost,collision);VeniV1.Confirm(attacker,defender,lost,attackerLost,collision,kind);report(attacker,defender,lost,kind)"
+      }
+    ]
+  },
+  {
+    "kind": "patch",
+    "path": "ServerScriptService.RoundManager",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": " local enhanced=spec and(model:GetAttribute(\"CraxSkillLevel\")or 0)>=spec.MinimumLevel",
+        "after": " local enhanced=spec and(model:GetAttribute(\"CraxSkillLevel\")or 0)>=spec.MinimumLevel\n -- VeniCrax : exécution MAX seulement sur une élimination par poison de cette manche.\n if enhanced and model:GetAttribute('CraxId')=='Crax_Veni'and(state:GetAttribute('VeniPoisonKillRound')~=state:GetAttribute('RoundId')or state:GetAttribute('VeniPoisonKillMatch')~=state:GetAttribute('CraxMatchToken'))then enhanced=false end"
+      }
+    ]
+  },
+  {
+    "kind": "patch",
+    "path": "StarterPlayer.StarterPlayerScripts.ArenaCamera",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "if state:GetAttribute('RoundVictoryKind')=='PolariFinale'",
+        "after": "if state:GetAttribute('RoundVictoryKind')=='VeniFinale'and state:GetAttribute('RoundVictoryRound')==state:GetAttribute('RoundId')then clearDefeat();return end\n if state:GetAttribute('RoundVictoryKind')=='PolariFinale'"
+      },
+      {
+        "before": "if player:GetAttribute(\"PolariCameraOwner\")then",
+        "after": "if player:GetAttribute(\"VeniCameraOwner\")then if defeat then clearDefeat()end;return end\n  if player:GetAttribute(\"PolariCameraOwner\")then"
+      }
+    ]
+  },
+  {
+    "kind": "patch",
+    "path": "StarterPlayer.StarterPlayerScripts.CopEmClient",
+    "prepend": "local function veniIconV1(parent,kind,x,y,size)\n local RSv=game:GetService('ReplicatedStorage');local C=require(RSv:WaitForChild('CraxVeniConfig'))\n local holder=Instance.new('Frame');holder.Size=UDim2.fromOffset(size,size);holder.Position=UDim2.fromOffset(x,y);holder.BackgroundTransparency=1;holder.ZIndex=4;holder.Parent=parent\n local key=({VeniBite='Bite',VeniRicochet='Cobra',VeniDistill='Distill',VeniMolt='Molt',VeniFinale='Max'})[kind]\n if key and C.Icons[key]~=''then local i=Instance.new('ImageLabel');i.Size=UDim2.fromScale(1,1);i.BackgroundTransparency=1;i.Image=C.Icons[key];i.ScaleType=Enum.ScaleType.Fit;i.ZIndex=5;i.Parent=holder;return holder end\n if kind=='VeniFinale'then require(RSv:WaitForChild('CraxTrophyIcons')).Build(holder,true);return holder end\n local disc=Instance.new('Frame');disc.Size=UDim2.fromScale(1,1);disc.BackgroundColor3=Color3.fromRGB(16,70,28);disc.ZIndex=5;disc.Parent=holder\n local corner=Instance.new('UICorner');corner.CornerRadius=UDim.new(.5,0);corner.Parent=disc\n local stroke=Instance.new('UIStroke');stroke.Color=Color3.fromRGB(150,255,40);stroke.Thickness=2;stroke.Parent=disc\n local t=Instance.new('TextLabel');t.Size=UDim2.fromScale(.8,.8);t.Position=UDim2.fromScale(.1,.1);t.BackgroundTransparency=1;t.TextScaled=true;t.Font=Enum.Font.GothamBlack;t.TextColor3=Color3.fromRGB(150,255,40);t.ZIndex=6\n t.Text=({VeniBite='§',VeniRicochet='S',VeniDistill='+',VeniMolt='◌'})[kind]or'V';t.Parent=disc;return holder\nend\n",
+    "replacements": [
+      {
+        "before": "if type(kind)=='string'and kind:sub(1,6)=='Polari'then polariIconV1(parent,kind,x,y,size);return end",
+        "after": "if type(kind)=='string'and kind:sub(1,6)=='Polari'then polariIconV1(parent,kind,x,y,size);return end\n if type(kind)=='string'and kind:sub(1,4)=='Veni'then veniIconV1(parent,kind,x,y,size);return end"
+      },
+      {
+        "before": "if currentCrax=='Crax_Polari'then earned:ClearAllChildren()",
+        "after": "if currentCrax=='Crax_Veni'then earned:ClearAllChildren();veniIconV1(earned,'VeniFinale',0,0,88);name.Text=require(RS.CraxVeniConfig).MaxTitle end\n   if currentCrax=='Crax_Polari'then earned:ClearAllChildren()"
+      },
+      {
+        "before": "  -- PolariNomMaxCorrige",
+        "after": "  if currentCrax=='Crax_Veni'then local title=require(RS.CraxVeniConfig).MaxTitle;if owned and lv>=4 then status='MAX · '..title end;local caption=left:FindFirstChild('CraxTrophyCaption');if caption then caption.Text=title end end\n  -- PolariNomMaxCorrige"
+      }
+    ]
+  },
+  {
+    "kind": "patch",
+    "path": "ReplicatedStorage.CraxBookCinema",
+    "prepend": "",
+    "replacements": [
+      {
+        "before": "if id=='Crax_Polari'then local C=require(game:GetService('ReplicatedStorage').CraxPolariConfig)",
+        "after": "if id=='Crax_Veni'then local C=require(game:GetService('ReplicatedStorage').CraxVeniConfig);if C.Icons.Max~=''then make('ImageLabel',{Size=UDim2.fromScale(1,1),BackgroundTransparency=1,Image=C.Icons.Max,ScaleType=Enum.ScaleType.Fit,ZIndex=113},self.trophyArt)else make('TextLabel',{Size=UDim2.fromScale(1,1),BackgroundTransparency=1,Text='MAX',TextScaled=true,Font=Enum.Font.FredokaOne,TextColor3=Color3.fromRGB(150,255,40),ZIndex=113},self.trophyArt)end;self.trophyIcon.TrophyTitle.Text=C.MaxTitle;return end\n if id=='Crax_Polari'then local C=require(game:GetService('ReplicatedStorage').CraxPolariConfig)"
+      }
+    ]
+  }
+]

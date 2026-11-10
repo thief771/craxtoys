@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node tests/run_inverted.mjs && node tests/run_installer.mjs && node tests/run_client.mjs && npm run test:super && npm run test:sym && npm run test:lucky && npm run test:polari",
+    "test": "node tests/run_inverted.mjs && node tests/run_installer.mjs && node tests/run_client.mjs && npm run test:super && npm run test:sym && npm run test:lucky && npm run test:polari && npm run test:veni",
     "build:installer": "python3 tools/build_inverted_package.py",
     "test:super": "node tests/run_super.mjs && node tests/run_super_catalog.mjs && node tests/run_super_installer.mjs && SUPER_BASE=1 node tests/run_super_installer.mjs && node tests/run_super_client.mjs",
     "build:super": "python3 tools/build_super_package.py",
@@ -20,7 +20,9 @@
     "build:polari:v3": "python3 tools/build_polari_v3.py",
     "package:polari:v3": "python3 tools/package_polari_v3.py",
     "build:polari": "python3 tools/build_polari_package.py",
-    "package:polari": "python3 tools/build_polari_zip.py"
+    "package:polari": "python3 tools/build_polari_zip.py",
+    "test:veni": "node tests/run_veni.mjs && node tests/run_veni_install.mjs",
+    "build:veni": "python3 tools/build_veni_audio.py && python3 tools/build_veni_package.py"
   },
   "devDependencies": {
     "luau-web": "1.5.1"

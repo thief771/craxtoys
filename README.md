@@ -1,3 +1,15 @@
+# 7 Deadly Crax — VeniCrax
+
+**[Télécharger VeniCrax-TOTAL.zip](dist/VeniCrax-TOTAL.zip)** · **[Installation Studio pas à pas](docs/venicrax/INSTALLATION.md)** · [Commande d'installation](integration/venicrax/INSTALLER_VENICRAX.lua) · [Sons, textures, icônes](integration/venicrax/BRANCHER_SONS_ET_TEXTURES.lua) · [Retour arrière](integration/venicrax/RETOUR_ARRIERE_VENICRAX.lua) · [Écouter les 21 sons](assets/venicrax/audio/ECOUTER.html)
+
+Épique · 100 PV · mêlée 5. Casque capuche de cobra, écailles vert foncé, crête crème, veines de venin néon, quatre crocs verts. **Morsure lente** (3 collisions → 2 PV/s pendant 5 s), **Cobra Ricochet** (5 + 3 PV/s pendant 3 s), **Distillation** (+8 PV au rebond mural après 5 pertes de poison, recharge 15 s), **Mue toxique** (cercle puis nuage 0,7 s après), exécution MAX **ÉTREINTE DU COBRA** sur élimination par poison.
+
+![VeniCrax — rendu Blender](assets/venicrax/model/trois-quarts.png)
+
+Construit sur la place « copie jeu mardi ». Tests hors Studio : 23 vérifications du moteur réel, 57 vérifications de l'installateur réel sur les 12 sources de la place (panne injectée, doublon, retour arrière). **À vérifier dans Studio** : rendu, sons importés, deux clients, cinématique. Aucune place ni ressource Roblox publiée.
+
+---
+
 **Duel PolariCrax contre PolariCrax : [perdant de face et gagnant de profil](integration/polaricrax/v3/AJUSTER_DUEL_POLARICRAX.lua)**. Ajustement ciblé de la cinématique, Play arrêté, puis enregistrer et relancer Play ; titres, images et sons conservés.
 
 **Cahier PolariCrax : [installer les trois images et le MAX « ÉCLAT DU TEMPS » avec le trophée standard](integration/polaricrax/v3/INSTALLER_IMAGES_ET_NOM_MAX_POLARICRAX.lua)**. Commande complète, Play arrêté, avec les IDs fournis. Enregistrer puis nouveau Play ; sons et cinématique préservés.
