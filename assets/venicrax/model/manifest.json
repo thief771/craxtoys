@@ -1,12 +1,20 @@
 {
   "headOnly": true,
+  "version": 2,
   "originalGroups": 48,
   "accessories": [
-    "V_CobraHood",
-    "V_HoodRibs",
-    "V_Fang_L",
-    "V_Fang_R",
-    "V_SkullScales"
+    "V_HoodShell",
+    "V_HoodBellyBands",
+    "V_HoodBlotches",
+    "V_HoodScalesFront",
+    "V_HoodScalesBack",
+    "V_SkullScales_Fonce",
+    "V_SkullScales_Moyen",
+    "V_SkullScales_Clair",
+    "V_SkullDots",
+    "V_VenomVeins",
+    "V_Fangs",
+    "V_VenomDrops"
   ],
   "markers": [
     "V_FitOrigin",
@@ -14,11 +22,18 @@
     "V_FitFront"
   ],
   "triangles": {
-    "V_CobraHood": 16342,
-    "V_HoodRibs": 2952,
-    "V_Fang_L": 972,
-    "V_Fang_R": 972,
-    "V_SkullScales": 7600
+    "V_HoodShell": 13440,
+    "V_HoodBellyBands": 9592,
+    "V_HoodBlotches": 1816,
+    "V_HoodScalesFront": 8736,
+    "V_HoodScalesBack": 16896,
+    "V_SkullScales_Fonce": 6576,
+    "V_SkullScales_Moyen": 7104,
+    "V_SkullScales_Clair": 6864,
+    "V_SkullDots": 1008,
+    "V_VenomVeins": 2880,
+    "V_Fangs": 2576,
+    "V_VenomDrops": 672
   },
   "sourceSHA256": "f731f741feb90a6857d9d2014bb1d23c43a06c47d99ae0e648915238b3718158"
 }
